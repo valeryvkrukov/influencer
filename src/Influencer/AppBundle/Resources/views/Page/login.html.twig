@@ -1,0 +1,52 @@
+<div class="login-wrapper" ng-controller="LoginCtrl">
+	<div class="bg-pic">
+		<img src="{{ asset('assets/img/new-york-city-buildings-sunrise-morning-hd-wallpaper.jpg') }}" data-src="{{ asset('assets/img/new-york-city-buildings-sunrise-morning-hd-wallpaper.jpg') }}" ui-jq="unveil" data-src-retina="{{ asset('assets/img/new-york-city-buildings-sunrise-morning-hd-wallpaper.jpg') }}" alt="" class="lazy">
+		<div class="bg-caption pull-bottom sm-pull-bottom text-white p-l-20 m-b-20">
+			<h2 class="semi-bold text-white">Some big text</h2>
+            <p class="small">Some small text</p>
+        </div>
+	</div>
+	<div class="login-container bg-white">
+		<div class="p-l-50 m-l-20 p-r-50 m-r-20 p-t-50 m-t-30 sm-p-l-15 sm-p-r-15 sm-p-t-40">
+			<img src="{{ asset('assets/img/logo.png') }}" alt="logo" data-src="{{ asset('assets/img/logo.png') }}" ui-jq="unveil" data-src-retina="{{ asset('assets/img/logo_2x.png') }}" height="45">
+			<p class="p-t-35">Sign into your Influence account</p>
+			<p class="alert alert-danger" ng-show="login_error == true">Login or password incorrect</p>
+			<form class="p-t-15" role="form" novalidate method="post" ng-submit="login()" name="loginForm">
+				<div class="form-group has-feedback">
+					<input class="form-control input-lg" type="text" name="email" ng-model="user.email" placeholder="Email" required autofocus>
+					<span class="ion-at form-control-feedback"></span>
+				</div>
+				<div class="form-group has-feedback">
+					<input class="form-control input-lg" type="password" name="password" ng-model="user.password" placeholder="Password" required>
+					<span class="ion-key form-control-feedback"></span>
+				</div>
+				<button type="submit" ng-disabled="loginForm.$invalid" class="btn btn-lg  btn-block btn-success">Log in</button>
+				<br/>
+				<p class="text-center text-muted">
+					<small>Don't have an account yet? <a ui-sref="access.signup">Sign up</a></small>
+				</p>
+				<div class="signup-or-separator">
+					<h6 class="text"> </h6>
+					<hr>
+				</div>
+			</form>
+			<p class="p-t-35">For Clients</p>
+			<button class="btn btn-block btn-facebook" ng-click="authenticate('facebook')">
+				<i class="ion-social-facebook"></i> Sign in with Facebook
+			</button>
+			<button class="btn btn-block btn-google-plus" ng-click="authenticate('google')">
+				<span class="ion-social-googleplus"></span> Sign in with Google
+			</button>
+			<button class="btn btn-block btn-instagram" ng-click="authenticate('instagram')">
+				<i class="ion-social-instagram"></i> Sign in with Instagram
+			</button>
+			<button class="btn btn-block btn-twitter" ng-click="authenticate('twitter')">
+				<i class="ion-social-twitter"></i> Sign in with Twitter
+			</button>
+			<p class="p-t-35">For Influencers</p>
+			<a href="" class="btn btn-block btn-black">
+				<span class="bold">Sign Up As Influencer</span>
+			</a>
+		</div>
+	</div>
+</div>

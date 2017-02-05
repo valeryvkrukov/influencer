@@ -1,0 +1,16 @@
+<div ng-include src=" '{{ path('inf_sidebar') }}' " include-replace></div>
+
+<div class="page-container">
+	<div ng-include=" '{{ path('inf_header') }}' "></div>
+	<div ng-include=" '{{ path('inf_mobile_controls') }}' "></div>
+	<div class="page-content-wrapper">
+		<div class="content">
+			<div class="full-height full-width" ui-view>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+	<div ng-include=" '{{ path('inf_footer') }}' ">
+</div>
+
+<div ng-include src=" '{{ path('inf_quickview') }}' " include-replace></div>
+<div ng-include src=" '{{ path('inf_search') }}' " include-replace></div>

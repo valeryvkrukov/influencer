@@ -1,0 +1,24 @@
+<nav class="page-sidebar" data-pages="sidebar" pg-sidebar ng-controller="SidebarCtrl">
+	<div class="sidebar-overlay-slide from-top" id="appMenu">
+	
+	</div>
+	<div class="sidebar-header">
+		<img src="{{ asset('assets/img/logo_white.png') }}" alt="logo" class="brand" data-src="{{ asset('assets/img/logo_white.png') }}" ui-jq="unveil" data-src-retina="{{ asset('assets/img/logo_white_2x.png') }}" height="35">
+		<div class="sidebar-header-controls">
+			<button type="button" class="btn btn-xs sidebar-slide-toggle btn-link m-l-20" data-pages-toggle="#appMenu"><i class="fa fa-angle-down fs-16"></i></button>
+		</div>
+	</div>
+	<div class="sidebar-menu">
+		<ul class="menu-items">
+			<li class="m-t-30 open" ui-sref-active="active">
+				<a ui-sref="app.home" class="detailed">
+					<span class="title">Dashboard</span>
+					<span class="details"></span>
+				</a>
+				<span class="icon-thumbnail"><i class="pg-home"></i></span>
+			</li>
+			
+		</ul>
+		<div class="clearfix"></div>
+	</div>
+</nav>

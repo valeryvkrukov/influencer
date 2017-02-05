@@ -1,0 +1,23 @@
+<div ng-controller="SearchCtrl" class="overlay" style="display: none" pg-search>
+	<div class="overlay-content has-results m-t-20">
+		<div class="container-fluid">
+			<img class="overlay-brand" src="{{ asset('assets/img/logo.png') }}" alt="logo" data-src="{{ asset('assets/img/logo.png') }}" ui-jq="unveil" data-src-retina="{{ asset('assets/img/logo_2x.png') }}" width="78" height="22">
+			<a href="" class="close-icon-light overlay-close text-black fs-16" data-search="closeButton">
+				<i class="pg-close"></i>
+			</a>
+		</div>
+		<div class="container-fluid">
+			<input data-search="searchField" id="overlay-search" class="no-border overlay-search bg-transparent" placeholder="Search..." autocomplete="off" spellcheck="false" ng-model="search.query" ng-change="liveSearch()" ng-model-options="{ updateOn: 'default blur', debounce: { default: 500, blur: 0 } }">
+			<br>
+			<div class="inline-block">
+				<div class="checkbox right">
+					<input id="checkboxn" type="checkbox" value="1" checked="checked">
+					<label for="checkboxn"><i class="fa fa-search"></i> Search within page</label>
+				</div>
+			</div>
+			<div class="inline-block m-l-10">
+				<p class="fs-13">Press enter to search</p>
+			</div>
+		</div>
+	</div>
+</div>

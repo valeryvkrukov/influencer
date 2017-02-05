@@ -1,0 +1,12 @@
+services:
+#    influencer_app.example:
+#        class: Influencer\AppBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]
+    
+    a0_user_provider:
+        class: Influencer\AppBundle\Security\A0UserProvider
+        arguments: ["@jwt_auth.auth0_service"]
+        
+    app.token_authenticator:
+        class: Influencer\AppBundle\Security\TokenAuthenticator
+        arguments: ["@doctrine.orm.entity_manager"]
