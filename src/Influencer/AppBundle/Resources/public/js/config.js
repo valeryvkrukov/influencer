@@ -40,7 +40,7 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 			abstract: true,
 			url: '/app',
 			templateUrl: Routing.generate('inf_app'),
-			resolve: lazyLoad(['header', 'search', 'sidebar'], [
+			resolve: lazyLoad(['header', 'search', 'sidebar', 'campaign'], [
             	'nvd3',
                 'mapplic',
                 'rickshaw',
@@ -48,7 +48,8 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
                 'sparkline',
                 'skycons',
                 'switchery',
-                'wysihtml5'
+                'wysihtml5',
+                'wizard'
             ])
 		})
 		.state('app.home', {

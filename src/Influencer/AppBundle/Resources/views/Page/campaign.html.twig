@@ -5,3 +5,121 @@
 		</div>
 	</div>
 </div>
+<div class="container-fluid container-fixed-lg demo-container" ng-controller="CampaignCtrl">
+	<div class="col-md-12">
+		<ul class="nav nav-tabs nav-tabs-linetriangle nav-tabs-separator nav-stack-sm">
+            <li ng-class="{'active': getCurrentStep() == 1 }">
+                <a data-toggle="tab" ng-click="goToStep(1)"><i class="fa fa-group tab-icon"></i> <span>Target Your Audience</span></a>
+            </li>
+            <li ng-class="{'active': getCurrentStep() == 2 }">
+                <a data-toggle="tab" ng-click="goToStep(2)"><i class="fa fa-briefcase tab-icon"></i> <span>Find Influencers</span></a>
+            </li>
+            <li ng-class="{'active': getCurrentStep() == 3 }">
+                <a data-toggle="tab" ng-click="goToStep(3)"><i class="fa fa-paste tab-icon"></i> <span>Write Your Brief</span></a>
+            </li>
+            <li ng-class="{'active': getCurrentStep() == 4 }">
+                <a data-toggle="tab" ng-click="goToStep(4)"><i class="fa fa-credit-card tab-icon"></i> <span>Payment Confirmation</span></a>
+            </li>
+            <li ng-class="{'active': getCurrentStep() == 5 }">
+                <a data-toggle="tab" ng-click="goToStep(5)"><i class="fa fa-comments tab-icon"></i> <span>Finish</span></a>
+            </li>
+        </ul>
+    	<wizard on-finish="campaignRequested()" class="bg-white" hide-indicators="true">
+    		<wz-step title="Target Your Audience">
+    			<div class="row row-same-height">
+    				
+    			</div>
+    			<div class="padding-20 bg-white">
+            		<ul class="pager wizard">
+    					<li class="next">
+    						<button type="button" class="btn btn-primary btn-cons btn-animated from-left fa fa-briefcase pull-right" wz-next>
+    							<span>Next</span>
+    						</button>
+    					</li>
+    					<li class="previous disabled">
+    						<button type="button" class="btn btn-default btn-cons pull-right">
+    							<span>Previous</span>
+    						</button>
+    					</li>
+    				</ul>
+    			</div>
+    		</wz-step>
+    		<wz-step title="Find Influencers">
+    			<div class="row row-same-height">
+    			
+    			</div>
+    			<div class="padding-20 bg-white">
+    				<ul class="pager wizard">
+    					<li class="next">
+    						<button type="button" class="btn btn-primary btn-cons btn-animated from-left fa fa-paste pull-right" wz-next>
+    							<span>Next</span>
+    						</button>
+    					</li>
+    					<li class="previous disabled">
+    						<button type="button" class="btn btn-default btn-cons pull-right">
+    							<span>Previous</span>
+    						</button>
+    					</li>
+    				</ul>
+    			</div>
+    		</wz-step>
+    		<wz-step title="Write Your Brief">
+    			<div class="row row-same-height">
+    			
+    			</div>
+    			<div class="padding-20 bg-white">
+    				<ul class="pager wizard">
+    					<li class="next">
+    						<button type="button" class="btn btn-primary btn-cons btn-animated from-left fa fa-credit-card pull-right" wz-next>
+    							<span>Next</span>
+    						</button>
+    					</li>
+    					<li class="previous disabled">
+    						<button type="button" class="btn btn-default btn-cons pull-right">
+    							<span>Previous</span>
+    						</button>
+    					</li>
+    				</ul>
+    			</div>
+    		</wz-step>
+    		<wz-step title="Payment Confirmation">
+    			<div class="row row-same-height">
+    				
+    			</div>
+    			<div class="padding-20 bg-white">
+    				<ul class="pager wizard">
+    					<li class="next">
+    						<button type="button" class="btn btn-primary btn-cons btn-animated from-left fa fa-comments pull-right" wz-next>
+    							<span>Next</span>
+    						</button>
+    					</li>
+    					<li class="previous disabled">
+    						<button type="button" class="btn btn-default btn-cons pull-right">
+    							<span>Previous</span>
+    						</button>
+    					</li>
+    				</ul>
+    			</div>
+    		</wz-step>
+    		<wz-step title="Send For Approving">
+    			<div class="row row-same-height">
+    			
+    			</div>
+    			<div class="padding-20 bg-white">
+    				<ul class="pager wizard">
+    					<li class="next">
+    						<button type="button" class="btn btn-primary btn-cons btn-animated from-left fa fa-truck pull-right" wz-next>
+    							<span>Send For Approving</span>
+    						</button>
+    					</li>
+    					<li class="previous disabled">
+    						<button type="button" class="btn btn-default btn-cons pull-right">
+    							<span>Previous</span>
+    						</button>
+    					</li>
+    				</ul>
+    			</div>
+    		</wz-step>
+    	</wizard>
+    </div>
+</div>
