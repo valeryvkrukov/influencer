@@ -1,0 +1,159 @@
+<div class="social-wrapper" ng-controller="ProfileCtrl">
+	<div class="social " data-pages="social">
+		<div class="jumbotron" data-pages="parallax" data-social="cover">
+        	<div class="cover-photo">
+        		<img alt="Cover photo" src="{{ asset('img/cover.png') }}" />
+        	</div>
+        	<div class="container-fluid container-fixed-lg sm-p-l-20 sm-p-r-20">
+        		<div class="inner">
+        			<div class="pull-bottom bottom-left m-b-40">
+        				<h5 class="text-white no-margin">welcome to your Influence profile</h5>
+        				<h1 class="text-white no-margin"><span class="semi-bold">{{ '{{ user.firstName }}' }}</span> {{ '{{ user.lastName }}' }}</h1>
+        			</div>
+        		</div>
+        	</div>
+        </div>
+        
+        <div class="container-fluid container-fixed-lg sm-p-l-20 sm-p-r-20">
+        	<div class="card no-border bg-transparent full-width" data-social="item">
+        		<div class="container-fluid p-t-30 p-b-30">
+        			<div class="row">
+        				<div class="col-md-4">
+        					<div class="container-xs-height">
+        						<div class="row-xs-height">
+        							<div class="social-user-profile col-xs-height text-center col-top" flow-init flow-file-added="changeAvatar($file, $event, $flow)">
+        								<div class="thumbnail-wrapper d48 circular bordered b-white">
+        									<img ng-if="!$flow.files[0]" alt="Avatar" width="85" height="85" data-src-retina="{{ '{{ user.profileImage }}' }}" ng-src="{{ '{{ user.profileImage }}' }}">
+        									<img ng-if="$flow.files[0]" alt="Avatar" width="85" height="85" flow-img="$flow.files[0]">
+        								</div>
+        								<br>
+        								<span flow-btn><i class="fa fa-pencil text-info fs-16 m-t-10"></i></span>
+            						</div>
+            						<div class="col-xs-height p-l-20">
+            							<h3 class="no-margin">Linked accounts</h3>
+            							<p class="no-margin fs-14" ng-if="user.facebook">
+            								<i class="social-icon fa fa-facebook"></i> {{ '{{ user.facebook }}' }}
+            								<a href="#" data-toggle="modal" data-target="#alertFacebook"><i class="fa fa-times text-danger fs-14 m-t-10"></i></a>
+            							</p>
+            							<div class="modal fade slide-up disable-scroll" id="alertFacebook" tabindex="-1" role="dialog" aria-labelledby="modalFacebook" aria-hidden="false">
+            								<div class="modal-dialog">
+            									<div class="modal-content-wrapper">
+            										<div class="modal-content">
+            											<div class="modal-header clearfix text-left">
+            												<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="pg-close fs-14"></i></button>
+            											</div>
+            											<div class="modal-body">
+                                                        	<h5>Are you sure?</h5>	
+                                                        </div>
+                                                        <div class="modal-footer">
+                            								<button type="button" class="btn btn-primary" ng-click="unlinkSocial('facebook')" data-dismiss="modal">Yes, unlink Facebook account</button>
+                            								<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            							</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+            							<p class="no-margin fs-14" ng-if="user.google">
+            								<i class="social-icon fa fa-google-plus"></i> {{ '{{ user.google }}' }}</a>
+            								<a data-toggle="modal" data-target="#alertGoogle"><i class="fa fa-times text-danger fs-14 m-t-10"></i></a>
+            							</p>
+            							<div class="modal fade slide-up disable-scroll" id="alertGoogle" tabindex="-1" role="dialog" aria-labelledby="modalGoogle" aria-hidden="false">
+            								<div class="modal-dialog">
+            									<div class="modal-content-wrapper">
+            										<div class="modal-content">
+            											<div class="modal-header clearfix text-left">
+            												<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="pg-close fs-14"></i></button>
+            											</div>
+            											<div class="modal-body">
+                                                        	<h5>Are you sure?</h5>	
+                                                        </div>
+                                                        <div class="modal-footer">
+                            								<button type="button" class="btn btn-primary" ng-click="unlinkSocial('google')" data-dismiss="modal">Yes, unlink Google account</button>
+                            								<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            							</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+            							<p class="no-margin fs-14" ng-if="user.twitter">
+            								<i class="social-icon fa fa-twitter"></i> {{ '{{ user.twitter }}' }}</a>
+            								<a data-toggle="modal" data-target="#alertTwitter"><i class="fa fa-times text-danger fs-14 m-t-10"></i></a>
+            							</p>
+            							<div class="modal fade slide-up disable-scroll" id="modalTwitter" tabindex="-1" role="dialog" aria-labelledby="modalTwitter" aria-hidden="false">
+            								<div class="modal-dialog">
+            									<div class="modal-content-wrapper">
+            										<div class="modal-content">
+            											<div class="modal-header clearfix text-left">
+            												<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="pg-close fs-14"></i></button>
+            											</div>
+            											<div class="modal-body">
+                                                        	<h5>Are you sure?</h5>	
+                                                        </div>
+                                                        <div class="modal-footer">
+                            								<button type="button" class="btn btn-primary" ng-click="unlinkSocial('facebook')" data-dismiss="modal">Yes, unlink Twitter account</button>
+                            								<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            							</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+            							<p class="no-margin fs-14" ng-if="user.instagram">
+            								<i class="social-icon fa fa-instagram"></i> {{ '{{ user.instagram }}' }}
+            								<a data-toggle="modal" data-target="#alertInstagram"><i class="fa fa-times text-danger fs-14 m-t-10"></i></a>
+            							</p>
+            							<div class="modal fade slide-up disable-scroll" id="alertInstagram" tabindex="-1" role="dialog" aria-labelledby="alertInstagram" aria-hidden="false">
+            								<div class="modal-dialog">
+            									<div class="modal-content-wrapper">
+            										<div class="modal-content">
+            											<div class="modal-header clearfix text-left">
+            												<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="pg-close fs-14"></i></button>
+            											</div>
+            											<div class="modal-body">
+                                                        	<h5>Are you sure?</h5>	
+                                                        </div>
+                                                        <div class="modal-footer">
+                            								<button type="button" class="btn btn-primary" ng-click="unlinkSocial('facebook')" data-dismiss="modal">Yes, unlink Instagram account</button>
+                            								<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            							</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+            						</div>
+        						</div>
+        					</div>
+        				</div>
+            			<div class="col-md-4">
+            				<h3 class="no-margin">Brief / Bio <small><a href="#" data-toggle="modal" data-target="#modalFillIn"><i class="fa fa-pencil text-info fs-16 m-t-10"></i></a></small></h3>
+            				<p class="no-margin fs-16">{{ '{{ user.brief }}' }}</p>
+            				<div class="modal fade fill-in" id="modalFillIn" tabindex="-1" role="dialog" aria-labelledby="modalFillInLabel" aria-hidden="true">
+            					<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="pg-close"></i></button>
+            					<div class="modal-dialog">
+            						<div class="modal-content">
+            							<div class="modal-header">
+            								<h5 class="text-left p-b-5"><span class="semi-bold">Add/Change</span> brief info</h5>
+            							</div>
+            							<div class="modal-body">
+            								<div class="wysiwyg5-wrapper b-a b-grey">
+            									<textarea id="user-brief-editor" ng-model="user.brief" placeholder="Enter text ..." style="width:100%;min-height:150px;"></textarea>
+            								</div>
+            							</div>
+            							<div class="modal-footer">
+            								<button type="button" class="btn btn-primary" ng-click="updateProfileField('brief')" data-dismiss="modal">Save</button>
+            								<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            							</div>
+            						</div>
+            					</div>
+            				</div>
+            			</div>
+            			<div class="col-md-4" ng-if="user.role == 'influencer'">
+            			
+            			</div>
+            		</div>
+            	</div>
+            </div>
+		</div>
+
+	</div>
+</div>
+
