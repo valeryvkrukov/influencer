@@ -20,8 +20,10 @@ class BaseController extends Controller
 	{
 		$user = $this->getUser();
 		return [
+			'id' => $user->getId(),
 			'username' => $user->getUsername(),
 			'email' => $user->getEmail(),
+			'brief' => $user->getBrief(),
 			'profileImage' => $user->getProfileImage(),
 			'firstName' => $user->getFirstName(),
 			'lastName' => $user->getLastName(),
@@ -29,6 +31,21 @@ class BaseController extends Controller
 			'google' => $user->getGoogle(),
 			'instagram' => $user->getInstagram(),
 			'twitter' => $user->getTwitter(),
+			'role' => $this->getReadableRole($user),
 		];
+	}
+	
+	protected function getReadableRole($user)
+	{
+		$roles = $user->getRoles();
+		if (in_array('ROLE_ADMIN', $roles)) {
+			return 'admin';
+		}
+		if (in_array('ROLE_INFLUENCER', $roles)) {
+			return 'influencer';
+		}
+		if (in_array('ROLE_CLIENT', $roles)) {
+			return 'client';
+		}
 	}
 }

@@ -47,7 +47,8 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
                 'metrojs',
                 'sparkline',
                 'skycons',
-                'switchery'
+                'switchery',
+                'wysihtml5'
             ])
 		})
 		.state('app.home', {
@@ -62,6 +63,22 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 			url: '/me',
 			controller: 'HomeCtrl',
 			templateUrl: Routing.generate('inf_home'),
+			resolve: {
+				loginRequired: loginRequired
+			}
+		})
+		.state('app.profile', {
+			url: '/profile',
+			templateUrl: Routing.generate('inf_profile'),
+			controller: 'ProfileCtrl',
+			resolve: {
+				loginRequired: loginRequired
+			}
+		})
+		.state('app.campaign', {
+			url: '/campaign',
+			controller: 'CampaignCtrl',
+			templateUrl: Routing.generate('inf_campaign'),
 			resolve: {
 				loginRequired: loginRequired
 			}
@@ -88,49 +105,21 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 			url: '/logout',
 			template: null,
 			controller: 'LogoutCtrl'
-		})
-		.state('profile', {
-			url: '/profile',
-			templateUrl: Routing.generate('inf_profile'),
-			controller: 'ProfileCtrl',
-			resolve: {
-				loginRequired: loginRequired
-			}
 		});
 	$urlRouterProvider.otherwise('/access/login');
-	console.log(window.location.hash);
-	if (window.location.hash == '#!/access/signup') {
-		$authProvider.facebook({
-    		clientId: '1223551571026721',
-    		authorizationEndpoint: 'https://www.facebook.com/v2.8/dialog/oauth',
-    		url: Routing.generate('inf_facebook_link')
-    	});
-    	$authProvider.google({
-    		clientId: '758902806102-sh9om8tu0bbbbgvecsokav3uimkmaekj.apps.googleusercontent.com',
-    		url: Routing.generate('inf_google_link')
-    	});
-    	$authProvider.instagram({
-    		clientId: '0328e45f47f944ceb589dc0f1879d82b',
-    		url: Routing.generate('inf_instagram_link')
-    	});
-    	$authProvider.twitter({
-    		url: Routing.generate('inf_twitter_link')
-    	});
-	} else {
-		$authProvider.facebook({
-			clientId: '1223551571026721',
-			authorizationEndpoint: 'https://www.facebook.com/v2.8/dialog/oauth'
-		});
-		$authProvider.google({
-			clientId: '758902806102-sh9om8tu0bbbbgvecsokav3uimkmaekj.apps.googleusercontent.com'
-		});
-		$authProvider.instagram({
-			clientId: '0328e45f47f944ceb589dc0f1879d82b'
-		});
-		$authProvider.twitter({
-			url: '/auth/twitter'
-		});
-	}
+	$authProvider.facebook({
+		clientId: '1223551571026721',
+		authorizationEndpoint: 'https://www.facebook.com/v2.8/dialog/oauth'
+	});
+	$authProvider.google({
+		clientId: '758902806102-sh9om8tu0bbbbgvecsokav3uimkmaekj.apps.googleusercontent.com'
+	});
+	$authProvider.instagram({
+		clientId: '0328e45f47f944ceb589dc0f1879d82b'
+	});
+	$authProvider.twitter({
+		url: '/auth/twitter'
+	});
 });
 
 app.controller('AppCtrl', ['$scope', '$rootScope', '$state', '$stateParams', 'Account', function($scope, $rootScope, $state, $stateParams, Account) {

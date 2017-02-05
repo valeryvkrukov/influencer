@@ -145,14 +145,11 @@ angular.module('app')
             return $sce.trustAsHtml(value);
         };
         $scope.registrationFinished = function() {
-			/*registerService($scope.user, $scope.user.user_type).then(function(response) {
-				console.log(response);
-			});*/
         	Register.submitInfluencerData($scope.user).then(function(resp) {
-        		if (resp.status === 200) {
+        		if (resp.token) {
         			$location.path('/');
         		} else {
-        			alert(resp.data.error);
+        			alert(resp.error);
         		}
         	});
 		};
@@ -218,7 +215,7 @@ angular.module('app')
         	}
         };
         $scope.connectAccount = function(network) {
-        	$auth.link(network).then(function(resp) {
+        	$auth.link(network, {'link_account': 1}).then(function(resp) {
         		if ($scope.user.socials === undefined) {
     				$scope.user.socials = {};
     			}

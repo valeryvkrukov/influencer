@@ -40,6 +40,14 @@ class PageController extends Controller
 	 */
 	public function profileAction(Request $request)
 	{
-		return $this->render('InfluencerAppBundle:Page:signup.html.twig');
+		return $this->render('InfluencerAppBundle:Page:profile.html.twig');
+	}
+	
+	/**
+	 * @Route("/campaign", name="inf_campaign", options={"expose"=true})
+	 */
+	public function campaignAction(Request $request)
+	{
+		return $this->render('InfluencerAppBundle:Page:campaign.html.twig');
 	}
 }

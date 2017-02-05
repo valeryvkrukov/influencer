@@ -19,7 +19,7 @@ class User extends BaseUser
 	protected $id;
 	
 	/**
-	 * @ORM\Column(name="profile_image", type="string", nullable=true)
+	 * @ORM\Column(name="profile_image", type="text", nullable=true)
 	 */
 	protected $profileImage;
 	

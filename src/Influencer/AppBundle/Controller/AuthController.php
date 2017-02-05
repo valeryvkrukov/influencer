@@ -69,56 +69,63 @@ class AuthController extends BaseController
 			],
 		]);
 		$profile = json_decode($profileResponse->getBody(), true);
-		$em = $this->getDoctrine()->getManager();
-		if ($request->headers->has('Authorization')) {
-			$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
-				'facebook' => $profile['id'],
-				'email' => $profile['email'],
-				'username' => $profile['id'],
+		if (isset($input->link_account) && $input->link_account == 1) {
+			return new JsonResponse([
+				'profile' => $profile,
+				'token' => $accessToken['access_token'],
 			]);
-			if ($user) {
-				return new JsonResponse(['message' => 'There is already a Facebook account that belongs to you'], 409);
-			}
-			$token = explode(' ', $request->headers->get('Authorization'))[1];
-			$payload = (array) JWT::decode($token, 'auth-token-secret', array('HS256'));
-			$user = $em->getRepository('InfluencerAppBundle:User')->find($payload['sub']);
-			$user->setEnabled(1);
-			$user->setFacebook($profile['id']);
-			if (!$user->getProfileImage()) {
-				$user->setProfileImage($profile['picture']['data']['url']);
-			}
-			if (!$user->getEmail()) {
-				$user->setEmail($profile['email']);
-			}
-			$user->setFirstName($profile['first_name']);
-			$user->setLastName($profile['last_name']);
-			$em->persist($user);
-			$em->flush();
-			return new JsonResponse(['token' => $this->createToken($user)]);
 		} else {
-			$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
-				'facebook' => $profile['id'],
-				'email' => $profile['email'],
-				'username' => $profile['id'],
-			]);
-			if ($user) {
+			$em = $this->getDoctrine()->getManager();
+			if ($request->headers->has('Authorization')) {
+				$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
+					'facebook' => $profile['id'],
+					'email' => $profile['email'],
+					'username' => $profile['id'],
+				]);
+				if ($user) {
+					return new JsonResponse(['message' => 'There is already a Facebook account that belongs to you'], 409);
+				}
+				$token = explode(' ', $request->headers->get('Authorization'))[1];
+				$payload = (array) JWT::decode($token, 'auth-token-secret', array('HS256'));
+				$user = $em->getRepository('InfluencerAppBundle:User')->find($payload['sub']);
+				$user->setEnabled(1);
+				$user->setFacebook($profile['id']);
+				if (!$user->getProfileImage()) {
+					$user->setProfileImage($profile['picture']['data']['url']);
+				}
+				if (!$user->getEmail()) {
+					$user->setEmail($profile['email']);
+				}
+				$user->setFirstName($profile['first_name']);
+				$user->setLastName($profile['last_name']);
+				$em->persist($user);
+				$em->flush();
+				return new JsonResponse(['token' => $this->createToken($user)]);
+			} else {
+				$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
+					'facebook' => $profile['id'],
+					'email' => $profile['email'],
+					'username' => $profile['id'],
+				]);
+				if ($user) {
+					return new JsonResponse(['token' => $this->createToken($user)]);
+				}
+				$user = new User();
+				$user->setEnabled(1);
+				$user->setUsername($profile['id']);
+				$user->setEmail($profile['email']);
+				$user->setFacebook($profile['id']);
+				$user->setProfileImage($profile['picture']['data']['url']);
+				$user->setFirstName($profile['first_name']);
+				$user->setLastName($profile['last_name']);
+				if (!$user->getPassword()) {
+					$user->setPassword('none');
+				}
+				$user->addRole('ROLE_CLIENT');
+				$em->persist($user);
+				$em->flush();
 				return new JsonResponse(['token' => $this->createToken($user)]);
 			}
-			$user = new User();
-			$user->setEnabled(1);
-			$user->setUsername($profile['id']);
-			$user->setEmail($profile['email']);
-			$user->setFacebook($profile['id']);
-			$user->setProfileImage($profile['picture']['data']['url']);
-			$user->setFirstName($profile['first_name']);
-			$user->setLastName($profile['last_name']);
-			if (!$user->getPassword()) {
-				$user->setPassword('none');
-			}
-			$user->addRole('ROLE_CLIENT');
-			$em->persist($user);
-			$em->flush();
-			return new JsonResponse(['token' => $this->createToken($user)]);
 		}
 	}
 	
@@ -144,52 +151,59 @@ class AuthController extends BaseController
 			'headers' => array('Authorization' => 'Bearer ' . $accessToken['access_token'])
 		]);
 		$profile = json_decode($profileResponse->getBody(), true);
-		$em = $this->getDoctrine()->getManager();
-		if ($request->headers->has('Authorization')) {
-			$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
-				'google' => $profile['id'],
-				'email' => $profile['email'],
-				'username' => $profile['id'],
+		if (isset($input->link_account) && $input->link_account == 1) {
+			return new JsonResponse([
+				'profile' => $profile,
+				'token' => $accessToken['access_token'],
 			]);
-			if ($user) {
-				return new JsonResponse(['message' => 'There is already a Google account that belongs to you'], 409);
-			}
-			$token = explode(' ', $request->headers->get('Authorization'))[1];
-			$payload = (array) JWT::decode($token, 'auth-token-secret', array('HS256'));
-			$user = $em->getRepository('InfluencerAppBundle:User')->find($payload['sub']);
-			$user->setGoogle($profile['id']);
-			$user->setEnabled(1);
-			if (!$user->getEmail()) {
-				$user->setEmail($profile['email']);
-			}
-			$user->setFirstName($profile['given_name']);
-			$user->setLastName($profile['family_name']);
-			$em->persist($user);
-			$em->flush();
-			return new JsonResponse(['token' => $this->createToken($user)]);
 		} else {
-			$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
-				'google' => $profile['sub'],
-				'email' => $profile['email'],
-				'username' => $profile['sub'],
-			]);
-			if ($user) {
+			$em = $this->getDoctrine()->getManager();
+			if ($request->headers->has('Authorization')) {
+				$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
+					'google' => $profile['id'],
+					'email' => $profile['email'],
+					'username' => $profile['id'],
+				]);
+				if ($user) {
+					return new JsonResponse(['message' => 'There is already a Google account that belongs to you'], 409);
+				}
+				$token = explode(' ', $request->headers->get('Authorization'))[1];
+				$payload = (array) JWT::decode($token, 'auth-token-secret', array('HS256'));
+				$user = $em->getRepository('InfluencerAppBundle:User')->find($payload['sub']);
+				$user->setGoogle($profile['id']);
+				$user->setEnabled(1);
+				if (!$user->getEmail()) {
+					$user->setEmail($profile['email']);
+				}
+				$user->setFirstName($profile['given_name']);
+				$user->setLastName($profile['family_name']);
+				$em->persist($user);
+				$em->flush();
+				return new JsonResponse(['token' => $this->createToken($user)]);
+			} else {
+				$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
+					'google' => $profile['sub'],
+					'email' => $profile['email'],
+					'username' => $profile['sub'],
+				]);
+				if ($user) {
+					return new JsonResponse(['token' => $this->createToken($user)]);
+				}
+				$user = new User();
+				$user->setEnabled(1);
+				$user->setUsername($profile['sub']);
+				$user->setEmail($profile['email']);
+				$user->setGoogle($profile['sub']);
+				$user->setFirstName($profile['given_name']);
+				$user->setLastName($profile['family_name']);
+				if (!$user->getPassword()) {
+					$user->setPassword('none');
+				}
+				$user->addRole('ROLE_CLIENT');
+				$em->persist($user);
+				$em->flush();
 				return new JsonResponse(['token' => $this->createToken($user)]);
 			}
-			$user = new User();
-			$user->setEnabled(1);
-			$user->setUsername($profile['sub']);
-			$user->setEmail($profile['email']);
-			$user->setGoogle($profile['sub']);
-			$user->setFirstName($profile['given_name']);
-			$user->setLastName($profile['family_name']);
-			if (!$user->getPassword()) {
-				$user->setPassword('none');
-			}
-			$user->addRole('ROLE_CLIENT');
-			$em->persist($user);
-			$em->flush();
-			return new JsonResponse(['token' => $this->createToken($user)]);
 		}
 	}
 	
@@ -238,24 +252,54 @@ class AuthController extends BaseController
 			$client = new GuzzleHttp\Client(['handler' => $stack]);
 			$profileResponse = $client->request('GET', 'https://api.twitter.com/1.1/users/show.json?screen_name='.$accessToken['screen_name'], ['auth' => 'oauth']);
 			$profile = json_decode($profileResponse->getBody(), true);
-			$em = $this->getDoctrine()->getManager();
-			if ($request->headers->has('Authorization')) {
-				$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
-					'twitter' => $profile['id'],
-					'username' => $profile['id'],
+			if (isset($input->link_account) && $input->link_account == 1) {
+				return new JsonResponse([
+					'profile' => $profile,
+					'token' => $accessToken['oauth_token'],
 				]);
-				if ($user) {
-					return new JsonResponse(['message' => 'There is already a Twitter account that belongs to you'], 409);
-				}
-				$token = explode(' ', $request->header('Authorization'))[1];
-				$payload = (array) JWT::decode($token, 'auth-token-secret', array('HS256'));
-				$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
-					'twitter' => $payload['sub'],
-					'username' => $profile['id'],
-				]);
-				$user->setEnabled(1);
-				$user->setTwitter($profile['id']);
-				if (!$user->getFirstName()) {
+			} else {
+				$em = $this->getDoctrine()->getManager();
+				if ($request->headers->has('Authorization')) {
+					$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
+						'twitter' => $profile['id'],
+						'username' => $profile['id'],
+					]);
+					if ($user) {
+						return new JsonResponse(['message' => 'There is already a Twitter account that belongs to you'], 409);
+					}
+					$token = explode(' ', $request->header('Authorization'))[1];
+					$payload = (array) JWT::decode($token, 'auth-token-secret', array('HS256'));
+					$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
+						'twitter' => $payload['sub'],
+						'username' => $profile['id'],
+					]);
+					$user->setEnabled(1);
+					$user->setTwitter($profile['id']);
+					if (!$user->getFirstName()) {
+						$splittedName = explode(' ', $profile['name']);
+						$firstName = $splittedName[0];
+						$user->setFirstName($firstName);
+						$lastName = array_pop($splittedName);
+						if ($lastName != $firstName) {
+							$user->setLastName($lastName);
+						}
+					}
+					$em->persist($user);
+					$em->flush();
+					return new JsonResponse(['token' => $this->createToken($user)]);
+				} else {
+					$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
+						'twitter' => $profile['id'],
+						'username' => $profile['id'],
+					]);
+					if ($user) {
+						return new JsonResponse(['token' => $this->createToken($user)]);
+					}
+					$user = new User();
+					$user->setEnabled(1);
+					$user->setUsername($profile['id']);
+					$user->setEmail('none-@'.time());
+					$user->setTwitter($profile['id']);
 					$splittedName = explode(' ', $profile['name']);
 					$firstName = $splittedName[0];
 					$user->setFirstName($firstName);
@@ -263,37 +307,14 @@ class AuthController extends BaseController
 					if ($lastName != $firstName) {
 						$user->setLastName($lastName);
 					}
-				}
-				$em->persist($user);
-				$em->flush();
-				return new JsonResponse(['token' => $this->createToken($user)]);
-			} else {
-				$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
-					'twitter' => $profile['id'],
-					'username' => $profile['id'],
-				]);
-				if ($user) {
+					if (!$user->getPassword()) {
+						$user->setPassword('none');
+					}
+					$user->addRole('ROLE_CLIENT');
+					$em->persist($user);
+					$em->flush();
 					return new JsonResponse(['token' => $this->createToken($user)]);
 				}
-				$user = new User();
-				$user->setEnabled(1);
-				$user->setUsername($profile['id']);
-				$user->setEmail('none-@'.time());
-				$user->setTwitter($profile['id']);
-				$splittedName = explode(' ', $profile['name']);
-				$firstName = $splittedName[0];
-				$user->setFirstName($firstName);
-				$lastName = array_pop($splittedName);
-				if ($lastName != $firstName) {
-					$user->setLastName($lastName);
-				}
-				if (!$user->getPassword()) {
-					$user->setPassword('none');
-				}
-				$user->addRole('ROLE_CLIENT');
-				$em->persist($user);
-				$em->flush();
-				return new JsonResponse(['token' => $this->createToken($user)]);
 			}
 		}
 	}
@@ -314,20 +335,46 @@ class AuthController extends BaseController
 		];
 		$accessTokenResponse = $client->request('POST', 'https://api.instagram.com/oauth/access_token', ['form_params' => $params]);
 		$accessToken = json_decode($accessTokenResponse->getBody(), true);
-		
-		$em = $this->getDoctrine()->getManager();
-		if ($request->headers->has('Authorization')) {
-			$user = $em->getRepository('InfluencerAppBundle:User')->findBy(['instagram' => $accessToken['user']['id']]);
-			if ($user) {
-				return new JsonResponse(['message' => 'There is already a Instagram account that belongs to you'], 409);
-			}
-			$token = explode(' ', $request->header('Authorization'))[1];
-			$payload = (array) JWT::decode($token, 'auth-token-secret', array('HS256'));
-			$user = $em->getRepository('InfluencerAppBundle:User')->find($payload['sub']);
-			$user->setUsername($accessToken['user']['id']);
-			$user->setEnabled(1);
-			$user->setInstagram($accessToken['user']['id']);
-			if (!$user->getFirstName()) {
+		if (isset($input->link_account) && $input->link_account == 1) {
+			return new JsonResponse([
+				'profile' => $accessToken['user'],
+				'token' => $accessToken['access_token'],
+			]);
+		} else {
+			$em = $this->getDoctrine()->getManager();
+			if ($request->headers->has('Authorization')) {
+				$user = $em->getRepository('InfluencerAppBundle:User')->findBy(['instagram' => $accessToken['user']['id']]);
+				if ($user) {
+					return new JsonResponse(['message' => 'There is already a Instagram account that belongs to you'], 409);
+				}
+				$token = explode(' ', $request->header('Authorization'))[1];
+				$payload = (array) JWT::decode($token, 'auth-token-secret', array('HS256'));
+				$user = $em->getRepository('InfluencerAppBundle:User')->find($payload['sub']);
+				$user->setUsername($accessToken['user']['id']);
+				$user->setEnabled(1);
+				$user->setInstagram($accessToken['user']['id']);
+				if (!$user->getFirstName()) {
+					$splittedName = explode(' ', $accessToken['user']['full_name']);
+					$firstName = $splittedName[0];
+					$user->setFirstName($firstName);
+					$lastName = array_pop($splittedName);
+					if ($lastName != $firstName) {
+						$user->setLastName($lastName);
+					}
+				}
+				$em->persist($user);
+				$em->flush();
+				return new JsonResponse(['token' => $this->createToken($user)]);
+			} else {
+				$user = $em->getRepository('InfluencerAppBundle:User')->findBy(['instagram' => $accessToken['user']['id']]);
+				if ($user) {
+					return new JsonResponse(['token' => $this->createToken($user)]);
+				}
+				$user = new User();
+				$user->setEnabled(1);
+				$user->setUsername($accessToken['user']['id']);
+				$user->setEmail('none-@'.time());
+				$user->setInstagram($accessToken['user']['id']);
 				$splittedName = explode(' ', $accessToken['user']['full_name']);
 				$firstName = $splittedName[0];
 				$user->setFirstName($firstName);
@@ -335,34 +382,14 @@ class AuthController extends BaseController
 				if ($lastName != $firstName) {
 					$user->setLastName($lastName);
 				}
-			}
-			$em->persist($user);
-			$em->flush();
-			return new JsonResponse(['token' => $this->createToken($user)]);
-		} else {
-			$user = $em->getRepository('InfluencerAppBundle:User')->findBy(['instagram' => $accessToken['user']['id']]);
-			if ($user) {
+				if (!$user->getPassword()) {
+					$user->setPassword('none');
+				}
+				$user->addRole('ROLE_CLIENT');
+				$em->persist($user);
+				$em->flush();
 				return new JsonResponse(['token' => $this->createToken($user)]);
 			}
-			$user = new User();
-			$user->setEnabled(1);
-			$user->setUsername($accessToken['user']['id']);
-			$user->setEmail('none-@'.time());
-			$user->setInstagram($accessToken['user']['id']);
-			$splittedName = explode(' ', $accessToken['user']['full_name']);
-			$firstName = $splittedName[0];
-			$user->setFirstName($firstName);
-			$lastName = array_pop($splittedName);
-			if ($lastName != $firstName) {
-				$user->setLastName($lastName);
-			}
-			if (!$user->getPassword()) {
-				$user->setPassword('none');
-			}
-			$user->addRole('ROLE_CLIENT');
-			$em->persist($user);
-			$em->flush();
-			return new JsonResponse(['token' => $this->createToken($user)]);
 		}
 	}
 }
