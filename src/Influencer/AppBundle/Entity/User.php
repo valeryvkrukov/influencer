@@ -39,7 +39,7 @@ class User extends BaseUser
 	protected $contactNumber;
 	
 	/**
-	 * @ORM\Column(name="brief", type="string", nullable=true)
+	 * @ORM\Column(name="brief", type="text", nullable=true)
 	 */
 	protected $brief;
 	

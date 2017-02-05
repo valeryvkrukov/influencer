@@ -1,7 +1,6 @@
 <?php
 namespace Influencer\AppBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -9,12 +8,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use GuzzleHttp;
 use GuzzleHttp\Subscriber\Oauth\Oauth1;
 
+use Influencer\AppBundle\Controller\BaseController;
 use Influencer\AppBundle\Entity\User;
 
 /**
  * @Route("/register")
  */
-class RegisterController extends Controller
+class RegisterController extends BaseController
 {
 	/**
 	 * @Route("/save", name="inf_registration_save", options={"expose"=true})
@@ -26,10 +26,13 @@ class RegisterController extends Controller
 			$em = $this->getDoctrine()->getManager();
 			if ($em->getRepository('InfluencerAppBundle:User')->checkForUniqueUser($input->username, $input->email)) {
 				$user = $em->getRepository('InfluencerAppBundle:User')->createInfluencerUser($input);
-				//var_dump($user->getId());die();
+				return new JsonResponse(['token' => $this->createToken($user)]);
+			} else {
+				return new JsonResponse(['error' => 'User with given username or/and password already registered'], 409);
 			}
+		} else {
+			return new JsonResponse(['error' => 'Username or/and password is not set'], 403);
 		}
-		var_dump(json_decode(json_encode($input->socials), true));die();
 	}
 	
 	/**

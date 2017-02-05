@@ -149,7 +149,11 @@ angular.module('app')
 				console.log(response);
 			});*/
         	Register.submitInfluencerData($scope.user).then(function(resp) {
-        		console.log(resp);
+        		if (resp.status === 200) {
+        			$location.path('/');
+        		} else {
+        			alert(resp.data.error);
+        		}
         	});
 		};
 		$scope.goToStep = function(step){

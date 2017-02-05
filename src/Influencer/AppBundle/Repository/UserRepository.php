@@ -97,7 +97,7 @@ class UserRepository extends EntityRepository
 					foreach ($socials as $network => $item) {
 						$setter = 'set'.ucfirst($network);
 						$user->$setter($item['id']);
-						$em->getRepository('InfluencerAppBundle:Feed')->loadLatestForUser($network, $user, $item['id'], $item['token']);
+						//$em->getRepository('InfluencerAppBundle:Feed')->loadLatestForUser($network, $user, $item['id'], $item['token']);
 					}
 					$em->persist($user);
 				}

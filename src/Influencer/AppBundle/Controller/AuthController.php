@@ -31,14 +31,18 @@ class AuthController extends BaseController
 	{
 		$input = json_decode($request->getContent());
 		$em = $this->getDoctrine()->getManager();
-		$user = $em->getRepository('InfluencerAppBundle:User')->findBy([
-			'email' => $input->email,
-			'password' => password_hash($input->password, PASSWORD_BCRYPT, ['cost' => 13])
-		]);
-		if (!$user) {
+		$user = $em->getRepository('InfluencerAppBundle:User')->findByUsername($input->email);
+		$factory = $this->get('security.encoder_factory');
+		$encoder = $factory->getEncoder($user[0]);
+		
+		if (!isset($user[0])) {
 			return new JsonResponse(['message' => 'Wrong email and/or password'], 401);
 		} else {
-			return new JsonResponse(['token' => $this->createToken($user)]);
+			if ($encoder->isPasswordValid($user[0]->getPassword(), $input->password, $user[0]->getSalt())) {
+				return new JsonResponse(['token' => $this->createToken($user[0])]);
+			} else {
+				return new JsonResponse(['message' => 'Wrong email and/or password'], 401);
+			}
 		}
 	}
 	
