@@ -49,19 +49,23 @@ class UtilController extends Controller
     	$types = [
     		[
     			'name' => 'Event',
-    			'tag' => 'event'
+    			'tag' => 'event',
+    			'icon' => 'pg-calender',
     		],
     		[
     			'name' => 'Video',
-    			'tag' => 'video'
+    			'tag' => 'video',
+    			'icon' => 'pg-movie',
     		],
     		[
     			'name' => 'Photoshoot',
-    			'tag' => 'photo'
+    			'tag' => 'photo',
+    			'icon' => 'pg-camera',
     		],
     		[
     			'name' => 'Social media',
-    			'tag' => 'social'
+    			'tag' => 'social',
+    			'icon' => 'pg-social',
     		]
     	];
     	return new JsonResponse([
@@ -112,7 +116,7 @@ class UtilController extends Controller
     	$response = ['status' => 'fail'];
     	if ($username) {
     		$em = $this->getDoctrine()->getManager();
-    		$user = $em->createQuery('SELECT u FROM StakeholdersApiBundle:User u WHERE u.username = :username')
+    		$user = $em->createQuery('SELECT u FROM InfluencerAppBundle:User u WHERE u.username = :username')
     			->setParameter('username', $username)
     			->getOneOrNullResult();
     		if ($user === null) {
@@ -131,7 +135,7 @@ class UtilController extends Controller
     	$response = ['status' => 'fail'];
     	if ($email) {
     		$em = $this->getDoctrine()->getManager();
-    		$user = $em->createQuery('SELECT u FROM StakeholdersApiBundle:User u WHERE u.email = :email')
+    		$user = $em->createQuery('SELECT u FROM InfluencerAppBundle:User u WHERE u.email = :email')
     			->setParameter('email', $email)
     			->getOneOrNullResult();
     		if ($user === null) {
@@ -139,6 +143,37 @@ class UtilController extends Controller
     		}
     	}
     	return new JsonResponse($response);
+    }
+    
+    /**
+     * @Route("/load-influencers", name="inf_load_influencers", options={"expose"=true})
+     */
+    public function loadInfluencersAction(Request $request)
+    {
+    	$em = $this->getDoctrine()->getManager();
+    	$data = $em->createQuery('SELECT u FROM InfluencerAppBundle:User u')// WHERE u.roles LIKE :role')
+    		//->setParameter('role', '%ROLE_INFLUENCER%')
+    		->getResult();
+    	$influencers = [];
+    	if ($data) {
+    		foreach ($data as $influencer) {
+    			$influencers[] = [
+    				'id' => $influencer->getId(),
+    				'firstName' => $influencer->getFirstName(),
+    				'lastName' => $influencer->getLastName(),
+    				'email' => $influencer->getEmail(),
+    				'profileImage' => $influencer->getProfileImage(),
+    				'profileCover' => $influencer->getProfileCover(),
+    				'facebook' => $influencer->getFacebook(),
+    				'google' => $influencer->getGoogle(),
+    				'twitter' => $influencer->getTwitter(),
+    				'instagram' => $influencer->getInstagram(),
+    				'brief' => substr($influencer->getBrief(), 0, 150).(strlen($influencer->getBrief()) > 150?'...':''),
+    				'lastLogin' => $influencer->getLastLogin()->format('d M @ h:ma'),
+    			];
+    		}
+    	}
+    	return new JsonResponse($influencers);
     }
 
 }

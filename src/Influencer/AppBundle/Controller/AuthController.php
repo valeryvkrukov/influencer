@@ -52,15 +52,18 @@ class AuthController extends BaseController
 	public function facebookAction(Request $request)
 	{
 		$input = json_decode($request->getContent());
+		$accessToken = $this->get('app.social_connector')->getFacebookToken($input);
+		
 		$client = new GuzzleHttp\Client();
-		$params = [
+		/*$params = [
 			'code' => $input->code,
 			'client_id' => $input->clientId,
 			'redirect_uri' => $input->redirectUri,
 			'client_secret' => $this->getParameter('facebook_secret')
 		];
 		$accessTokenResponse = $client->request('GET', 'https://graph.facebook.com/v2.8/oauth/access_token', ['query' => $params]);
-		$accessToken = json_decode($accessTokenResponse->getBody(), true);
+		$accessToken = json_decode($accessTokenResponse->getBody(), true);*/
+		
 		$fields = 'id,email,first_name,last_name,link,name,picture';
 		$profileResponse = $client->request('GET', 'https://graph.facebook.com/v2.8/me', [
 			'query' => [
@@ -135,7 +138,9 @@ class AuthController extends BaseController
 	public function googleAction(Request $request)
 	{
 		$input = json_decode($request->getContent());
-		$client = new GuzzleHttp\Client();
+		$accessToken = $this->get('app.social_connector')->getGoogleToken($input);
+		
+		/*$client = new GuzzleHttp\Client();
 		$params = [
 			'code' => $input->code,
 			'client_id' => $input->clientId,
@@ -146,7 +151,8 @@ class AuthController extends BaseController
 		$accessTokenResponse = $client->request('POST', 'https://accounts.google.com/o/oauth2/token', [
 			'form_params' => $params
 		]);
-		$accessToken = json_decode($accessTokenResponse->getBody(), true);
+		$accessToken = json_decode($accessTokenResponse->getBody(), true);*/
+		
 		$profileResponse = $client->request('GET', 'https://www.googleapis.com/plus/v1/people/me/openIdConnect', [
 			'headers' => array('Authorization' => 'Bearer ' . $accessToken['access_token'])
 		]);
@@ -213,9 +219,11 @@ class AuthController extends BaseController
 	public function twitterAction(Request $request)
 	{
 		$input = json_decode($request->getContent());
+		
 		$stack = GuzzleHttp\HandlerStack::create();
 		if (!isset($input->oauth_token) || !isset($input->oauth_verifier)) {
-			$stack = GuzzleHttp\HandlerStack::create();
+			$oauthToken = $this->get('app.social_connector')->getTwitterToken1($input);
+			/*$stack = GuzzleHttp\HandlerStack::create();
 			$requestTokenOauth = new Oauth1([
 				'consumer_key' => $this->getParameter('twitter_consumer_key'),
 				'consumer_secret' => $this->getParameter('twitter_consumer_secret'),
@@ -227,10 +235,10 @@ class AuthController extends BaseController
 			$client = new GuzzleHttp\Client(['handler' => $stack]);
 			$requestTokenResponse = $client->request('POST', 'https://api.twitter.com/oauth/request_token', ['auth' => 'oauth']);
 			$oauthToken = array();
-			parse_str($requestTokenResponse->getBody(), $oauthToken);
+			parse_str($requestTokenResponse->getBody(), $oauthToken);*/
 			return new JsonResponse($oauthToken);
 		} else {
-			$accessTokenOauth = new Oauth1([
+			/*$accessTokenOauth = new Oauth1([
 				'consumer_key' => $this->getParameter('twitter_consumer_key'),
 				'consumer_secret' => $this->getParameter('twitter_consumer_secret'),
 				'token' => $input->oauth_token,
@@ -241,7 +249,8 @@ class AuthController extends BaseController
 			$client = new GuzzleHttp\Client(['handler' => $stack]);
 			$accessTokenResponse = $client->request('POST', 'https://api.twitter.com/oauth/access_token', ['auth' => 'oauth']);
 			$accessToken = array();
-			parse_str($accessTokenResponse->getBody(), $accessToken);
+			parse_str($accessTokenResponse->getBody(), $accessToken);*/
+			$accessToken = $this->get('app.social_connector')->getTwitterToken2($input);
 			$profileOauth = new Oauth1([
 				'consumer_key' => $this->getParameter('twitter_consumer_key'),
 				'consumer_secret' => $this->getParameter('twitter_consumer_secret'),
@@ -325,7 +334,7 @@ class AuthController extends BaseController
 	public function instagramAction(Request $request)
 	{
 		$input = json_decode($request->getContent());
-		$client = new GuzzleHttp\Client();
+		/*$client = new GuzzleHttp\Client();
 		$params = [
 			'code' => $input->code,
 			'client_id' => $input->clientId,
@@ -334,7 +343,10 @@ class AuthController extends BaseController
 			'grant_type' => 'authorization_code',
 		];
 		$accessTokenResponse = $client->request('POST', 'https://api.instagram.com/oauth/access_token', ['form_params' => $params]);
-		$accessToken = json_decode($accessTokenResponse->getBody(), true);
+		$accessToken = json_decode($accessTokenResponse->getBody(), true);*/
+		
+		$accessToken = $this->get('app.social_connector')->getInstagramToken($input);
+		
 		if (isset($input->link_account) && $input->link_account == 1) {
 			return new JsonResponse([
 				'profile' => $accessToken['user'],

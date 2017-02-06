@@ -1,14 +1,17 @@
 <div class="social-wrapper" ng-controller="ProfileCtrl">
 	<div class="social " data-pages="social">
-		<div class="jumbotron" data-pages="parallax" data-social="cover">
+		<div class="jumbotron" data-pages="parallax" data-social="cover" flow-init flow-file-added="changeCover($file, $event, $flow)">
         	<div class="cover-photo">
-        		<img alt="Cover photo" src="{{ asset('img/cover.png') }}" />
+        		<img ng-if="!$flow.files[0] && !user.profileCover" alt="Cover photo" src="{{ asset('img/cover.png') }}">
+        		<img ng-if="user.profileCover" alt="Cover photo" src="{{ '{{ user.profileCover }}' }}" style="display:block;">
+        		<img ng-if="$flow.files[0]" alt="Cover photo" flow-img="$flow.files[0]">
         	</div>
         	<div class="container-fluid container-fixed-lg sm-p-l-20 sm-p-r-20">
         		<div class="inner">
         			<div class="pull-bottom bottom-left m-b-40">
         				<h5 class="text-white no-margin">welcome to your Influence profile</h5>
         				<h1 class="text-white no-margin"><span class="semi-bold">{{ '{{ user.firstName }}' }}</span> {{ '{{ user.lastName }}' }}</h1>
+        				<span flow-btn class="pull-right text-white"><i class="fa fa-pencil fs-16 m-t-10"></i> change cover</span>
         			</div>
         		</div>
         	</div>
@@ -33,6 +36,7 @@
             							<h3 class="no-margin">Linked accounts</h3>
             							<p class="no-margin fs-14" ng-if="user.facebook">
             								<i class="social-icon fa fa-facebook"></i> {{ '{{ user.facebook }}' }}
+            								<a ng-click="refreshFeed('facebook')"><i class="fa fa-refresh text-success"></i></a>
             								<a href="#" data-toggle="modal" data-target="#alertFacebook"><i class="fa fa-times text-danger fs-14 m-t-10"></i></a>
             							</p>
             							<div class="modal fade slide-up disable-scroll" id="alertFacebook" tabindex="-1" role="dialog" aria-labelledby="modalFacebook" aria-hidden="false">
@@ -55,6 +59,7 @@
                                         </div>
             							<p class="no-margin fs-14" ng-if="user.google">
             								<i class="social-icon fa fa-google-plus"></i> {{ '{{ user.google }}' }}</a>
+            								<a ng-click="refreshFeed('google')"><i class="fa fa-refresh text-success"></i></a>
             								<a data-toggle="modal" data-target="#alertGoogle"><i class="fa fa-times text-danger fs-14 m-t-10"></i></a>
             							</p>
             							<div class="modal fade slide-up disable-scroll" id="alertGoogle" tabindex="-1" role="dialog" aria-labelledby="modalGoogle" aria-hidden="false">
@@ -77,6 +82,7 @@
                                         </div>
             							<p class="no-margin fs-14" ng-if="user.twitter">
             								<i class="social-icon fa fa-twitter"></i> {{ '{{ user.twitter }}' }}</a>
+            								<a ng-click="refreshFeed('twitter')"><i class="fa fa-refresh text-success"></i></a>
             								<a data-toggle="modal" data-target="#alertTwitter"><i class="fa fa-times text-danger fs-14 m-t-10"></i></a>
             							</p>
             							<div class="modal fade slide-up disable-scroll" id="modalTwitter" tabindex="-1" role="dialog" aria-labelledby="modalTwitter" aria-hidden="false">
@@ -99,6 +105,7 @@
                                         </div>
             							<p class="no-margin fs-14" ng-if="user.instagram">
             								<i class="social-icon fa fa-instagram"></i> {{ '{{ user.instagram }}' }}
+            								<a ng-click="refreshFeed('instagram')"><i class="fa fa-refresh text-success"></i></a>
             								<a data-toggle="modal" data-target="#alertInstagram"><i class="fa fa-times text-danger fs-14 m-t-10"></i></a>
             							</p>
             							<div class="modal fade slide-up disable-scroll" id="alertInstagram" tabindex="-1" role="dialog" aria-labelledby="alertInstagram" aria-hidden="false">

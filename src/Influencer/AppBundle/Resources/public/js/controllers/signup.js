@@ -1,33 +1,5 @@
 'use strict';
 
-angular.module('ui.select').config(function($provide) {
-    $provide.decorator('uiSelectChoicesDirective', function($delegate) {
-        var directive = $delegate[0];
-
-        var templateUrl = directive.templateUrl;
-
-        directive.templateUrl = function(tElement) {
-            tElement.addClass('ui-select-choices');
-            return templateUrl(tElement);
-        };
-
-        return $delegate;
-    });
-
-    $provide.decorator('uiSelectMatchDirective', function($delegate) {
-        var directive = $delegate[0];
-
-        var templateUrl = directive.templateUrl;
-
-        directive.templateUrl = function(tElement) {
-            tElement.addClass('ui-select-match')
-            return templateUrl(tElement);
-        };
-
-        return $delegate;
-    });
-});
-
 angular.module('app')
 	.factory('CheckForUnique', ['$q', '$http', function($q, $http) {
 		return {
@@ -48,43 +20,6 @@ angular.module('app')
         				'email': email
         			}
         		});
-			}
-		};
-	}])
-	.factory('GetPredefinedVars', ['$q', '$http', function($q, $http) {
-		return {
-			getIntl: function() {
-				var deferred = $q.defer();
-				$http.get(Routing.generate('inf_get_intl_vars')).then(function(resp) {
-					//if (resp.status === 200) {
-						deferred.resolve(resp.data);
-					/*} else {
-						deferred.reject();
-					}*/
-				});
-				return deferred.promise;
-			},
-			getTypes: function() {
-				var deferred = $q.defer();
-				$http.get(Routing.generate('inf_get_post_types')).then(function(resp) {
-					//if (resp.status === 200) {
-						deferred.resolve(resp.data);
-					/*} else {
-						deferred.reject();
-					}*/
-				});
-				return deferred.promise;
-			},
-			getSocialNetworks: function() {
-				var deferred = $q.defer();
-				$http.get(Routing.generate('inf_get_social_networks')).then(function(resp) {
-					//if (resp.status === 200) {
-						deferred.resolve(resp.data);
-					/*} else {
-						deferred.reject();
-					}*/
-				});
-				return deferred.promise;
 			}
 		};
 	}])
@@ -131,7 +66,7 @@ angular.module('app')
 				if (resp.data.networks) {
 					$scope.networks = resp.data.networks;
 				}
-			})
+			});
 		};
 		$scope.sizeOf = function(obj) {
 		    return Object.keys(obj).length;

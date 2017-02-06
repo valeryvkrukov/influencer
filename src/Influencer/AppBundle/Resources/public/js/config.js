@@ -40,7 +40,9 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 			abstract: true,
 			url: '/app',
 			templateUrl: Routing.generate('inf_app'),
-			resolve: lazyLoad(['header', 'search', 'sidebar', 'campaign'], [
+			resolve: {
+				loginRequired: loginRequired
+			}/*lazyLoad(['header', 'search', 'sidebar'], [
             	'nvd3',
                 'mapplic',
                 'rickshaw',
@@ -50,39 +52,31 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
                 'switchery',
                 'wysihtml5',
                 'wizard'
-            ])
+            ])*/
 		})
 		.state('app.home', {
 			url: '/home',
 			controller: 'HomeCtrl',
 			templateUrl: Routing.generate('inf_home'),
-			resolve: {
-				loginRequired: loginRequired
-			}
+			resolve: lazyLoad(['home'], [])
 		})
 		.state('app.me', {
 			url: '/me',
 			controller: 'HomeCtrl',
 			templateUrl: Routing.generate('inf_home'),
-			resolve: {
-				loginRequired: loginRequired
-			}
+			resolve: lazyLoad(['home'], [])
 		})
 		.state('app.profile', {
 			url: '/profile',
 			templateUrl: Routing.generate('inf_profile'),
 			controller: 'ProfileCtrl',
-			resolve: {
-				loginRequired: loginRequired
-			}
+			resolve: lazyLoad(['profile'], ['wysihtml5'])
 		})
 		.state('app.campaign', {
 			url: '/campaign',
 			controller: 'CampaignCtrl',
 			templateUrl: Routing.generate('inf_campaign'),
-			resolve: {
-				loginRequired: loginRequired
-			}
+			resolve: lazyLoad(['campaign'], ['select', 'wizard'])
 		})
 		.state('access', {
 			url: '/access',
@@ -116,12 +110,67 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 		clientId: '758902806102-sh9om8tu0bbbbgvecsokav3uimkmaekj.apps.googleusercontent.com'
 	});
 	$authProvider.instagram({
-		clientId: '0328e45f47f944ceb589dc0f1879d82b'
+		clientId: '0328e45f47f944ceb589dc0f1879d82b',
+		scope: ['basic', 'public_content']
 	});
 	$authProvider.twitter({
 		url: '/auth/twitter'
 	});
 });
+
+angular.module('ui.select').config(function($provide) {
+    $provide.decorator('uiSelectChoicesDirective', function($delegate) {
+        var directive = $delegate[0];
+
+        var templateUrl = directive.templateUrl;
+
+        directive.templateUrl = function(tElement) {
+            tElement.addClass('ui-select-choices');
+            return templateUrl(tElement);
+        };
+
+        return $delegate;
+    });
+
+    $provide.decorator('uiSelectMatchDirective', function($delegate) {
+        var directive = $delegate[0];
+
+        var templateUrl = directive.templateUrl;
+
+        directive.templateUrl = function(tElement) {
+            tElement.addClass('ui-select-match')
+            return templateUrl(tElement);
+        };
+
+        return $delegate;
+    });
+});
+
+app.factory('GetPredefinedVars', ['$q', '$http', function($q, $http) {
+	return {
+		getIntl: function() {
+			var deferred = $q.defer();
+			$http.get(Routing.generate('inf_get_intl_vars')).then(function(resp) {
+				deferred.resolve(resp.data);
+			});
+			return deferred.promise;
+		},
+		getTypes: function() {
+			var deferred = $q.defer();
+			$http.get(Routing.generate('inf_get_post_types')).then(function(resp) {
+				deferred.resolve(resp.data);
+			});
+			return deferred.promise;
+		},
+		getSocialNetworks: function() {
+			var deferred = $q.defer();
+			$http.get(Routing.generate('inf_get_social_networks')).then(function(resp) {
+				deferred.resolve(resp.data);
+			});
+			return deferred.promise;
+		}
+	};
+}]);
 
 app.controller('AppCtrl', ['$scope', '$rootScope', '$state', '$stateParams', 'Account', function($scope, $rootScope, $state, $stateParams, Account) {
 	$scope.app = {

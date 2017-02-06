@@ -24,6 +24,11 @@ class User extends BaseUser
 	protected $profileImage;
 	
 	/**
+	 * @ORM\Column(name="profile_cover", type="text", nullable=true)
+	 */
+	protected $profileCover;
+	
+	/**
 	 * @ORM\Column(name="first_name", type="string", nullable=true)
 	 */
 	protected $firstName;
@@ -172,7 +177,24 @@ class User extends BaseUser
 		$this->profileImage = $profileImage;
 		return $this;
 	}
-			
+	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getProfileCover() {
+		return $this->profileCover;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $profileCover        	
+	 */
+	public function setProfileCover($profileCover) {
+		$this->profileCover = $profileCover;
+		return $this;
+	}
+				
 	/**
 	 *
 	 * @return the unknown_type

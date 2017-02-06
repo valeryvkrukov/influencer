@@ -25,6 +25,7 @@ class BaseController extends Controller
 			'email' => $user->getEmail(),
 			'brief' => $user->getBrief(),
 			'profileImage' => $user->getProfileImage(),
+			'profileCover' => $user->getProfileCover(),
 			'firstName' => $user->getFirstName(),
 			'lastName' => $user->getLastName(),
 			'facebook' => $user->getFacebook(),
