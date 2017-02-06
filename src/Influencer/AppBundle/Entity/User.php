@@ -106,15 +106,7 @@ class User extends BaseUser
 	protected $prices;
 	
 	/**
-	 * @ORM\ManyToMany(targetEntity="Feed")
-	 * @ORM\JoinTable(name="users_feeds",
-	 *   joinColumns={
-	 *     @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-	 *   },
-	 *   inverseJoinColumns={
-	 *     @ORM\JoinColumn(name="feed_id", referencedColumnName="id")
-	 *   }
-	 * )
+	 * @ORM\OneToMany(targetEntity="Feed", mappedBy="user")
 	 */
 	protected $feeds;
 	
@@ -151,6 +143,7 @@ class User extends BaseUser
 		$this->countries = new \Doctrine\Common\Collections\ArrayCollection();
 		$this->audience = new \Doctrine\Common\Collections\ArrayCollection();
 		$this->prices = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->feeds = new \Doctrine\Common\Collections\ArrayCollection();
 	}
 	
 	/**

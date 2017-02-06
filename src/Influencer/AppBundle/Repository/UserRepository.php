@@ -108,4 +108,5 @@ class UserRepository extends EntityRepository
 			var_dump($e->getMessage());
 		}
 	}
+	
 }

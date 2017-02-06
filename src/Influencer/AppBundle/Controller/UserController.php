@@ -18,8 +18,21 @@ class UserController extends BaseController
 	public function meAction(Request $request)
 	{
 		$user = $this->getUserData();
-		
 		return new JsonResponse($user);
+	}
+	
+	/**
+	 * @Route("/feeds", name="inf_feeds", options={"expose"=true})
+	 */
+	public function feedsAction(Request $request)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$data = $em->getRepository('InfluencerAppBundle:Feed')->loadSavedFeedsFor($this->getUser(), null, 'array');
+		$feeds = [];
+		foreach ($data as $item) {
+			$feeds[$item['network']][] = $item;
+		}
+		return new JsonResponse($feeds); 
 	}
 	
 	/**
@@ -49,6 +62,8 @@ class UserController extends BaseController
 		if (isset($input->token)) {
 			$getter = 'load'.ucfirst($network).'Feed';
 			$data = $this->get('app.feed_loader')->$getter($input->token, $id);
+			$em = $this->getDoctrine()->getManager();
+			$em->getRepository('InfluencerAppBundle:Feed')->loadLatestForUser($data, $network, $id);
 			return new JsonResponse($data);
 		}
 	}

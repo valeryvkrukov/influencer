@@ -3,12 +3,25 @@
 angular.module('app')
 	.factory('FeedLoader', ['$q', '$http', function($q, $http) {
 		return {
-			loadFor: function(network, token, payload, id) {
+			loadFor: function(network, token, id) {
 				var deferred = $q.defer();
 				$http({
 					url: Routing.generate('inf_load_feeds', {'network': network, 'id': id}),
 					method: 'POST',
-					data: {token: token, payload: payload}
+					data: {token: token}
+				}).then(function(resp) {
+					console.log(resp);
+					deferred.resolve(resp.data);
+				}, function() {
+					deferred.reject();
+				});
+				return deferred.promise;
+			},
+			loadAllSaved: function() {
+				var deferred = $q.defer();
+				$http({
+					url: Routing.generate('inf_feeds'),
+					method: 'GET'
 				}).then(function(resp) {
 					console.log(resp);
 					deferred.resolve(resp.data);
@@ -67,19 +80,28 @@ angular.module('app')
 				data: {user: $scope.user.id, field: field, value: $scope.user[field]}
 			});
 		};
+		$scope.loadFeeds = function() {
+			FeedLoader.loadAllSaved().then(function(resp) {
+				console.log(resp);
+				$scope.feeds = resp;
+			});
+		};
 		$scope.refreshFeed = function(network) {
 			var token = $auth.getToken();
-			var id = $scope.user.id;
-			var loader = function(network, id) {
-				FeedLoader.loadFor(network, $auth.getToken(), id).then(function(resp) {
+			//var id = $scope.user.id;
+			console.log('1: ' + $scope.user.id);
+			var loader = function(network) {
+				FeedLoader.loadFor(network, $auth.getToken(), $scope.user.id).then(function(resp) {
 					$scope.feeds[network] = resp;
-					//$auth.setToken(token);
+					$auth.setToken(token);
+					console.log('3: ' + $scope.user.id);
 				});
 			};
 			//if (!$auth.isAuthenticated()) {
 				$auth.link(network, {'link_account': 1}).then(function(resp) {
-					console.log(resp)
-					loader(network, id);
+					//$auth.setToken(token);
+					console.log('2: ' + $scope.user.id);
+					loader(network);
 				});
 			/*} else {
 				loader(network);

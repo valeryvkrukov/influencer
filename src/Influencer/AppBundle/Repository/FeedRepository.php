@@ -10,89 +10,86 @@ use Influencer\AppBundle\Entity\Feed;
 
 class FeedRepository extends EntityRepository
 {
-	public function loadLatestForUser($network, $user, $id, $token)
+	protected $exists = [];
+	
+	public function loadSavedFeedsFor($userId, $network = null, $hydration = 'object')
 	{
-		$loader = 'load'.ucfirst($network);
-		$data = $this->$loader($user, $id, $token);
+		$em = $this->getEntityManager();
+		$dql = 'SELECT f FROM InfluencerAppBundle:Feed f WHERE f.user = :userId';
+		$params = [
+			'userId' => $userId,
+		];
+		if ($network !== null) {
+			$params['network'] = $network;
+			$dql .= ' AND f.network = :network';
+		}
+		if ($hydration == 'object') {
+			$feeds = $em->createQuery($dql)->setParameters($params)->getResult();
+		} else {
+			$feeds = $em->createQuery($dql)->setParameters($params)->getArrayResult();
+		}
+		return $feeds;
 	}
 	
-	protected function loadFacebook($user, $id, $token)
+	public function loadLatestForUser($data, $network, $userId)
 	{
-		$client = new GuzzleHttp\Client();
-		$fields = 'name,created_time,description,picture,permalink_url';
-		$response = $client->request('GET', 'https://graph.facebook.com/v2.8/me', [
-			'query' => [
-				'access_token' => $token,
-				'fields' => $fields,
-			],
-		]);
-		$posts = json_decode($response->getBody(), true);
-		$result = [];
-		var_dump($posts);die();
-		if (is_array($posts['data']) && sizeof($posts['data']) > 0) {
-			try {
-				$em = $this->getEntityManager();
-				foreach ($posts['data'] as $item) {
-					$feed = new Feed();
-					$feed->setNetwork('facebook');
-					$feed->setTitle((isset($item['name'])?$item['name']:'Untitled'));
-					$feed->setPicture($item['picture']);
-					$feed->setContents($item['description']);
-					$feed->setLink($item['permalink_url']);
-					$feed->setCreatedAt($item['created_time']);
-					$em->persist($feed);
-					$user->addFeed($feed);
-					$em->persist($user);
-				}
-				$em->flush();
-			} catch(\Exception $e) {
-				var_dump($e->getMessage());
+		$em = $this->getEntityManager();
+		$loader = 'update'.ucfirst($network);
+		$user = $em->getRepository('InfluencerAppBundle:User')->find($userId);
+		if ($user) {
+			$feeds = $this->loadSavedFeedsFor($userId, $network);
+			foreach ($feeds as $item) {
+				$this->exists[$item->getInternalId()] = $item;
 			}
-		} else {
-			var_dump('HAVE NOT POSTS');
+			$data = $this->$loader($data, $user);
 		}
 	}
 	
-	protected function loadGoogle($user, $id, $token)
+	protected function updateFacebook($data, $user)
 	{
-		/*$client = new GuzzleHttp\Client();
-		$response = $client->request('GET', 'https://www.googleapis.com/plus/v1/people/'.$id.'/openIdConnect', [
-			'headers' => array('Authorization' => 'Bearer ' . $token),
-			'query' => 'TEST'
-		]);
-		$posts = json_decode($response->getBody(), true);
-		$result = [];
-		if (is_array($posts) && sizeof($posts) > 0) {
-			try {
-				$em = $this->getEntityManager();
-				foreach ($posts as $item) {
+		
+	}
+	
+	protected function updateGoogle($data, $user)
+	{
+		
+	}
+	
+	protected function updateTwitter($data, $user)
+	{
+	
+	}
+	
+	protected function updateInstagram($data, $user)
+	{
+		try {
+			$em = $this->getEntityManager();
+			foreach ($data['data'] as $item) {
+				if (isset($this->exists[$item['id']])) {
+					$feed = $this->exists[$item['id']];
+				} else {
 					$feed = new Feed();
-					$feed->setNetwork('facebook');
-					$feed->setTitle($item['name']);
-					$feed->setPicture($item['picture']);
-					$feed->setContents($item['description']);
-					$feed->setLink($item['permalink_url']);
-					$feed->setCreatedAt($item['created_time']);
+					$feed->setInternalId($item['id']);
+					$feed->setNetwork('instagram');
+				}
+				$feed->setTitle((isset($item['caption'])?$item['caption']:'Untitled'));
+				$feed->setPicture($item['images']['low_resolution']['url']);
+				$feed->setContents($item['images']['standard_resolution']['url']);
+				$feed->setLikes(intval($item['likes']['count']));
+				$feed->setComments(intval($item['comments']['count']));
+				$feed->setLink($item['link']);
+				$feed->setCreatedAt(date('c', $item['created_time']));
+				$em->persist($feed);
+				if (!isset($this->exists[$item['id']])) {
+					$feed->setUser($user);
 					$em->persist($feed);
 					$user->addFeed($feed);
 					$em->persist($user);
 				}
-				$em->flush();
-			} catch(\Exception $e) {
-				var_dump($e->getMessage());
 			}
-		} else {
-			var_dump('HAVE NOT POSTS');
-		}*/
-	}
-	
-	protected function loadTwitter($user, $id, $token)
-	{
-	
-	}
-	
-	protected function loadInstagram($user, $id, $token)
-	{
-	
+			$em->flush();
+		} catch(\Exception $e) {
+			var_dump($e->getMessage());
+		}
 	}
 }
