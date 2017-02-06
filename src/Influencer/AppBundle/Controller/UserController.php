@@ -62,6 +62,7 @@ class UserController extends BaseController
 		if (isset($input->token)) {
 			$getter = 'load'.ucfirst($network).'Feed';
 			$data = $this->get('app.feed_loader')->$getter($input->token, $id);
+			//var_dump($data);die();
 			$em = $this->getDoctrine()->getManager();
 			$em->getRepository('InfluencerAppBundle:Feed')->loadLatestForUser($data, $network, $id);
 			return new JsonResponse($data);

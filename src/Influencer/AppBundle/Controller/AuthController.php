@@ -140,8 +140,8 @@ class AuthController extends BaseController
 		$input = json_decode($request->getContent());
 		$accessToken = $this->get('app.social_connector')->getGoogleToken($input);
 		
-		/*$client = new GuzzleHttp\Client();
-		$params = [
+		$client = new GuzzleHttp\Client();
+		/*$params = [
 			'code' => $input->code,
 			'client_id' => $input->clientId,
 			'client_secret' => $this->getParameter('google_secret'),

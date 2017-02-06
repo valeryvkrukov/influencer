@@ -103,8 +103,9 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 		});
 	$urlRouterProvider.otherwise('/access/login');
 	$authProvider.facebook({
-		clientId: '1223551571026721',
-		authorizationEndpoint: 'https://www.facebook.com/v2.8/dialog/oauth'
+		clientId: '1230641216984423',
+		authorizationEndpoint: 'https://www.facebook.com/v2.8/dialog/oauth',
+		scope: ['email', 'public_profile', 'user_friends']
 	});
 	$authProvider.google({
 		clientId: '758902806102-sh9om8tu0bbbbgvecsokav3uimkmaekj.apps.googleusercontent.com'
@@ -249,3 +250,9 @@ app.filter('datetime', function() {
 		return date.toDateString() + ' @ ' + date.getHours() + ':' + date.getMinutes();
 	};
 });
+
+app.filter('trustHTML', ['$sce',function($sce) {
+	  return function(value, type) {
+		    return $sce.trustAs(type || 'html', value);
+		  }
+		}]);

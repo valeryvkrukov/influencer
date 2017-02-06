@@ -32,13 +32,16 @@ angular.module('app')
 			}
 		};
 	}])
-	.controller('ProfileCtrl', ['$scope', '$http', '$auth', 'FeedLoader', function($scope, $http, $auth, FeedLoader) {
+	.controller('ProfileCtrl', ['$scope', '$http', '$auth', '$sce', 'FeedLoader', function($scope, $http, $auth, $sce, FeedLoader) {
 		$scope.feeds = {
 			facebook: [],
 			google: [],
 			twitter: [],
 			instagram: []
 		};
+		$scope.trustAsHtml = function(value) {
+            return $sce.trustAsHtml(value);
+        };
 		$scope.changeCover = function($file, $event, $flow) {
 			var cover = '';
 			var fileReader = new FileReader();

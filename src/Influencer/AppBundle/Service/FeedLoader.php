@@ -17,7 +17,7 @@ class FeedLoader
 	{
 		$client = new GuzzleHttp\Client();
 		$fields = 'name,caption,created_time,description,picture,permalink_url';
-		$response = $client->request('GET', 'https://graph.facebook.com/v2.8/me/posts', [
+		$response = $client->request('GET', 'https://graph.facebook.com/v2.8/me/feed', [
 			'query' => [
 				'access_token' => $token,
 				'fields' => $fields,
@@ -28,7 +28,15 @@ class FeedLoader
 	
 	public function loadGoogleFeed($token, $userId)
 	{
-		
+		$client = new GuzzleHttp\Client();
+		$response = $client->request('GET', 'https://www.googleapis.com/plus/v1/activities', [
+			'headers' => ['Authorization' => 'Bearer ' . $token],
+			'query' => [
+				'query' => 'TEST',
+				'key' => $this->container->getParameter('google_id')
+			]
+		]);
+		return json_decode($response->getBody(), true);
 	}
 	
 	public function loadTwitterFeed($token, $userId)
@@ -41,13 +49,9 @@ class FeedLoader
 		$client = new GuzzleHttp\Client();
 		$data = $client->request('GET', 'https://api.instagram.com/v1/users/self/media/recent/', [
 			'query' => [
-				//'q' => 'kyliejenner',
-				//'lat' => 48.858844,
-				//'lng' => 2.294351,
 				'access_token' => $token
 			]
 		]);
-		//var_dump($data->getBody());die();
 		return json_decode($data->getBody(), true);
 	}
 }

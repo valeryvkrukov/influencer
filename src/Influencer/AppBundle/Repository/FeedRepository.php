@@ -52,7 +52,38 @@ class FeedRepository extends EntityRepository
 	
 	protected function updateGoogle($data, $user)
 	{
-		
+		try {
+			$em = $this->getEntityManager();
+			foreach ($data['items'] as $item) {
+				//var_dump($item['object']);die();
+				if (isset($this->exists[$item['id']])) {
+					$feed = $this->exists[$item['id']];
+				} else {
+					$feed = new Feed();
+					$feed->setInternalId($item['id']);
+					$feed->setNetwork('google');
+				}
+				$feed->setTitle($item['title']);
+				if (isset($item['object']['attachments'][0]['image']['url'])) {
+					$feed->setPicture($item['object']['attachments'][0]['image']['url']);
+				}
+				$feed->setContents($item['object']['content']);
+				$feed->setLikes(intval($item['object']['plusoners']['totalItems']));
+				$feed->setComments(intval($item['object']['replies']['totalItems']));
+				$feed->setLink($item['object']['url']);
+				$feed->setCreatedAt($item['published']);
+				$em->persist($feed);
+				if (!isset($this->exists[$item['id']])) {
+					$feed->setUser($user);
+					$em->persist($feed);
+					$user->addFeed($feed);
+					$em->persist($user);
+				}
+			}
+			$em->flush();
+		} catch(\Exception $e) {
+			var_dump($e->getMessage());
+		}
 	}
 	
 	protected function updateTwitter($data, $user)

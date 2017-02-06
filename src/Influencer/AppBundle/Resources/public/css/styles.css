@@ -56,3 +56,7 @@
     font-size: 14px;
     padding: 2px;
 }
+
+.card.col1.wide {
+	width: 100%;
+}
