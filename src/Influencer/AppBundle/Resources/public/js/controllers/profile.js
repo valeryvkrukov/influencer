@@ -98,6 +98,8 @@ angular.module('app')
 				FeedLoader.loadFor(network, $auth.getToken(), $scope.user.id).then(function(resp) {
 					$scope.feeds[network] = resp;
 					$auth.setToken(token);
+				}, function() {
+					$auth.setToken(token);
 				});
 			};
 			$auth.link(network, {'link_account': 1}).then(function(resp) {

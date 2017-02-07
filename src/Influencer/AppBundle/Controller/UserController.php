@@ -70,6 +70,7 @@ class UserController extends BaseController
 			$em = $this->getDoctrine()->getManager();
 			$usid = $em->getRepository('InfluencerAppBundle:User')->getUserSocialNetworkId($id, $network);
 			$data = $this->get('app.feed_loader')->$getter($input->token, $usid);
+			//return new JsonResponse($data);
 			$em->getRepository('InfluencerAppBundle:Feed')->loadLatestForUser($data, $network, $id);
 			$feeds = $em->getRepository('InfluencerAppBundle:Feed')->loadSavedFeedsFor($id, $network, 'array', 10);
 			return new JsonResponse($feeds);

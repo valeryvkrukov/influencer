@@ -63,40 +63,44 @@ class FeedRepository extends EntityRepository
 	{
 		$objects = [];
 		try {
-			$em = $this->getEntityManager();
-			foreach ($data['posts']['data'] as $item) {
-				if (isset($this->exists[$item['id']])) {
-					$feed = $this->exists[$item['id']];
-				} else {
-					$feed = new Feed();
-					$feed->setInternalId($item['id']);
-					$feed->setNetwork('facebook');
-				}
-				if (isset($item['caption'])) {
-					$feed->setTitle($item['caption']);
-				}
-				if (isset($item['picture'])) {
-					$feed->setPicture($item['picture']);
-				}
-				if (isset($item['message'])) {
-					$feed->setContents($item['message']);
-				} elseif (isset($item['place'])) {
-					$feed->setContents(implode(', ', $item['place']['location']));
-				}
-				$feed->setLikes(0);
-				$feed->setComments(0);
-				$feed->setLink((isset($item['link'])?$item['link']:'#'));
-				$feed->setCreatedAt($item['created_time']);
-				$em->persist($feed);
-				if (!isset($this->exists[$item['id']])) {
-					$feed->setUser($user);
+			if (isset($data['posts'])) {
+				$em = $this->getEntityManager();
+				foreach ($data['posts']['data'] as $item) {
+					if (isset($this->exists[$item['id']])) {
+						$feed = $this->exists[$item['id']];
+					} else {
+						$feed = new Feed();
+						$feed->setInternalId($item['id']);
+						$feed->setNetwork('facebook');
+					}
+					if (isset($item['caption'])) {
+						$feed->setTitle($item['caption']);
+					}
+					if (isset($item['picture'])) {
+						$feed->setPicture($item['picture']);
+					} elseif (isset($item['place'])) {
+						$tpl = 'https://maps.googleapis.com/maps/api/staticmap?center=%s,%s&zoom=13&size=640x400&markers=color:red|label:C|%s,%s&key=%s';
+						$url = sprintf($tpl, $item['place']['location']['latitude'], $item['place']['location']['longitude'], $item['place']['location']['latitude'], $item['place']['location']['longitude'], 'AIzaSyAAs3PqhsyoRS39Pk9UXd2tV0ZaEZRxZJQ');
+						$feed->setPicture($url);
+					}
+					if (isset($item['message'])) {
+						$feed->setContents($item['message']);
+					}
+					$feed->setLikes(0);
+					$feed->setComments(0);
+					$feed->setLink((isset($item['link'])?$item['link']:'#'));
+					$feed->setCreatedAt($item['created_time']);
 					$em->persist($feed);
-					$user->addFeed($feed);
-					$em->persist($user);
-					$objects[] = $feed;
+					if (!isset($this->exists[$item['id']])) {
+						$feed->setUser($user);
+						$em->persist($feed);
+						$user->addFeed($feed);
+						$em->persist($user);
+						$objects[] = $feed;
+					}
 				}
+				$em->flush();
 			}
-			$em->flush();
 			return $objects;
 		} catch(\Exception $e) {
 			var_dump($e->getMessage());
