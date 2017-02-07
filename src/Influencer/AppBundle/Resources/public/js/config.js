@@ -42,17 +42,7 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 			templateUrl: Routing.generate('inf_app'),
 			resolve: {
 				loginRequired: loginRequired
-			}/*lazyLoad(['header', 'search', 'sidebar'], [
-            	'nvd3',
-                'mapplic',
-                'rickshaw',
-                'metrojs',
-                'sparkline',
-                'skycons',
-                'switchery',
-                'wysihtml5',
-                'wizard'
-            ])*/
+			}
 		})
 		.state('app.home', {
 			url: '/home',
@@ -79,6 +69,7 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 			resolve: lazyLoad(['campaign'], ['select', 'wizard'])
 		})
 		.state('access', {
+			abstract: true,
 			url: '/access',
 	    	template: '<div class="full-height" ui-view></div>',
 			resolve: {

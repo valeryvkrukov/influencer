@@ -44,6 +44,16 @@ class User extends BaseUser
 	protected $contactNumber;
 	
 	/**
+	 * @ORM\Column(name="secondary_number", type="string", nullable=true)
+	 */
+	protected $secondaryNumber;
+	
+	/**
+	 * @ORM\Column(name="age", type="string", nullable=true)
+	 */
+	protected $age;
+	
+	/**
 	 * @ORM\Column(name="brief", type="text", nullable=true)
 	 */
 	protected $brief;
@@ -134,6 +144,11 @@ class User extends BaseUser
 	 * @ORM\Column(name="instagram", type="string", nullable=true)
 	 */
 	protected $instagram;
+	
+	/**
+	 * @ORM\Column(name="klout", type="string", nullable=true)
+	 */
+	protected $klout;
 	
 	public function __construct()
 	{
@@ -239,6 +254,40 @@ class User extends BaseUser
 		return $this;
 	}
 	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getSecondaryNumber() {
+		return $this->secondaryNumber;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $secondaryNumber        	
+	 */
+	public function setSecondaryNumber($secondaryNumber) {
+		$this->secondaryNumber = $secondaryNumber;
+		return $this;
+	}
+	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getAge() {
+		return $this->age;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $age        	
+	 */
+	public function setAge($age) {
+		$this->age = $age;
+		return $this;
+	}
+		
 	/**
 	 *
 	 * @return the unknown_type
@@ -487,6 +536,24 @@ class User extends BaseUser
 		$this->instagram = $instagram;
 		return $this;
 	}
+	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getKlout() {
+		return $this->klout;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $klout        	
+	 */
+	public function setKlout($klout) {
+		$this->klout = $klout;
+		return $this;
+	}
+	
 	
 	
 }

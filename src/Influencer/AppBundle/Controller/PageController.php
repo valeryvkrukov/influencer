@@ -6,17 +6,32 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 
+use Influencer\AppBundle\Controller\BaseController;
+
 /**
  * @Route("/page")
  */
-class PageController extends Controller
+class PageController extends BaseController
 {
 	/**
 	 * @Route("/home", name="inf_home", options={"expose"=true})
 	 */
 	public function homeAction(Request $request)
 	{
-		return $this->render('InfluencerAppBundle:Page:home.html.twig');
+		switch ($request->query->get('role')) {
+			case 'admin':
+				$tpl = 'admin/home';
+				break;
+			case 'influencer':
+				$tpl = 'influencer/home';
+				break;
+			case 'client':
+				$tpl = 'client/home';
+				break;
+			default:
+				$tpl = 'home';
+		}
+		return $this->render('InfluencerAppBundle:Page:'.$tpl.'.html.twig');
 	}
 	
 	/**
@@ -40,7 +55,20 @@ class PageController extends Controller
 	 */
 	public function profileAction(Request $request)
 	{
-		return $this->render('InfluencerAppBundle:Page:profile.html.twig');
+		switch ($request->query->get('role')) {
+			case 'admin':
+				$tpl = 'admin/profile';
+				break;
+			case 'influencer':
+				$tpl = 'influencer/profile';
+				break;
+			case 'client':
+				$tpl = 'client/profile';
+				break;
+			default:
+				$tpl = 'home';
+		}
+		return $this->render('InfluencerAppBundle:Page:admin/'.$tpl.'.html.twig');
 	}
 	
 	/**

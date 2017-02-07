@@ -23,6 +23,14 @@ class UserController extends BaseController
 	}
 	
 	/**
+	 * @Route("/home/{role}", name="inf_load_user_home", options={"expose"=true})
+	 */
+	public function getUserHome(Request $request, $role)
+	{
+		
+	}
+	
+	/**
 	 * @Route("/feeds", name="inf_feeds", options={"expose"=true})
 	 */
 	public function feedsAction(Request $request)
