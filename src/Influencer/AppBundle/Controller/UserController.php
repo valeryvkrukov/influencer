@@ -72,7 +72,7 @@ class UserController extends BaseController
 			$data = $this->get('app.feed_loader')->$getter($input->token, $usid);
 			$em->getRepository('InfluencerAppBundle:Feed')->loadLatestForUser($data, $network, $id);
 			$feeds = $em->getRepository('InfluencerAppBundle:Feed')->loadSavedFeedsFor($id, $network, 'array', 10);
-			return new JsonResponse($data);
+			return new JsonResponse($feeds);
 		}
 	}
 	

@@ -40,7 +40,7 @@ class Feed
 	protected $title;
 	
 	/**
-	 * @ORM\Column(name="picture", type="string", nullable=true)
+	 * @ORM\Column(name="picture", type="text", nullable=true)
 	 */
 	protected $picture;
 	
