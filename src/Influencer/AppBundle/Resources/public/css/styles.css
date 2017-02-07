@@ -60,3 +60,7 @@
 .card.col1.wide {
 	width: 100%;
 }
+
+.social-wrapper .social .jumbotron {
+	height: 30vh;
+}

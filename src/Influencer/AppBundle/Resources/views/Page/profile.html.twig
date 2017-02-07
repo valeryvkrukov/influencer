@@ -197,7 +197,7 @@
     				</div>
     				<div class="card-content">
     					<img ng-if="item.picture" alt="Social post" ng-src="{{ '{{ item.picture }}' }}">
-    					<div ng-if="item.contents" ng-bind-html="item.contents|trustHTML" class="padding-10"></div>
+    					<div ng-if="item.contents" ng-bind-html="item.contents|limitTo:200|trustHTML" class="padding-10"></div>
     				</div>
     				<div class="card-footer clearfix">
     					<div class="time">{{ '{{ item.createdAt.date|datetime }}' }}</div>
