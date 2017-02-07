@@ -35,7 +35,7 @@ class Feed
 	protected $network;
 	
 	/**
-	 * @ORM\Column(name="title", type="string", nullable=false)
+	 * @ORM\Column(name="title", type="string", nullable=true)
 	 */
 	protected $title;
 	
@@ -45,7 +45,7 @@ class Feed
 	protected $picture;
 	
 	/**
-	 * @ORM\Column(name="contents", type="text", nullable=false)
+	 * @ORM\Column(name="contents", type="text", nullable=true)
 	 */
 	protected $contents;
 	

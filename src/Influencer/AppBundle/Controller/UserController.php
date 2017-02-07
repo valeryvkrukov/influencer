@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 use Influencer\AppBundle\Controller\BaseController;
+use GuzzleHttp;
 
 /**
  * @Route("/user")
@@ -27,11 +28,16 @@ class UserController extends BaseController
 	public function feedsAction(Request $request)
 	{
 		$em = $this->getDoctrine()->getManager();
-		$data = $em->getRepository('InfluencerAppBundle:Feed')->loadSavedFeedsFor($this->getUser(), null, 'array');
+		$userId = $this->getUser();
 		$feeds = [];
-		foreach ($data as $item) {
-			$feeds[$item['network']][] = $item;
+		$networks = $em->getRepository('InfluencerAppBundle:Feed')->getUserNetworks($userId);
+		foreach ($networks as $n) {
+			$data = $em->getRepository('InfluencerAppBundle:Feed')->loadSavedFeedsFor($userId, $n['network'], 'array', 10);
+			foreach ($data as $item) {
+				$feeds[$n['network']][] = $item;
+			}
 		}
+		
 		return new JsonResponse($feeds); 
 	}
 	
@@ -62,10 +68,11 @@ class UserController extends BaseController
 		if (isset($input->token)) {
 			$getter = 'load'.ucfirst($network).'Feed';
 			$data = $this->get('app.feed_loader')->$getter($input->token, $id);
-			//var_dump($data);die();
 			$em = $this->getDoctrine()->getManager();
 			$em->getRepository('InfluencerAppBundle:Feed')->loadLatestForUser($data, $network, $id);
+			$feeds = $em->getRepository('InfluencerAppBundle:Feed')->loadSavedFeedsFor($id, $network, 'array', 10);
 			return new JsonResponse($data);
 		}
 	}
+	
 }

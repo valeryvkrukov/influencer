@@ -18,6 +18,9 @@ parameters:
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
     
+    facebook_id: 1223551571026721
+    facebook_secret: 0fc7586b2a4f3de49b84eadf01056807
+    google_id: 758902806102-sh9om8tu0bbbbgvecsokav3uimkmaekj.apps.googleusercontent.com
     google_secret: 9CuZs3D6hwTPt8C_vGlPKMfo
     instagram_id: 0328e45f47f944ceb589dc0f1879d82b
     instagram_secret: b62d5966094a495e94a30edfdb5a32e5

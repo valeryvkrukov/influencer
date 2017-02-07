@@ -17,10 +17,10 @@ class FeedLoader
 	{
 		$client = new GuzzleHttp\Client();
 		$fields = 'name,caption,created_time,description,picture,permalink_url';
-		$response = $client->request('GET', 'https://graph.facebook.com/v2.8/me/feed', [
+		$response = $client->request('GET', 'https://graph.facebook.com/v2.8/me', [
 			'query' => [
 				'access_token' => $token,
-				'fields' => $fields,
+				'fields' => 'posts.limit(10){message,picture,caption,link,created_time,likes{name},place}',
 			],
 		]);
 		return json_decode($response->getBody(), true);

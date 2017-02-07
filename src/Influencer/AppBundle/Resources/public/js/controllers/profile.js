@@ -39,6 +39,9 @@ angular.module('app')
 			twitter: [],
 			instagram: []
 		};
+		$scope.sizeOf = function(obj) {
+		    return Object.keys(obj).length;
+		};
 		$scope.trustAsHtml = function(value) {
             return $sce.trustAsHtml(value);
         };
@@ -91,24 +94,15 @@ angular.module('app')
 		};
 		$scope.refreshFeed = function(network) {
 			var token = $auth.getToken();
-			//var id = $scope.user.id;
-			console.log('1: ' + $scope.user.id);
 			var loader = function(network) {
 				FeedLoader.loadFor(network, $auth.getToken(), $scope.user.id).then(function(resp) {
 					$scope.feeds[network] = resp;
 					$auth.setToken(token);
-					console.log('3: ' + $scope.user.id);
 				});
 			};
-			//if (!$auth.isAuthenticated()) {
-				$auth.link(network, {'link_account': 1}).then(function(resp) {
-					//$auth.setToken(token);
-					console.log('2: ' + $scope.user.id);
-					loader(network);
-				});
-			/*} else {
+			$auth.link(network, {'link_account': 1}).then(function(resp) {
 				loader(network);
-			}*/
+			});
 		};
 		$scope.linkSocial = function(network) {
 			
