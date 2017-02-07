@@ -35,6 +35,14 @@ class UserRepository extends EntityRepository
 		return ($user === null);
 	}
 	
+	public function getUserSocialNetworkId($userId, $network)
+	{
+		$em = $this->getEntityManager();
+		$user = $this->find($userId);
+		$getter = 'get'.ucfirst($network);
+		return $user->$getter();
+	}
+	
 	public function createInfluencerUser($data)
 	{
 		try {

@@ -146,23 +146,23 @@ class FeedRepository extends EntityRepository
 		$objects = [];
 		try {
 			$em = $this->getEntityManager();
-			foreach ($data['items'] as $item) {
+			foreach ($data as $item) {
 				if (isset($this->exists[$item['id']])) {
 					$feed = $this->exists[$item['id']];
 				} else {
 					$feed = new Feed();
 					$feed->setInternalId($item['id']);
-					$feed->setNetwork('google');
+					$feed->setNetwork('twitter');
 				}
-				$feed->setTitle($item['title']);
-				if (isset($item['object']['attachments'][0]['image']['url'])) {
-					$feed->setPicture($item['object']['attachments'][0]['image']['url']);
+				//$feed->setTitle($item['title']);
+				if (isset($item['entities']['media'][0]['media_url'])) {
+					$feed->setPicture($item['entities']['media'][0]['media_url']);
 				}
-				$feed->setContents($item['object']['content']);
-				$feed->setLikes(intval($item['object']['plusoners']['totalItems']));
-				$feed->setComments(intval($item['object']['replies']['totalItems']));
-				$feed->setLink($item['object']['url']);
-				$feed->setCreatedAt($item['published']);
+				$feed->setContents($item['text']);
+				$feed->setLikes(intval($item['favorite_count']));
+				$feed->setComments(intval($item['retweet_count']));
+				$feed->setLink('#');
+				$feed->setCreatedAt($item['created_at']);
 				$em->persist($feed);
 				if (!isset($this->exists[$item['id']])) {
 					$feed->setUser($user);
