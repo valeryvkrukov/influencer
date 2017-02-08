@@ -82,6 +82,26 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 			templateUrl: Routing.generate('inf_admin_settings_signup'),
 			resolve: lazyLoad(['admin/settings/signup'], [])
 		})
+		.state('app.users', {
+			abstract: true,
+			url: '/users',
+			template: '<div class="full-height" ui-view></div>',
+			resolve: {
+				loginRequired: loginRequired
+			}
+		})
+		.state('app.users.list', {
+			url: '/list',
+			controller: 'AdminUsersListCtrl',
+			templateUrl: Routing.generate('inf_admin_users_list'),
+			resolve: lazyLoad(['admin/users/list'], [])
+		})
+		.state('app.users.create', {
+			url: '/create',
+			controller: 'AdminUsersCreateCtrl',
+			templateUrl: Routing.generate('inf_admin_users_create'),
+			resolve: lazyLoad(['admin/users/create'], [])
+		})
 		.state('access', {
 			abstract: true,
 			url: '/access',
