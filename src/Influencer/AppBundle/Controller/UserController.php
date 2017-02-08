@@ -27,7 +27,16 @@ class UserController extends BaseController
 	 */
 	public function getUserHome(Request $request, $role)
 	{
-		
+		$userId = $this->getUser()->getId();
+		$userRoles = $this->getUser()->getRoles();
+		if ($role === 'admin' && in_array('ROLE_ADMIN', $userRoles)) {
+			$data = $this->get('app.admin_data')->getDashboardData($userId);
+		} elseif ($role === 'influencer' && in_array('ROLE_INFLUENCER', $userRoles)) {
+			$data = $this->get('app.influencer_data')->getDashboardData($userId);
+		} else {
+			$data = get('app.client_data')->getDashboardData($userId);
+		}
+		return new JsonResponse($data);
 	}
 	
 	/**
