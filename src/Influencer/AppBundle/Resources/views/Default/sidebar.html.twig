@@ -17,7 +17,26 @@
 				</a>
 				<span class="icon-thumbnail"><i class="pg-home"></i></span>
 			</li>
-			
+			<li ng-if="user.role == 'admin'" ng-class="{'open active':includes('app.layouts')}">
+				<a href="javascript:;">
+					<span class="title">Settings</span>
+					<span class="arrow" ng-class="{'active open':$state.includes('app.settings')}"></span>
+				</a>
+				<span class="icon-thumbnail"><i class="pg-settings"></i></span>
+				<ul class="sub-menu">
+					<li ui-sref-active="active">
+						<a ui-sref="app.settings.signup">Sign Up Fields</a>
+						<span class="icon-thumbnail">suf</span>
+					</li>
+				</ul>
+			</li>
+			<li ng-if="user.role == 'client'" ui-sref-active="active">
+				<a ui-sref="app.campaign" class="detailed">
+					<span class="title">Campaign</span>
+					<span class="details"></span>
+				</a>
+				<span class="icon-thumbnail"><i class="pg-suitcase"></i></span>
+			</li>
 		</ul>
 		<div class="clearfix"></div>
 	</div>

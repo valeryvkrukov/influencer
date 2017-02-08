@@ -9,4 +9,24 @@ services:
         
     app.token_authenticator:
         class: Influencer\AppBundle\Security\TokenAuthenticator
-        arguments: ["@doctrine.orm.entity_manager"]
+        arguments: ["@doctrine.orm.entity_manager", "@security.token_storage"]
+        
+    app.social_connector:
+        class: Influencer\AppBundle\Service\SocialConnect
+        arguments: ["@service_container"]
+        
+    app.feed_loader:
+        class: Influencer\AppBundle\Service\FeedLoader
+        arguments: ["@service_container"]
+
+    app.admin_data:
+        class: Influencer\AppBundle\Service\AdminData
+        arguments: ["@service_container"]
+        
+    app.influencer_data:
+        class: Influencer\AppBundle\Service\InfluencerData
+        arguments: ["@service_container"]
+        
+    app.client_data:
+        class: Influencer\AppBundle\Service\ClientData
+        arguments: ["@service_container"]

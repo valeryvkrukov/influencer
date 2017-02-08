@@ -40,33 +40,50 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 			abstract: true,
 			url: '/app',
 			templateUrl: Routing.generate('inf_app'),
-			resolve: lazyLoad(['header', 'search', 'sidebar'], [
-            	'nvd3',
-                'mapplic',
-                'rickshaw',
-                'metrojs',
-                'sparkline',
-                'skycons',
-                'switchery'
-            ])
+			resolve: {
+				loginRequired: loginRequired
+			}
 		})
 		.state('app.home', {
 			url: '/home',
 			controller: 'HomeCtrl',
 			templateUrl: Routing.generate('inf_home'),
-			resolve: {
-				loginRequired: loginRequired
-			}
+			resolve: lazyLoad(['home'], [])
 		})
 		.state('app.me', {
 			url: '/me',
 			controller: 'HomeCtrl',
 			templateUrl: Routing.generate('inf_home'),
+			resolve: lazyLoad(['home'], [])
+		})
+		.state('app.profile', {
+			url: '/profile',
+			templateUrl: Routing.generate('inf_profile'),
+			controller: 'ProfileCtrl',
+			resolve: lazyLoad(['profile'], ['wysihtml5'])
+		})
+		.state('app.campaign', {
+			url: '/campaign',
+			controller: 'CampaignCtrl',
+			templateUrl: Routing.generate('inf_campaign'),
+			resolve: lazyLoad(['campaign'], ['select', 'wizard'])
+		})
+		.state('app.settings', {
+			abstract: true,
+			url: '/settings',
+			template: '<div class="full-height" ui-view></div>',
 			resolve: {
 				loginRequired: loginRequired
 			}
 		})
+		.state('app.settings.signup', {
+			url: '/signup',
+			controller: 'AdminSettingsSignupCtrl',
+			templateUrl: Routing.generate('inf_admin_settings_signup'),
+			resolve: lazyLoad(['admin/settings/signup'], [])
+		})
 		.state('access', {
+			abstract: true,
 			url: '/access',
 	    	template: '<div class="full-height" ui-view></div>',
 			resolve: {
@@ -88,50 +105,78 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 			url: '/logout',
 			template: null,
 			controller: 'LogoutCtrl'
-		})
-		.state('profile', {
-			url: '/profile',
-			templateUrl: Routing.generate('inf_profile'),
-			controller: 'ProfileCtrl',
-			resolve: {
-				loginRequired: loginRequired
-			}
 		});
 	$urlRouterProvider.otherwise('/access/login');
-	console.log(window.location.hash);
-	if (window.location.hash == '#!/access/signup') {
-		$authProvider.facebook({
-    		clientId: '1223551571026721',
-    		authorizationEndpoint: 'https://www.facebook.com/v2.8/dialog/oauth',
-    		url: Routing.generate('inf_facebook_link')
-    	});
-    	$authProvider.google({
-    		clientId: '758902806102-sh9om8tu0bbbbgvecsokav3uimkmaekj.apps.googleusercontent.com',
-    		url: Routing.generate('inf_google_link')
-    	});
-    	$authProvider.instagram({
-    		clientId: '0328e45f47f944ceb589dc0f1879d82b',
-    		url: Routing.generate('inf_instagram_link')
-    	});
-    	$authProvider.twitter({
-    		url: Routing.generate('inf_twitter_link')
-    	});
-	} else {
-		$authProvider.facebook({
-			clientId: '1223551571026721',
-			authorizationEndpoint: 'https://www.facebook.com/v2.8/dialog/oauth'
-		});
-		$authProvider.google({
-			clientId: '758902806102-sh9om8tu0bbbbgvecsokav3uimkmaekj.apps.googleusercontent.com'
-		});
-		$authProvider.instagram({
-			clientId: '0328e45f47f944ceb589dc0f1879d82b'
-		});
-		$authProvider.twitter({
-			url: '/auth/twitter'
-		});
-	}
+	$authProvider.facebook({
+		clientId: '1230641216984423',
+		authorizationEndpoint: 'https://www.facebook.com/v2.8/dialog/oauth',
+		scope: ['email', 'public_profile', 'user_friends']
+	});
+	$authProvider.google({
+		clientId: '758902806102-sh9om8tu0bbbbgvecsokav3uimkmaekj.apps.googleusercontent.com'
+	});
+	$authProvider.instagram({
+		clientId: '0328e45f47f944ceb589dc0f1879d82b',
+		scope: ['basic', 'public_content']
+	});
+	$authProvider.twitter({
+		url: '/auth/twitter'
+	});
 });
+
+angular.module('ui.select').config(function($provide) {
+    $provide.decorator('uiSelectChoicesDirective', function($delegate) {
+        var directive = $delegate[0];
+
+        var templateUrl = directive.templateUrl;
+
+        directive.templateUrl = function(tElement) {
+            tElement.addClass('ui-select-choices');
+            return templateUrl(tElement);
+        };
+
+        return $delegate;
+    });
+
+    $provide.decorator('uiSelectMatchDirective', function($delegate) {
+        var directive = $delegate[0];
+
+        var templateUrl = directive.templateUrl;
+
+        directive.templateUrl = function(tElement) {
+            tElement.addClass('ui-select-match')
+            return templateUrl(tElement);
+        };
+
+        return $delegate;
+    });
+});
+
+app.factory('GetPredefinedVars', ['$q', '$http', function($q, $http) {
+	return {
+		getIntl: function() {
+			var deferred = $q.defer();
+			$http.get(Routing.generate('inf_get_intl_vars')).then(function(resp) {
+				deferred.resolve(resp.data);
+			});
+			return deferred.promise;
+		},
+		getTypes: function() {
+			var deferred = $q.defer();
+			$http.get(Routing.generate('inf_get_post_types')).then(function(resp) {
+				deferred.resolve(resp.data);
+			});
+			return deferred.promise;
+		},
+		getSocialNetworks: function() {
+			var deferred = $q.defer();
+			$http.get(Routing.generate('inf_get_social_networks')).then(function(resp) {
+				deferred.resolve(resp.data);
+			});
+			return deferred.promise;
+		}
+	};
+}]);
 
 app.controller('AppCtrl', ['$scope', '$rootScope', '$state', '$stateParams', 'Account', function($scope, $rootScope, $state, $stateParams, Account) {
 	$scope.app = {
@@ -203,3 +248,16 @@ app.filter('capitalize', function() {
       return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
     }
 });
+
+app.filter('datetime', function() {
+	return function(input) {
+		var date = new Date(input);
+		return date.toDateString() + ' @ ' + date.getHours() + ':' + date.getMinutes();
+	};
+});
+
+app.filter('trustHTML', ['$sce',function($sce) {
+	  return function(value, type) {
+		    return $sce.trustAs(type || 'html', value);
+		  }
+		}]);

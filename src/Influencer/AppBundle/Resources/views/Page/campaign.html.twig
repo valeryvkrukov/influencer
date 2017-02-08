@@ -1,0 +1,221 @@
+<div class="jumbotron no-margin" data-pages="parallax">
+	<div class="container-fluid container-fixed-lg sm-p-l-20 sm-p-r-20">
+		<div class="inner">
+			<h3 class="">Start New Campaign</h3>
+		</div>
+	</div>
+</div>
+<div class="container-fluid container-fixed-lg full-height" ng-controller="CampaignCtrl" ng-init="init()">
+	<div class="col-md-12">
+		<ul class="nav nav-tabs nav-tabs-linetriangle nav-tabs-separator nav-stack-sm">
+            <li ng-class="{'active': getCurrentStep() == 1 }">
+                <a data-toggle="tab" ng-click="goToStep(1)"><i class="fa fa-group tab-icon"></i> <span>Target Your Audience</span></a>
+            </li>
+            <li ng-class="{'active': getCurrentStep() == 2 }">
+                <a data-toggle="tab" ng-click="goToStep(2)"><i class="fa fa-briefcase tab-icon"></i> <span>Find Influencers</span></a>
+            </li>
+            <li ng-class="{'active': getCurrentStep() == 3 }">
+                <a data-toggle="tab" ng-click="goToStep(3)"><i class="fa fa-paste tab-icon"></i> <span>Write Your Brief</span></a>
+            </li>
+            <li ng-class="{'active': getCurrentStep() == 4 }">
+                <a data-toggle="tab" ng-click="goToStep(4)"><i class="fa fa-credit-card tab-icon"></i> <span>Payment Confirmation</span></a>
+            </li>
+            <li ng-class="{'active': getCurrentStep() == 5 }">
+                <a data-toggle="tab" ng-click="goToStep(5)"><i class="fa fa-comments tab-icon"></i> <span>Finish</span></a>
+            </li>
+        </ul>
+    	<wizard on-finish="campaignRequested()" class="bg-white" hide-indicators="true">
+    		<wz-step title="Target Your Audience">
+    			<div class="row row-same-height">
+    				<div class="col-md-12">
+    					<form role="form">
+    						<div class="padding-30 m-t-50">
+    							<div class="col-sm-12 col-md-6" id="countries-list">
+        							<div pg-form-group class="form-group">
+        								<label>Countries</label>
+        								<ui-select name="countries" multiple ng-model="user.countries" theme="select2" style="width:100%">
+        									<ui-select-match placeholder="Select countries...">{{ '{{ $item.country }}' }}</ui-select-match>
+        									<ui-select-choices repeat="item in countries | filter: $select.search">
+        										<div ng-bind-html="trustAsHtml(('<strong>' + item.country + '</strong> (' + item.code + ')' | highlight: $select.search))"></div>
+        									</ui-select-choices>
+        								</ui-select>
+        							</div>
+        						</div>
+        						<div class="col-sm-12 col-md-6" id="languages-list">
+        							<div pg-form-group class="form-group">
+        								<label>Languages</label>
+        								<ui-select name="languages" multiple ng-model="campaign.languages" theme="select2" style="width:100%">
+        									<ui-select-match placeholder="Select language...">{{ '{{ $item.lang }}' }}</ui-select-match>
+        									<ui-select-choices repeat="item in languages | filter: $select.search">
+        										<div ng-bind-html="trustAsHtml(('<strong>' + item.lang + '</strong> (' + item.code + ')' | highlight: $select.search))"></div>
+        									</ui-select-choices>
+        								</ui-select>
+        							</div>
+        						</div>
+        						<br>
+        						<br>
+        						<div class="col-sm-12 col-md-6" id="types-list">
+        							<div pg-form-group class="form-group">
+        								<label>Post Types</label>
+        								<div class="checkbox check-primary" ng-repeat="type in postTypes">
+        									<input type="checkbox" checked="checked" value="{{ '{{ type.tag }}' }}" id="{{ 'checkbox-{{ type.tag }}' }}">
+        									<label for="{{ 'checkbox-{{ type.tag }}' }}">{{ '{{ type.name }}' }}</label>
+        								</div>
+        							</div>
+        						</div>
+        						<div class="col-sm-12 col-md-6">
+    								<div pg-form-group class="form-group required" ng-class="{ 'has-error': !campaign.gender }">
+                						<label>Gender</label>
+                        				<div class="radio radio-primary">
+                        					<input type="radio" name="gender" id="male" ng-model="campaign.gender" value="male">
+                                            <label for="male">Male</label>
+                                        </div>
+                                        <div class="radio radio-primary">
+                                            <input type="radio" name="gender" id="female" ng-model="campaign.gender" value="female">
+                                            <label for="female">Female</label>
+                                        </div>
+                                        <div class="radio radio-primary">
+                                            <input type="radio" name="gender" id="both" ng-model="campaign.gender" value="both">
+                                            <label for="both">Both</label>
+                        				</div>
+                        			</div>
+                    			</div>
+        					</div>
+                		</form>
+            		</div>
+    			</div>
+    			<div class="padding-20 bg-white">
+            		<ul class="pager wizard">
+    					<li class="next">
+    						<button type="button" class="btn btn-primary btn-cons btn-animated from-left fa fa-briefcase pull-right" wz-next ng-click="loadInfluencers()">
+    							<span>Next</span>
+    						</button>
+    					</li>
+    					<li class="previous disabled">
+    						<button type="button" class="btn btn-default btn-cons pull-right">
+    							<span>Previous</span>
+    						</button>
+    					</li>
+    				</ul>
+    			</div>
+    		</wz-step>
+    		<wz-step title="Find Influencers">
+    			<div class="row row-same-height">
+    				<div class="padding-30 m-t-50">
+        				<div ng-if="!campaign.influencers" class="progress-circle-indeterminate"></div>
+        				<div ng-if="campaign.influencers && campaign.influencers.length === 0">
+        					<h3>Influencers with selected criterias aren't registered in our application at the moment...</h3>
+        				</div>
+        				<div ng-if="campaign.influencers && campaign.influencers.length > 0">
+        					<div class="card share share-self col1 m-t-10 m-b-10 m-l-10 m-r-10" data-social="item" ng-repeat="influencer in campaign.influencers">
+        						<div class="circle" data-toggle="tooltip" title="Label"></div>
+        						<div class="card-header clearfix">
+        							<div class="user-pic">
+        								<img alt="Profile Image" width="33" height="33" ng-src-retina="{{ '{{ influencer.profileImage }}' }}" ng-src="{{ '{{ influencer.profileImage }}' }}">
+        							</div>
+        							<h5>{{ '{{ influencer.firstName }}' }} {{ '{{ influencer.lastName }}' }}</h5>
+        						</div>
+        						<div class="card-description">
+        							<div class="via" ng-if="influencer.facebook">
+        								<a href=""><i class="social-icon fa fa-facebook"></i> {{ '{{ influencer.facebook }}' }}</a>
+        							</div>
+        							<div class="via" ng-if="influencer.google">
+        								<a href=""><i class="social-icon fa fa-google"></i> {{ '{{ influencer.google }}' }}</a>
+        							</div>
+        							<div class="via" ng-if="influencer.twitter">
+        								<a href=""><i class="social-icon fa fa-twitter"></i> {{ '{{ influencer.twitter }}' }}</a>
+        							</div>
+        							<div class="via" ng-if="influencer.instagram">
+        								<a href=""><i class="social-icon fa fa-instagram"></i> {{ '{{ influencer.instagram }}' }}</a>
+        							</div>
+        							<p>{{ '{{ influencer.brief }}' }}</p>
+        						</div>
+        						<div class="card-content" ng-if="influencer.profileCover">
+        							<img alt="Cover" ng-src="{{ '{{ influencer.profileCover }}' }}">
+        						</div>
+        						<div class="card-footer clearfix">
+        							<div class="time">{{ '{{ influencer.lastLogin }}' }}</div>
+        							<ul class="reactions">
+        								<li><a href="#">5,345 <i class="fa fa-comment-o"></i></a></li>
+        								<li><a href="#">23K <i class="fa fa-heart-o"></i></a></li>
+        							</ul>
+        						</div>
+        					</div>
+        				</div>
+        			</div>
+    			</div>
+    			<div class="padding-20 bg-white">
+    				<ul class="pager wizard">
+    					<li class="next">
+    						<button type="button" class="btn btn-primary btn-cons btn-animated from-left fa fa-paste pull-right" wz-next>
+    							<span>Next</span>
+    						</button>
+    					</li>
+    					<li class="previous disabled">
+    						<button type="button" class="btn btn-default btn-cons pull-right">
+    							<span>Previous</span>
+    						</button>
+    					</li>
+    				</ul>
+    			</div>
+    		</wz-step>
+    		<wz-step title="Write Your Brief">
+    			<div class="row row-same-height">
+    			
+    			</div>
+    			<div class="padding-20 bg-white">
+    				<ul class="pager wizard">
+    					<li class="next">
+    						<button type="button" class="btn btn-primary btn-cons btn-animated from-left fa fa-credit-card pull-right" wz-next>
+    							<span>Next</span>
+    						</button>
+    					</li>
+    					<li class="previous disabled">
+    						<button type="button" class="btn btn-default btn-cons pull-right">
+    							<span>Previous</span>
+    						</button>
+    					</li>
+    				</ul>
+    			</div>
+    		</wz-step>
+    		<wz-step title="Payment Confirmation">
+    			<div class="row row-same-height">
+    				
+    			</div>
+    			<div class="padding-20 bg-white">
+    				<ul class="pager wizard">
+    					<li class="next">
+    						<button type="button" class="btn btn-primary btn-cons btn-animated from-left fa fa-comments pull-right" wz-next>
+    							<span>Next</span>
+    						</button>
+    					</li>
+    					<li class="previous disabled">
+    						<button type="button" class="btn btn-default btn-cons pull-right">
+    							<span>Previous</span>
+    						</button>
+    					</li>
+    				</ul>
+    			</div>
+    		</wz-step>
+    		<wz-step title="Send For Approving">
+    			<div class="row row-same-height">
+    			
+    			</div>
+    			<div class="padding-20 bg-white">
+    				<ul class="pager wizard">
+    					<li class="next">
+    						<button type="button" class="btn btn-primary btn-cons btn-animated from-left fa fa-truck pull-right" wz-next>
+    							<span>Send For Approving</span>
+    						</button>
+    					</li>
+    					<li class="previous disabled">
+    						<button type="button" class="btn btn-default btn-cons pull-right">
+    							<span>Previous</span>
+    						</button>
+    					</li>
+    				</ul>
+    			</div>
+    		</wz-step>
+    	</wizard>
+    </div>
+</div>
