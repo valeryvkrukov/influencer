@@ -19,9 +19,14 @@ class User extends BaseUser
 	protected $id;
 	
 	/**
-	 * @ORM\Column(name="profile_image", type="string", nullable=true)
+	 * @ORM\Column(name="profile_image", type="text", nullable=true)
 	 */
 	protected $profileImage;
+	
+	/**
+	 * @ORM\Column(name="profile_cover", type="text", nullable=true)
+	 */
+	protected $profileCover;
 	
 	/**
 	 * @ORM\Column(name="first_name", type="string", nullable=true)
@@ -37,6 +42,16 @@ class User extends BaseUser
 	 * @ORM\Column(name="contact_number", type="string", nullable=true)
 	 */
 	protected $contactNumber;
+	
+	/**
+	 * @ORM\Column(name="secondary_number", type="string", nullable=true)
+	 */
+	protected $secondaryNumber;
+	
+	/**
+	 * @ORM\Column(name="age", type="string", nullable=true)
+	 */
+	protected $age;
 	
 	/**
 	 * @ORM\Column(name="brief", type="text", nullable=true)
@@ -101,15 +116,7 @@ class User extends BaseUser
 	protected $prices;
 	
 	/**
-	 * @ORM\ManyToMany(targetEntity="Feed")
-	 * @ORM\JoinTable(name="users_feeds",
-	 *   joinColumns={
-	 *     @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-	 *   },
-	 *   inverseJoinColumns={
-	 *     @ORM\JoinColumn(name="feed_id", referencedColumnName="id")
-	 *   }
-	 * )
+	 * @ORM\OneToMany(targetEntity="Feed", mappedBy="user")
 	 */
 	protected $feeds;
 	
@@ -138,6 +145,11 @@ class User extends BaseUser
 	 */
 	protected $instagram;
 	
+	/**
+	 * @ORM\Column(name="klout", type="string", nullable=true)
+	 */
+	protected $klout;
+	
 	public function __construct()
 	{
 		parent::__construct();
@@ -146,6 +158,7 @@ class User extends BaseUser
 		$this->countries = new \Doctrine\Common\Collections\ArrayCollection();
 		$this->audience = new \Doctrine\Common\Collections\ArrayCollection();
 		$this->prices = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->feeds = new \Doctrine\Common\Collections\ArrayCollection();
 	}
 	
 	/**
@@ -172,7 +185,24 @@ class User extends BaseUser
 		$this->profileImage = $profileImage;
 		return $this;
 	}
-			
+	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getProfileCover() {
+		return $this->profileCover;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $profileCover        	
+	 */
+	public function setProfileCover($profileCover) {
+		$this->profileCover = $profileCover;
+		return $this;
+	}
+				
 	/**
 	 *
 	 * @return the unknown_type
@@ -224,6 +254,40 @@ class User extends BaseUser
 		return $this;
 	}
 	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getSecondaryNumber() {
+		return $this->secondaryNumber;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $secondaryNumber        	
+	 */
+	public function setSecondaryNumber($secondaryNumber) {
+		$this->secondaryNumber = $secondaryNumber;
+		return $this;
+	}
+	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getAge() {
+		return $this->age;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $age        	
+	 */
+	public function setAge($age) {
+		$this->age = $age;
+		return $this;
+	}
+		
 	/**
 	 *
 	 * @return the unknown_type
@@ -472,6 +536,24 @@ class User extends BaseUser
 		$this->instagram = $instagram;
 		return $this;
 	}
+	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getKlout() {
+		return $this->klout;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $klout        	
+	 */
+	public function setKlout($klout) {
+		$this->klout = $klout;
+		return $this;
+	}
+	
 	
 	
 }

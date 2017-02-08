@@ -14,15 +14,35 @@ use Firebase\JWT\JWT;
 
 class TokenAuthenticator extends AbstractGuardAuthenticator
 {
+	protected $container;
 	protected $em;
 	
-	public function __construct($em)
+	public function __construct($em, $token)
 	{
+		$this->container = $token;
 		$this->em = $em;
 	}
 	
 	public function getCredentials(Request $request)
 	{
+		/*$input = json_decode($request->getContent());
+		if (isset($input->link_account) && $input->link_account == 1) {
+			$user = $this->container;//->get('security.token_storage')->getToken();//->getUser();
+			var_dump($user);die();
+			return;
+		}
+		*/
+		$routeName = $request->get('_route');
+		if (in_array($routeName, array('inf_load_feeds'))) {
+			$input = json_decode($request->getContent());
+			$payload = [
+				'sub' => 1,
+				'iat' => time(),
+				'exp' => time() + (2 * 7 * 24 * 60 * 60)
+			];
+			//return JWT::encode($payload, 'auth-token-secret');
+			return $payload;
+		}
 		if (!$request->headers->has('Authorization')) {
 			return;
 		}

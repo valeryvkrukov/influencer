@@ -1,9 +1,3 @@
-<div class="container-fluid padding-25 sm-padding-10 sm-gutter">
-	<div class="row">
-		<div class="col-md-12 col-xlg-12">
-			<div class="row">
-				
-			</div>
-		</div>
-	</div>
-</div>
+<div ng-if="user.role == 'admin'" ng-include src=" '{{ path('inf_home', {'role': 'admin'}) }}' " include-replace></div>
+<div ng-if="user.role == 'influencer'" ng-include src=" '{{ path('inf_home', {'role': 'influencer'}) }}' " include-replace></div>
+<div ng-if="user.role == 'client'" ng-include src=" '{{ path('inf_home', {'role': 'client'}) }}' " include-replace></div>

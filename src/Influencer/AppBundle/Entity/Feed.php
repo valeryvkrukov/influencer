@@ -17,6 +17,17 @@ class Feed
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 */
 	protected $id;
+
+	/**
+	 * @ORM\Column(name="internal_id", type="string", nullable=false)
+	 */
+	protected $internalId;
+	
+	/**
+	 * @ORM\ManyToOne(targetEntity="User", inversedBy="feeds")
+	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+	 */
+	protected $user;
 	
 	/**
 	 * @ORM\Column(name="network", type="string", nullable=false)
@@ -24,17 +35,17 @@ class Feed
 	protected $network;
 	
 	/**
-	 * @ORM\Column(name="title", type="string", nullable=false)
+	 * @ORM\Column(name="title", type="string", nullable=true)
 	 */
 	protected $title;
 	
 	/**
-	 * @ORM\Column(name="picture", type="string", nullable=true)
+	 * @ORM\Column(name="picture", type="text", nullable=true)
 	 */
 	protected $picture;
 	
 	/**
-	 * @ORM\Column(name="contents", type="string", nullable=false)
+	 * @ORM\Column(name="contents", type="text", nullable=true)
 	 */
 	protected $contents;
 	
@@ -42,6 +53,16 @@ class Feed
 	 * @ORM\Column(name="link", type="string", nullable=true)
 	 */
 	protected $link;
+	
+	/**
+	 * @ORM\Column(name="likes", type="integer", nullable=true)
+	 */
+	protected $likes;
+	
+	/**
+	 * @ORM\Column(name="comments", type="integer", nullable=true)
+	 */
+	protected $comments;
 	
 	/**
 	 * @ORM\Column(name="added_at", type="datetime")
@@ -61,6 +82,40 @@ class Feed
 		return $this->id;
 	}
 	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getInternalId() {
+		return $this->internalId;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $internalId        	
+	 */
+	public function setInternalId($internalId) {
+		$this->internalId = $internalId;
+		return $this;
+	}
+	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getUser() {
+		return $this->user;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $user        	
+	 */
+	public function setUser($user) {
+		$this->user = $user;
+		return $this;
+	}
+			
 	/**
 	 *
 	 * @return the unknown_type
@@ -146,6 +201,40 @@ class Feed
 		return $this;
 	}
 	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getLikes() {
+		return $this->likes;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $likes        	
+	 */
+	public function setLikes($likes) {
+		$this->likes = $likes;
+		return $this;
+	}
+	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getComments() {
+		return $this->comments;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $comments        	
+	 */
+	public function setComments($comments) {
+		$this->comments = $comments;
+		return $this;
+	}
+		
 	/**
 	 *
 	 * @return the unknown_type
