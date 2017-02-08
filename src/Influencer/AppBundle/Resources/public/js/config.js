@@ -68,6 +68,20 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 			templateUrl: Routing.generate('inf_campaign'),
 			resolve: lazyLoad(['campaign'], ['select', 'wizard'])
 		})
+		.state('app.settings', {
+			abstract: true,
+			url: '/settings',
+			template: '<div class="full-height" ui-view></div>',
+			resolve: {
+				loginRequired: loginRequired
+			}
+		})
+		.state('app.settings.signup', {
+			url: '/signup',
+			controller: 'AdminSettingsSignupCtrl',
+			templateUrl: Routing.generate('inf_admin_settings_signup'),
+			resolve: lazyLoad(['admin/settings/signup'], [])
+		})
 		.state('access', {
 			abstract: true,
 			url: '/access',

@@ -21,4 +21,6 @@ abstract class AbstractData
 	{
 		return new Client();
 	}
+	
+	abstract public function getDashboardData($id);
 }

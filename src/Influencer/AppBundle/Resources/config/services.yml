@@ -18,3 +18,15 @@ services:
     app.feed_loader:
         class: Influencer\AppBundle\Service\FeedLoader
         arguments: ["@service_container"]
+
+    app.admin_data:
+        class: Influencer\AppBundle\Service\AdminData
+        arguments: ["@service_container"]
+        
+    app.influencer_data:
+        class: Influencer\AppBundle\Service\InfluencerData
+        arguments: ["@service_container"]
+        
+    app.client_data:
+        class: Influencer\AppBundle\Service\ClientData
+        arguments: ["@service_container"]
