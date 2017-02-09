@@ -246,7 +246,6 @@ angular.module('app')
                         root + 'assets/plugins/bootstrap-collapse/bootstrap-tabcollapse.js'
                     ]
                 }
-
             ]
         });
     }]);

@@ -32,7 +32,13 @@ angular.module('app')
 			}
 		};
 	}])
-	.controller('ProfileCtrl', ['$scope', '$http', '$auth', '$sce', 'FeedLoader', function($scope, $http, $auth, $sce, FeedLoader) {
+	.controller('ProfileCtrl', ['Account', '$scope', '$http', '$auth', '$sce', 'FeedLoader', function(Account, $scope, $http, $auth, $sce, FeedLoader) {
+		if ($scope.templatePath === undefined) {
+			Account.getProfile().then(function(resp) {
+				console.log(resp.data.role);
+				$scope.templatePath = Routing.generate('inf_profile', {role: resp.data.role});
+			});
+		}
 		$scope.feeds = {
 			facebook: [],
 			google: [],

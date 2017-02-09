@@ -82,8 +82,8 @@ class AuthController extends BaseController
 			if ($request->headers->has('Authorization')) {
 				$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
 					'facebook' => $profile['id'],
-					'email' => $profile['email'],
-					'username' => $profile['id'],
+					//'email' => $profile['email'],
+					//'username' => $profile['id'],
 				]);
 				if ($user) {
 					return new JsonResponse(['message' => 'There is already a Facebook account that belongs to you'], 409);
@@ -107,8 +107,8 @@ class AuthController extends BaseController
 			} else {
 				$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
 					'facebook' => $profile['id'],
-					'email' => $profile['email'],
-					'username' => $profile['id'],
+					//'email' => $profile['email'],
+					//'username' => $profile['id'],
 				]);
 				if ($user) {
 					return new JsonResponse(['token' => $this->createToken($user)]);
@@ -167,8 +167,8 @@ class AuthController extends BaseController
 			if ($request->headers->has('Authorization')) {
 				$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
 					'google' => $profile['id'],
-					'email' => $profile['email'],
-					'username' => $profile['id'],
+					//'email' => $profile['email'],
+					//'username' => $profile['id'],
 				]);
 				if ($user) {
 					return new JsonResponse(['message' => 'There is already a Google account that belongs to you'], 409);
@@ -189,8 +189,8 @@ class AuthController extends BaseController
 			} else {
 				$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
 					'google' => $profile['sub'],
-					'email' => $profile['email'],
-					'username' => $profile['sub'],
+					//'email' => $profile['email'],
+					//'username' => $profile['sub'],
 				]);
 				if ($user) {
 					return new JsonResponse(['token' => $this->createToken($user)]);
@@ -271,7 +271,7 @@ class AuthController extends BaseController
 				if ($request->headers->has('Authorization')) {
 					$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
 						'twitter' => $profile['id'],
-						'username' => $profile['id'],
+						//'username' => $profile['id'],
 					]);
 					if ($user) {
 						return new JsonResponse(['message' => 'There is already a Twitter account that belongs to you'], 409);
@@ -280,7 +280,7 @@ class AuthController extends BaseController
 					$payload = (array) JWT::decode($token, 'auth-token-secret', array('HS256'));
 					$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
 						'twitter' => $payload['sub'],
-						'username' => $profile['id'],
+						//'username' => $profile['id'],
 					]);
 					$user->setEnabled(1);
 					$user->setTwitter($profile['id']);

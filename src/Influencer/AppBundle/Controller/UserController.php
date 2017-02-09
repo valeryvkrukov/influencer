@@ -45,11 +45,11 @@ class UserController extends BaseController
 	public function feedsAction(Request $request)
 	{
 		$em = $this->getDoctrine()->getManager();
-		$userId = $this->getUser();
+		$user = $this->getUser();
 		$feeds = [];
-		$networks = $em->getRepository('InfluencerAppBundle:Feed')->getUserNetworks($userId);
+		$networks = $em->getRepository('InfluencerAppBundle:Feed')->getUserNetworks($user);
 		foreach ($networks as $n) {
-			$data = $em->getRepository('InfluencerAppBundle:Feed')->loadSavedFeedsFor($userId, $n['network'], 'array', 10);
+			$data = $em->getRepository('InfluencerAppBundle:Feed')->loadSavedFeedsFor($user, $n['network'], 'array', 10);
 			foreach ($data as $item) {
 				$feeds[$n['network']][] = $item;
 			}
@@ -94,4 +94,16 @@ class UserController extends BaseController
 		}
 	}
 	
+	/**
+	 * @Route("/list", name="inf_admin_get_users_list", options={"expose"=true})
+	 */
+	public function adminGetUsersList(Request $request)
+	{
+		$roles = $this->getUser()->getRoles();
+		if (in_array('ROLE_ADMIN', $roles)) {
+			$em = $this->getDoctrine()->getManager();
+			$users = $em->getRepository('InfluencerAppBundle:User')->getAllUsers();
+			return new JsonResponse($users);
+		}
+	}
 }

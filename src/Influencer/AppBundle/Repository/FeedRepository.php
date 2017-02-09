@@ -120,15 +120,15 @@ class FeedRepository extends EntityRepository
 					$feed->setInternalId($item['id']);
 					$feed->setNetwork('google');
 				}
-				$feed->setTitle($item['title']);
-				if (isset($item['object']['attachments'][0]['image']['url'])) {
-					$feed->setPicture($item['object']['attachments'][0]['image']['url']);
+				$feed->setTitle($item['snippet']['title']);
+				if (isset($item['snippet']['standard']['url'])) {
+					$feed->setPicture($item['snippet']['standard']['url']);
 				}
-				$feed->setContents($item['object']['content']);
-				$feed->setLikes(intval($item['object']['plusoners']['totalItems']));
-				$feed->setComments(intval($item['object']['replies']['totalItems']));
-				$feed->setLink($item['object']['url']);
-				$feed->setCreatedAt($item['published']);
+				$feed->setContents($item['snippet']['description']);
+				$feed->setLikes(0);
+				$feed->setComments(0);
+				$feed->setLink('#');
+				$feed->setCreatedAt($item['snippet']['publishedAt']);
 				$em->persist($feed);
 				if (!isset($this->exists[$item['id']])) {
 					$feed->setUser($user);

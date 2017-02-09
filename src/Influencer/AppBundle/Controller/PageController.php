@@ -51,11 +51,11 @@ class PageController extends BaseController
 	}
 	
 	/**
-	 * @Route("/profile", name="inf_profile", options={"expose"=true})
+	 * @Route("/profile/{role}", name="inf_profile", options={"expose"=true})
 	 */
-	public function profileAction(Request $request)
+	public function profileAction(Request $request, $role = null)
 	{
-		switch ($request->query->get('role')) {
+		switch ($role) {
 			case 'admin':
 				$tpl = 'admin/profile';
 				break;
@@ -66,9 +66,9 @@ class PageController extends BaseController
 				$tpl = 'client/profile';
 				break;
 			default:
-				$tpl = 'home';
+				$tpl = 'profile';
 		}
-		return $this->render('InfluencerAppBundle:Page:admin/'.$tpl.'.html.twig');
+		return $this->render('InfluencerAppBundle:Page:'.$tpl.'.html.twig');
 	}
 	
 	/**

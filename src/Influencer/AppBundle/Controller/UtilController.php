@@ -75,6 +75,111 @@ class UtilController extends Controller
     		],
     	]);
     }
+    
+    /**
+     * @Route("/get-categories", name="inf_get_categories", options={"expose"=true})
+     */
+    public function getCategories()
+    {
+    	$categories = [
+    		[
+    			'name' => 'Art & Design',
+    			'tag' => 'art-n-design',
+    			'icon' => '',
+    		],
+    		[
+    			'name' => 'Beauty',
+    			'tag' => 'beauty',
+    			'icon' => '',
+    		],
+    		[
+    			'name' => 'Women’s Fashion & Jewelry',
+    			'tag' => 'women-fashion-n-jewelry',
+    			'icon' => '',
+    		],
+    		[
+    			'name' => 'Men’s Fashion & Jewelry',
+    			'tag' => 'men-fashion-n-jewelry',
+    			'icon' => '',
+    		],
+    		[
+    			'name' => 'Travel',
+    			'tag' => 'travel',
+    			'icon' => '',
+    		],
+    		[
+    			'name' => 'Adventure',
+    			'tag' => 'adventure',
+    			'icon' => '',
+    		],
+    		[
+    			'name' => 'Auto',
+    			'tag' => 'auto',
+    			'icon' => '',
+    		],
+    		[
+    			'name' => 'Sports',
+    			'tag' => 'sport',
+    			'icon' => '',
+    		],
+    		[
+    			'name' => 'Food',
+    			'tag' => 'food',
+    			'icon' => '',
+    		],
+    		[
+    			'name' => 'Fitness',
+    			'tag' => 'fitness',
+    			'icon' => '',
+    		],
+    		[
+    			'name' => 'Wellness & Nutrition',
+    			'tag' => 'wellness-n-nutrition',
+    			'icon' => '',
+    		],
+    		[
+    			'name' => 'Parenting',
+    			'tag' => 'parenting',
+    			'icon' => '',
+    		],
+    		[
+    			'name' => 'Life Coach',
+    			'tag' => 'life-coach',
+    			'icon' => '',
+    		],
+    		[
+    			'name' => 'Music',
+    			'tag' => 'music',
+    			'icon' => '',
+    		],
+    		[
+    			'name' => 'Nightlife',
+    			'tag' => 'nightlife',
+    			'icon' => '',
+    		],
+    		[
+    			'name' => 'Entertainment',
+    			'tag' => 'entertainment',
+    			'icon' => '',
+    		],
+    		[
+    			'name' => 'Pets',
+    			'tag' => 'pets',
+    			'icon' => '',
+    		],
+    		[
+    			'name' => 'Tech',
+    			'tag' => 'tech',
+    			'icon' => '',
+    		],
+    	];
+    	return new JsonResponse([
+    		'status' => 200,
+    		'data' => [
+    			'categories' => $categories,
+    		],
+    	]);
+    }
 
     /**
      * @Route("/get-social-networks", name="inf_get_social_networks", options={"expose"=true})

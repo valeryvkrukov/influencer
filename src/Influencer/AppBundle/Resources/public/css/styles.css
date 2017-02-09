@@ -64,3 +64,25 @@
 .social-wrapper .social .jumbotron {
 	height: 30vh;
 }
+
+.inline-group {
+	background-color: #fff;
+	border: 1px solid rgba(0,0,0,.07);
+	padding: 7px 12px 4px;
+    -webkit-transition: background-color .2s ease;
+    transition: background-color .2s ease;
+    margin-bottom: 10px;
+}
+
+.spec-label {
+    font-family: Montserrat;
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+label small {
+	color: #888a85;
+	font-weight:normal;
+	text-transform:none;
+}

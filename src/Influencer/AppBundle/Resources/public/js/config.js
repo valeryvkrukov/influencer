@@ -94,7 +94,7 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 			url: '/list',
 			controller: 'AdminUsersListCtrl',
 			templateUrl: Routing.generate('inf_admin_users_list'),
-			resolve: lazyLoad(['admin/users/list'], [])
+			resolve: lazyLoad(['admin/users/list'], ['dataTables'])
 		})
 		.state('app.users.create', {
 			url: '/create',
@@ -194,6 +194,13 @@ app.factory('GetPredefinedVars', ['$q', '$http', function($q, $http) {
 				deferred.resolve(resp.data);
 			});
 			return deferred.promise;
+		},
+		getCategories: function() {
+			var deferred = $q.defer();
+			$http.get(Routing.generate('inf_get_categories')).then(function(resp) {
+				deferred.resolve(resp.data);
+			});
+			return deferred.promise;
 		}
 	};
 }]);
@@ -215,9 +222,11 @@ app.controller('AppCtrl', ['$scope', '$rootScope', '$state', '$stateParams', 'Ac
 		return $state.includes(name);
     };
     $rootScope.getUserData = function(key) {
-    	Account.getProfile().then(function(resp) {
-    		$rootScope.user = resp.data;
-    	});
+    	if ($rootScope.user === undefined) {
+	    	Account.getProfile().then(function(resp) {
+	    		$rootScope.user = resp.data;
+	    	});
+    	}
     };
 }]);
 
@@ -277,7 +286,7 @@ app.filter('datetime', function() {
 });
 
 app.filter('trustHTML', ['$sce',function($sce) {
-	  return function(value, type) {
-		    return $sce.trustAs(type || 'html', value);
-		  }
-		}]);
+	return function(value, type) {
+		return $sce.trustAs(type || 'html', value);
+	};
+}]);

@@ -54,6 +54,12 @@ class UserRepository extends EntityRepository
 			$user->setFirstName($data->first_name);
 			$user->setLastName($data->last_name);
 			$user->setContactNumber($data->contact_number);
+			$tz = new \DateTimeZone(date_default_timezone_get());
+			$age = \DateTime::createFromFormat('d/m/Y', $data->dob, $tz)->diff(new DateTime('now', $tz))->y;
+			$user->setAge($age);
+			if (isset($data->secondary_number)) {
+				$user->setSecondaryNumber($data->secondary_number);
+			}
 			$user->setBrief($data->bio);
 			if ($data->website) {
 				$user->setWebsite($data->website);
@@ -82,7 +88,8 @@ class UserRepository extends EntityRepository
 			if (is_array($data->audience) && sizeof($data->audience) > 0) {
 				foreach ($data->audience as $item) {
 					$audience = new Audience();
-					$audience->setName($item);
+					$audience->setCode($item->code);
+					$audience->setName($item->name);
 					$em->persist($audience);
 					$user->addAudience($audience);
 				}
@@ -115,6 +122,12 @@ class UserRepository extends EntityRepository
 		} catch(\Exception $e) {
 			var_dump($e->getMessage());
 		}
+	}
+	
+	public function getAllUsers()
+	{
+		$em = $this->getEntityManager();
+		$dql = 'SELECT u.';
 	}
 	
 }

@@ -33,7 +33,9 @@
                 						<h2 ng-if="(user.first_name || user.last_name)">{{ '{{ user.first_name }} {{ user.last_name }}' }}</h2>
                 						<p ng-if="user.username"><strong>Username: </strong> {{ '{{ user.username }}' }}</p>
                 						<p ng-if="user.email"><strong>Email: </strong> {{ '{{ user.email }}' }}</p>
-                						<p ng-if="user.contact_number"><strong>Phone: </strong> {{ '{{ user.contact_number }}' }}</p>
+                						<p ng-if="user.dob"><strong>DOB: </strong> {{ '{{ user.dob }}' }}</p>
+                						<p ng-if="user.contact_number"><strong>Contact Number: </strong> {{ '{{ user.contact_number }}' }}</p>
+                						<p ng-if="user.secondary_number"><strong>Secondary Number: </strong> {{ '{{ user.secondary_number }}' }}</p>
                 						<p ng-if="user.website && user.website != ''"><strong>Website: </strong> {{ '{{ user.website }}' }}</p>
                 						<p ng-if="user.socials && sizeOf(user.socials) > 0"><strong>Social Accounts:</strong></p>
                 						<p ng-if="user.socials && sizeOf(user.socials) > 0" class="small hint-text" ng-repeat="(network, item) in user.socials" style="padding-left:10px;">
@@ -116,11 +118,28 @@
                     					</div>
                     					<div class="row">
                     						<div class="col-sm-12">
+                    							<div pg-form-group class="form-group form-group-default required" ng-class="{ 'has-error': mainInfluencerInfo.dob.$invalid && !mainInfluencerInfo.dob.$pristine }">
+                    								<label>DOB <small>(Not shown on profile)</small></label>
+                    								<input type="text" name="dob" placeholder="DOB" class="form-control" ng-model="user.dob" ui-jq="mask" ui-options="'99/99/9999'" required>
+                    							</div>
+                    							<label class="error" for="dob" ng-show="mainInfluencerInfo.dob.$invalid && !mainInfluencerInfo.dob.$pristine">This field is required.</label>
+                    						</div>
+                    					</div>
+                    					<div class="row">
+                    						<div class="col-sm-12">
                     							<div pg-form-group class="form-group form-group-default required" ng-class="{ 'has-error': mainInfluencerInfo.contact_number.$invalid && !mainInfluencerInfo.contact_number.$pristine }">
                     								<label>Contact Number</label>
                     								<input type="text" name="contact_number" placeholder="Contact Number" class="form-control" ng-model="user.contact_number" ui-jq="mask" ui-options="'(999) 999-9999'" required>
                     							</div>
                     							<label class="error" for="contact_number" ng-show="mainInfluencerInfo.contact_number.$invalid && !mainInfluencerInfo.contact_number.$pristine">This field is required.</label>
+                    						</div>
+                    					</div>
+                    					<div class="row">
+                    						<div class="col-sm-12">
+                    							<div pg-form-group class="form-group form-group-default" ng-class="{ 'has-error': mainInfluencerInfo.secondary_number.$invalid && !mainInfluencerInfo.secondary_number.$pristine }">
+                    								<label>Secondary Number</label>
+                    								<input type="text" name="secondary_number" placeholder="Secondary Number" class="form-control" ng-model="user.secondary_number" ui-jq="mask" ui-options="'(999) 999-9999'">
+                    							</div>
                     						</div>
                     					</div>
                     				</div>
@@ -153,7 +172,9 @@
                 						<h2 ng-if="(user.first_name || user.last_name)">{{ '{{ user.first_name }} {{ user.last_name }}' }}</h2>
                 						<p ng-if="user.username"><strong>Username: </strong> {{ '{{ user.username }}' }}</p>
                 						<p ng-if="user.email"><strong>Email: </strong> {{ '{{ user.email }}' }}</p>
-                						<p ng-if="user.contact_number"><strong>Phone: </strong> {{ '{{ user.contact_number }}' }}</p>
+                						<p ng-if="user.dob"><strong>DOB: </strong> {{ '{{ user.dob }}' }}</p>
+                						<p ng-if="user.contact_number"><strong>Contact Number: </strong> {{ '{{ user.contact_number }}' }}</p>
+                						<p ng-if="user.secondary_number"><strong>Secondary Number: </strong> {{ '{{ user.secondary_number }}' }}</p>
                 						<p ng-if="user.website && user.website != ''"><strong>Website: </strong> {{ '{{ user.website }}' }}</p>
                 						<p ng-if="user.socials && sizeOf(user.socials) > 0"><strong>Social Accounts:</strong></p>
                 						<p ng-if="user.socials && sizeOf(user.socials) > 0" class="small hint-text" ng-repeat="(network, item) in user.socials" style="padding-left:10px;">
@@ -212,6 +233,20 @@
                     							<label class="error" for="countries" ng-show="user.countries && user.countries.length == 0">At least one country required.</label>
                     						</div>
                     					</div>
+                    					<div class="row">
+                    						<div class="col-sm-12" id="languages-list">
+                    							<div pg-form-group class="form-group form-group-default form-group-default-select required" ng-class="{ 'has-error': user.categories.length == 0 }">
+                    								<label>Categories</label>
+                    								<ui-select name="categories" multiple ng-model="user.audience" theme="select2" style="width:100%">
+                    									<ui-select-match placeholder="Select categories...">{{ '{{ $item.name }}' }}</ui-select-match>
+                    									<ui-select-choices repeat="item in categories | filter: $select.search">
+                    										<div ng-bind-html="trustAsHtml(('<strong>' + item.name + '</strong>' | highlight: $select.search))"></div>
+                    									</ui-select-choices>
+                    								</ui-select>
+                    							</div>
+                    							<label class="error" for="countries" ng-show="user.countries && user.countries.length == 0">At least one country required.</label>
+                    						</div>
+                    					</div>
                 						<div class="row">
                     						<div class="col-sm-12">
                     							<div pg-form-group class="form-group form-group-default">
@@ -226,15 +261,6 @@
                     								<label>About Me</label>
                     								<textarea name="bio" class="form-control" rows="3" ng-model="user.bio"></textarea>
                     							</div>
-                    						</div>
-                    					</div>
-                    					<div class="row">
-                    						<div class="col-sm-12" id="audience-list">
-                    							<div pg-form-group class="form-group form-group-default required" ng-class="{ 'has-error': user.audience.length == 0 }">
-                    								<label>Audience</label>
-                    								<input type="text" name="audience" placeholder="Audience" class="tagsinput custom-tag-input" ui-jq="tagsinput">
-                    							</div>
-                    							<label class="error" for="audience" ng-show="user.audience.length == 0">This field is required.</label>
                     						</div>
                     					</div>
                 					</div>
@@ -267,7 +293,9 @@
                 						<h2 ng-if="(user.first_name || user.last_name)">{{ '{{ user.first_name }} {{ user.last_name }}' }}</h2>
                 						<p ng-if="user.username"><strong>Username: </strong> {{ '{{ user.username }}' }}</p>
                 						<p ng-if="user.email"><strong>Email: </strong> {{ '{{ user.email }}' }}</p>
-                						<p ng-if="user.contact_number"><strong>Phone: </strong> {{ '{{ user.contact_number }}' }}</p>
+                						<p ng-if="user.dob"><strong>DOB: </strong> {{ '{{ user.dob }}' }}</p>
+                						<p ng-if="user.contact_number"><strong>Contact Number: </strong> {{ '{{ user.contact_number }}' }}</p>
+                						<p ng-if="user.secondary_number"><strong>Secondary Number: </strong> {{ '{{ user.secondary_number }}' }}</p>
                 						<p ng-if="user.website && user.website != ''"><strong>Website: </strong> {{ '{{ user.website }}' }}</p>
                 						<p ng-if="user.socials && sizeOf(user.socials) > 0"><strong>Social Accounts:</strong></p>
                 						<p ng-if="user.socials && sizeOf(user.socials) > 0" class="small hint-text" ng-repeat="(network, item) in user.socials" style="padding-left:10px;">
@@ -360,7 +388,9 @@
                 						<h2 ng-if="(user.first_name || user.last_name)">{{ '{{ user.first_name }} {{ user.last_name }}' }}</h2>
                 						<p ng-if="user.username"><strong>Username: </strong> {{ '{{ user.username }}' }}</p>
                 						<p ng-if="user.email"><strong>Email: </strong> {{ '{{ user.email }}' }}</p>
-                						<p ng-if="user.contact_number"><strong>Phone: </strong> {{ '{{ user.contact_number }}' }}</p>
+                						<p ng-if="user.dob"><strong>DOB: </strong> {{ '{{ user.dob }}' }}</p>
+                						<p ng-if="user.contact_number"><strong>Contact Number: </strong> {{ '{{ user.contact_number }}' }}</p>
+                						<p ng-if="user.secondary_number"><strong>Secondary Number: </strong> {{ '{{ user.secondary_number }}' }}</p>
                 						<p ng-if="user.website && user.website != ''"><strong>Website: </strong> {{ '{{ user.website }}' }}</p>
                 						<p ng-if="user.socials && sizeOf(user.socials) > 0"><strong>Social Accounts:</strong></p>
                 						<p ng-if="user.socials && sizeOf(user.socials) > 0" class="small hint-text" ng-repeat="(network, item) in user.socials" style="padding-left:10px;">
@@ -446,7 +476,9 @@
                     						<p ng-if="(user.first_name || user.last_name)"><strong>Name: </strong> {{ '{{ user.first_name }} {{ user.last_name }}' }}</p>
                     						<p ng-if="user.username"><strong>Username: </strong> {{ '{{ user.username }}' }}</p>
                     						<p ng-if="user.email"><strong>Email: </strong> {{ '{{ user.email }}' }}</p>
-                    						<p ng-if="user.contact_number"><strong>Phone: </strong> {{ '{{ user.contact_number }}' }}</p>
+                    						<p ng-if="user.dob"><strong>DOB: </strong> {{ '{{ user.dob }}' }}</p>
+                    						<p ng-if="user.contact_number"><strong>Contact Number: </strong> {{ '{{ user.contact_number }}' }}</p>
+                							<p ng-if="user.secondary_number"><strong>Secondary Number: </strong> {{ '{{ user.secondary_number }}' }}</p>
                     						<p ng-if="user.website && user.website != ''"><strong>Website: </strong> {{ '{{ user.website }}' }}</p>
                     						<p ng-if="user.socials && sizeOf(user.socials) > 0"><strong>Social Accounts:</strong></p>
                     						<p ng-if="user.socials && sizeOf(user.socials) > 0" class="small hint-text" ng-repeat="(network, item) in user.socials" style="padding-left:10px;">
