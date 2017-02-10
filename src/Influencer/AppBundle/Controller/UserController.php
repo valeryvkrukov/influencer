@@ -2,6 +2,7 @@
 namespace Influencer\AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -20,6 +21,57 @@ class UserController extends BaseController
 	{
 		$user = $this->getUserData();
 		return new JsonResponse($user);
+	}
+	
+	/**
+	 * @Route("/update/{id}", name="inf_update_user", options={"expose"=true})
+	 * @Method("POST")
+	 */
+	public function updateUser(Request $request, $id)
+	{
+		$input = json_decode($request->getContent());
+		if ($input->id == $id) {
+			unset($input->id);
+			unset($input->role);
+			$serializer = $this->get('serializer');
+			$em = $this->getDoctrine()->getManager();
+			$user = $em->getRepository('InfluencerAppBundle:User')->find($id);
+			if ($user) {
+				foreach ($input as $field => $value) {
+					$setter = 'set'.ucfirst($field);
+					if (method_exists($user, $setter)) {
+						if (!is_array($value)) {
+							$user->$setter($value);
+						} else {
+							$em->getRepository('InfluencerAppBundle:User')->addIfNotExists($id, $field, $value);
+							/*switch($field) {
+								case 'languages':
+									$em->getRepository('InfluencerAppBundle:User')->addIfNotExists($field, $value);
+									$current = json_decode($serializer->serialize($user->getLanguages(), 'json'));
+									foreach ($current as $curr) {
+										$add = true;
+										foreach ($value as $item) {
+											if ($curr->code == $item->code) {
+												$add = false;
+											}
+										}
+										if ($add) {
+											$lang = new Language();
+											$lang->setCode($item->code);
+											$lang->setName($item->lang);
+											$em->persist($lang);
+											$user->addLanguage($lang);
+										}
+									}
+									break;
+							}*/
+						}
+						var_dump($field, $value);
+					}
+				}
+			}
+		}
+		die();
 	}
 	
 	/**

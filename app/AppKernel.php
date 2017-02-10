@@ -15,6 +15,7 @@ class AppKernel extends Kernel
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
+        	new JMS\SerializerBundle\JMSSerializerBundle(),
         	new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
         	new FOS\UserBundle\FOSUserBundle(),
         	new \Auth0\JWTAuthBundle\JWTAuthBundle(),

@@ -49,9 +49,19 @@ class User extends BaseUser
 	protected $secondaryNumber;
 	
 	/**
-	 * @ORM\Column(name="age", type="string", nullable=true)
+	 * @ORM\Column(name="age", type="integer", nullable=true)
 	 */
 	protected $age;
+	
+	/**
+	 * @ORM\Column(name="age_bracket", type="string", nullable=true)
+	 */
+	protected $ageBracket;
+	
+	/**
+	 * @ORM\Column(name="gender", type="integer", nullable=true)
+	 */
+	protected $gender;
 	
 	/**
 	 * @ORM\Column(name="brief", type="text", nullable=true)
@@ -64,59 +74,27 @@ class User extends BaseUser
 	protected $website;
 	
 	/**
-	 * @ORM\ManyToMany(targetEntity="Language")
-	 * @ORM\JoinTable(name="users_languages",
-	 *   joinColumns={
-	 *     @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-	 *   },
-	 *   inverseJoinColumns={
-	 *     @ORM\JoinColumn(name="language_id", referencedColumnName="id")
-	 *   }
-	 * )
+	 * @ORM\OneToMany(targetEntity="Language", mappedBy="user", cascade={"persist", "remove"})
 	 */
 	protected $languages;
 	
 	/**
-	 * @ORM\ManyToMany(targetEntity="Country")
-	 * @ORM\JoinTable(name="users_countries",
-	 *   joinColumns={
-	 *     @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-	 *   },
-	 *   inverseJoinColumns={
-	 *     @ORM\JoinColumn(name="country_id", referencedColumnName="id")
-	 *   }
-	 * )
+	 * @ORM\OneToMany(targetEntity="Country", mappedBy="user", cascade={"persist", "remove"})
 	 */
 	protected $countries;
 	
 	/**
-	 * @ORM\ManyToMany(targetEntity="Audience")
-	 * @ORM\JoinTable(name="users_audience",
-	 *   joinColumns={
-	 *     @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-	 *   },
-	 *   inverseJoinColumns={
-	 *     @ORM\JoinColumn(name="audience_id", referencedColumnName="id")
-	 *   }
-	 * )
+	 * @ORM\OneToMany(targetEntity="Audience", mappedBy="user", cascade={"persist", "remove"})
 	 */
 	protected $audience;
 	
 	/**
-	 * @ORM\ManyToMany(targetEntity="Price")
-	 * @ORM\JoinTable(name="users_prices",
-	 *   joinColumns={
-	 *     @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-	 *   },
-	 *   inverseJoinColumns={
-	 *     @ORM\JoinColumn(name="price_id", referencedColumnName="id")
-	 *   }
-	 * )
+	 * @ORM\OneToMany(targetEntity="Price", mappedBy="user", cascade={"persist", "remove"})
 	 */
 	protected $prices;
 	
 	/**
-	 * @ORM\OneToMany(targetEntity="Feed", mappedBy="user")
+	 * @ORM\OneToMany(targetEntity="Feed", mappedBy="user", cascade={"persist", "remove"})
 	 */
 	protected $feeds;
 	
@@ -287,7 +265,41 @@ class User extends BaseUser
 		$this->age = $age;
 		return $this;
 	}
-		
+	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getAgeBracket() {
+		return $this->ageBracket;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $ageBracket        	
+	 */
+	public function setAgeBracket($ageBracket) {
+		$this->ageBracket = $ageBracket;
+		return $this;
+	}
+	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getGender() {
+		return $this->gender;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $gender        	
+	 */
+	public function setGender($gender) {
+		$this->gender = $gender;
+		return $this;
+	}
+				
 	/**
 	 *
 	 * @return the unknown_type

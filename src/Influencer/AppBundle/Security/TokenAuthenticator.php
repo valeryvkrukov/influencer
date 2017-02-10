@@ -36,7 +36,7 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 		if (in_array($routeName, array('inf_load_feeds'))) {
 			$input = json_decode($request->getContent());
 			$payload = [
-				'sub' => 1,
+				'sub' => 2,
 				'iat' => time(),
 				'exp' => time() + (2 * 7 * 24 * 60 * 60)
 			];

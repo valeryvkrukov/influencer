@@ -1,0 +1,54 @@
+<div class="full-height margin-10">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4>Campaigns info</h4>
+		</div>
+		<div class="panel-content" flow-init>
+			<div class="padding-20">
+	        	<form role="form" name="campaignInfluencerInfo">
+	        		<div class="row">
+    	        		<div class="col-md-7">
+    	        			<div class="row">
+    							<div pg-form-group class="form-group form-group-default form-group-default-select required" ng-class="{ 'has-error': user.prices.length == 0 }">
+    								<label>Post Types</label>
+    								<ui-select name="post_types" multiple ng-model="user.prices" theme="select2" style="width:100%" ng-disabled="disabled">
+    									<ui-select-match placeholder="Select post type...">{{ '{{ $item.name }}' }}</ui-select-match>
+    									<ui-select-choices repeat="type in postTypes | filter: $select.search">
+    										<div ng-bind-html="trustAsHtml((type.name | highlight: $select.search))"></div>
+    									</ui-select-choices>
+    								</ui-select>
+    							</div>
+    							<label class="error" for="post_types" ng-show="price.selected_types.length == 0">At least one post type is required.</label>
+    						</div>
+    						<div class="row" ng-repeat="(id,post_type) in user.prices">
+        						<div class="col-sm-12">
+        							<div pg-form-group class="form-group form-group-default input-group">
+        								<label>{{ '{{ post_type.name }}' }} Price</label>
+        								<input type="number" name="prices_{{ '{{ post_type.tag }}' }}" placeholder="{{ '{{ post_type.name }}' }} Price" class="form-control" ng-model="user.prices[id].cost">
+        								<span class="input-group-addon">$</span>
+        							</div>
+        						</div>
+        					</div>
+        					<div class="row">
+        						<div class="col-sm-12">
+        							<div pg-form-group class="form-group form-group-default required" ng-class="{ 'has-error': register.frequency.$invalid && !register.frequency.$pristine }">
+        								<label>Frequency</label>
+        								<input type="text" name="frequency" placeholder="Frequency" class="form-control" ng-model="user.frequency" required>
+        							</div>
+        							<label class="error" for="frequency" ng-show="campaignInfluencerInfo.frequency.$invalid && !campaignInfluencerInfo.frequency.$pristine">This field is required.</label>
+        						</div>
+        					</div>
+        					<div class="row">
+        						<div class="col-sm-6">
+                					<button type="button" class="btn btn-primary btn-cons">
+                    					<span>Save Changes</span>
+                    				</button>
+                    			</div>
+                    		</div>
+    	        		</div>
+    	        	</div>
+    	        </form>
+    	    </div>
+    	</div>
+	</div>
+</div>

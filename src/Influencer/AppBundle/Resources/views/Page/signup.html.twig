@@ -1,5 +1,5 @@
 <div class="container-fluid container-fixed-lg m-t-30" ng-controller="SignupCtrl" ng-init="initIntlVars()">
-	<div class="container-sm-height full-height" flow-init>
+	<div class="container-sm-height full-height" flow-init flow-file-added="setProfileImage($file, $event, $flow)">
 		<div class="row row-sm-height">
 			<div class="col-sm-10 col-sm-height col-middle">
             	<h2>Sign Up as Influencer</h2>
@@ -220,7 +220,7 @@
                     						</div>
                     					</div>
                     					<div class="row">
-                    						<div class="col-sm-12" id="languages-list">
+                    						<div class="col-sm-12" id="countries-list">
                     							<div pg-form-group class="form-group form-group-default form-group-default-select required" ng-class="{ 'has-error': user.countries.length == 0 }">
                     								<label>Countries</label>
                     								<ui-select name="countries" multiple ng-model="user.countries" theme="select2" style="width:100%">
@@ -234,17 +234,17 @@
                     						</div>
                     					</div>
                     					<div class="row">
-                    						<div class="col-sm-12" id="languages-list">
+                    						<div class="col-sm-12" id="categories-list">
                     							<div pg-form-group class="form-group form-group-default form-group-default-select required" ng-class="{ 'has-error': user.categories.length == 0 }">
                     								<label>Categories</label>
-                    								<ui-select name="categories" multiple ng-model="user.audience" theme="select2" style="width:100%">
+                    								<ui-select name="categories" multiple ng-model="user.categories" theme="select2" style="width:100%">
                     									<ui-select-match placeholder="Select categories...">{{ '{{ $item.name }}' }}</ui-select-match>
                     									<ui-select-choices repeat="item in categories | filter: $select.search">
                     										<div ng-bind-html="trustAsHtml(('<strong>' + item.name + '</strong>' | highlight: $select.search))"></div>
                     									</ui-select-choices>
                     								</ui-select>
                     							</div>
-                    							<label class="error" for="countries" ng-show="user.countries && user.countries.length == 0">At least one country required.</label>
+                    							<label class="error" for="categories" ng-show="user.countries && user.countries.length == 0">At least one country required.</label>
                     						</div>
                     					</div>
                 						<div class="row">
@@ -311,7 +311,7 @@
             							</p>
             							<p ng-if="user.audience.length > 0">
             								<strong>Audience:</strong>
-            								<span ng-repeat="item in user.audience">{{ '{{ ($index > 0?", ":"") + item }}' }}</span>
+            								<span ng-repeat="item in user.audience">{{ '{{ ($index > 0?", ":"") + item.name }}' }}</span>
             							</p>
             							<p ng-if="price.selected_types.length > 0"><strong>Prices:</strong></p>
             							<p ng-if="price.selected_types.length > 0" class="small hint-text" ng-repeat="pt in price.selected_types" style="padding-left:10px;">

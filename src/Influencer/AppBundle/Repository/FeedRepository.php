@@ -121,8 +121,8 @@ class FeedRepository extends EntityRepository
 					$feed->setNetwork('google');
 				}
 				$feed->setTitle($item['snippet']['title']);
-				if (isset($item['snippet']['standard']['url'])) {
-					$feed->setPicture($item['snippet']['standard']['url']);
+				if (isset($item['snippet']['thumbnails']['default']['url'])) {
+					$feed->setPicture($item['snippet']['thumbnails']['default']['url']);
 				}
 				$feed->setContents($item['snippet']['description']);
 				$feed->setLikes(0);

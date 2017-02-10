@@ -1,0 +1,111 @@
+<div class="full-height margin-10">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4>Main Info</h4>
+		</div>
+		<div class="panel-content" flow-init>
+			<div class="padding-20">
+	        	<form role="form" name="mainInfluencerInfo" ng-submit="submitMain()">
+	        		<div class="row">
+    	        		<div class="col-md-7">
+    	        			<div class="row">
+        						<div class="col-sm-12">
+        							<div pg-form-group class="form-group form-group-default required">
+        								<div class="alert" flow-drop>
+        									<label>Profile Image</label>
+        									<span class="btn btn-block btn-primary" flow-btn>Select File</span>
+        									<br>
+        									<div class="alert alert-default text-center bordered" style="height: 100px;" flow-drop>
+        										<h4>Or Drag And Drop your file here</h4>
+        									</div>
+        								</div>
+        							</div>
+        						</div>
+        					</div>
+        	        		<div class="row">
+        						<div class="col-sm-12">
+        							<div pg-form-group class="form-group form-group-default required" ng-class="{ 'has-error': mainInfluencerInfo.username.$invalid && !mainInfluencerInfo.username.$pristine }">
+        								<label>Username</label>
+        								<input inf-unique inf-unique-property="username" type="text" name="username" placeholder="Username" class="form-control" ng-model="user.username" required>
+        							</div>
+        							<label class="error" for="username" ng-show="mainInfluencerInfo.username.$invalid && !mainInfluencerInfo.username.$pristine && !mainInfluencerInfo.username.$error.unique">This field is required.</label>
+        							<label class="error" for="username" ng-show="mainInfluencerInfo.username.$error.unique == true">Username already in use.</label>
+        						</div>
+        					</div>
+        					<div class="row">
+        						<div class="col-sm-12">
+        							<div pg-form-group class="form-group form-group-default required" ng-class="{ 'has-error': (mainInfluencerInfo.email.$invalid && !mainInfluencerInfo.email.$pristine) || user.email == false }">
+        								<label>Email</label>
+        								<input inf-unique inf-unique-property="email" type="email" name="email" placeholder="Email" class="form-control" ng-model="user.email" required>
+        							</div>
+        							<label class="error" for="email" ng-show="mainInfluencerInfo.email.$invalid && !mainInfluencerInfo.email.$pristine && !mainInfluencerInfo.email.$error.unique">Enter a valid email.</label>
+        							<label class="error" for="email" ng-show="mainInfluencerInfo.email.$error.unique == true">Email already in use.</label>
+        						</div>
+        					</div>
+            				<div class="row">
+            					<div class="col-md-6">
+                    				<div pg-form-group class="form-group form-group-default required" ng-class="{ 'has-error': mainInfluencerInfo.firstName.$invalid && !mainInfluencerInfo.firstName.$pristine }">
+                    					<label>First Name</label>
+                    					<input type="text" name="firstName" placeholder="John" class="form-control" ng-model="user.firstName" required>
+                    				</div>
+                    				<label class="error" for="firstName" ng-show="mainInfluencerInfo.firstName.$invalid && !mainInfluencerInfo.firstName.$pristine">This field is required.</label>
+                    			</div>
+            					<div class="col-md-6">
+                    				<div pg-form-group class="form-group form-group-default required" ng-class="{ 'has-error': mainInfluencerInfo.lastName.$invalid && !mainInfluencerInfo.lastName.$pristine }">
+                    					<label>Last Name</label>
+                    					<input type="text" name="lastName" placeholder="Smith" class="form-control" ng-model="user.lastName" required>
+                    				</div>
+                    				<label class="error" for="lastName" ng-show="mainInfluencerInfo.lastName.$invalid && !mainInfluencerInfo.lastName.$pristine">This field is required.</label>
+                    			</div>
+                    		</div>
+        					<div class="row">
+        						<div class="col-sm-6">
+        							<div pg-form-group class="form-group form-group-default required" ng-class="{ 'has-error': mainInfluencerInfo.contactNumber.$invalid && !mainInfluencerInfo.contactNumber.$pristine }">
+        								<label>Contact Number</label>
+        								<input type="text" name="contactNumber" placeholder="Contact Number" class="form-control" ng-model="user.contactNumber" ui-jq="mask" ui-options="'(999) 999-9999'" required>
+        							</div>
+        							<label class="error" for="contactNumber" ng-show="mainInfluencerInfo.contactNumber.$invalid && !mainInfluencerInfo.contactNumber.$pristine">This field is required.</label>
+        						</div>
+        						<div class="col-sm-6">
+        							<div pg-form-group class="form-group form-group-default" ng-class="{ 'has-error': mainInfluencerInfo.secondaryNumber.$invalid && !mainInfluencerInfo.secondaryNumber.$pristine }">
+        								<label>Secondary Number</label>
+        								<input type="text" name="secondaryNumber" placeholder="Secondary Number" class="form-control" ng-model="user.secondaryNumber" ui-jq="mask" ui-options="'(999) 999-9999'">
+        							</div>
+        						</div>
+        					</div>
+        					<div class="row">
+        						<div class="col-sm-12">
+        							<div pg-form-group class="form-group form-group-default">
+        								<label>Website</label>
+        								<input type="text" name="webiste" placeholder="Website" class="form-control" ng-model="user.website">
+        							</div>
+        						</div>
+        					</div>
+    						<div class="row">
+    							<div class="col-sm-12">
+        							<div pg-form-group class="form-group form-group-default" style="height: 150px;">
+        								<label>About Me</label>
+        								<textarea name="brief" class="form-control" rows="3" ng-model="user.brief"></textarea>
+        							</div>
+        						</div>
+        					</div>
+        					<div class="row">
+        						<div class="col-sm-6">
+                					<button type="submit" class="btn btn-primary btn-cons">
+                    					<span>Save Changes</span>
+                    				</button>
+                    			</div>
+                    		</div>
+                    	</div>
+                    	<div class="col-md-5">
+                    		<div class="gallery-item">
+    							<img ng-if="$flow.files.length > 0" flow-img="$flow.files[0]" class="img-responsive" />
+    							<img ng-if="!$flow.files[0] && user.profileImage" ng-src="{{ '{{ user.profileImage }}' }}" class="img-responsive" />
+    						</div>
+                    	</div>
+                    </div>
+	        	</form>
+	        </div>
+        </div>
+    </div>
+</div>

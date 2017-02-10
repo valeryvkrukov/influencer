@@ -112,6 +112,13 @@ angular.module('app')
     	    });
         	form.$setSubmitted();
         };
+        $scope.setProfileImage = function($file, $event, $flow) {
+        	var fileReader = new FileReader();
+			fileReader.onload = function(event) {
+				$scope.user.profileImage = event.target.result;
+			};
+			fileReader.readAsDataURL($file.file);
+        };
         $scope.checkForMain = function() {
         	return $scope.steps['main'];
         };
@@ -138,7 +145,7 @@ angular.module('app')
         	/*angular.forEach(angular.element('#audience-list').find('.tag'), function(val, key) {
         		$scope.user.audience.push(val.innerText);
 			});*/
-        	if (audienceAndInfluencerDataInfo.$valid && $scope.user.audience.length > 0) {
+        	if (audienceAndInfluencerDataInfo.$valid) {
         		$scope.steps['audience'] = true;
         		WizardHandler.wizard().next();
         	} else {

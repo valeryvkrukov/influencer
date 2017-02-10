@@ -27,6 +27,12 @@ class Audience
 	protected $name;
 	
 	/**
+	 * @ORM\ManyToOne(targetEntity="User", inversedBy="audience")
+	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+	 */
+	protected $user;
+	
+	/**
 	 *
 	 * @return the unknown_type
 	 */
@@ -67,5 +73,23 @@ class Audience
 		$this->name = $name;
 		return $this;
 	}
+	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getUser() {
+		return $this->user;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $user        	
+	 */
+	public function setUser($user) {
+		$this->user = $user;
+		return $this;
+	}
+	
 	
 }

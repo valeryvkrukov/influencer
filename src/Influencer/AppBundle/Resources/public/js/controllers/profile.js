@@ -32,13 +32,68 @@ angular.module('app')
 			}
 		};
 	}])
-	.controller('ProfileCtrl', ['Account', '$scope', '$http', '$auth', '$sce', 'FeedLoader', function(Account, $scope, $http, $auth, $sce, FeedLoader) {
+	.controller('ProfileCtrl', ['Account', '$scope', '$http', '$auth', '$sce', 'FeedLoader', 'GetPredefinedVars', function(Account, $scope, $http, $auth, $sce, FeedLoader, GetPredefinedVars) {
+		$scope.languages = [];
+		$scope.countries = [];
+		$scope.categories = [];
+		$scope.postTypes = [];
+		$scope.networks = [];
 		if ($scope.templatePath === undefined) {
 			Account.getProfile().then(function(resp) {
-				console.log(resp.data.role);
+				$scope.user = resp.data;
 				$scope.templatePath = Routing.generate('inf_profile', {role: resp.data.role});
+				$scope.formPath = Routing.generate('inf_profile_main', {role: resp.data.role});
+				$scope.formLoaded = 'main';
+				GetPredefinedVars.getIntl().then(function(resp) {
+					if (resp.data.countries) {
+						$scope.countries = resp.data.countries;
+					}
+					if (resp.data.languages){
+						$scope.languages = resp.data.languages;
+					}
+				});
+				GetPredefinedVars.getCategories().then(function(resp) {
+					if (resp.data.categories) {
+						$scope.categories = resp.data.categories;
+					}
+				});
+				GetPredefinedVars.getTypes().then(function(resp) {
+					if (resp.data.types) {
+						angular.forEach(resp.data.types, function(v1, k1) {
+							var add = true;
+							angular.forEach($scope.user.prices, function(v2, k2) {
+								if (v1.tag == v2.tag) {
+									add = false;
+								}
+							});
+							if (add) {
+								$scope.postTypes.push(v1);
+							}
+						});
+					}
+				});
+				GetPredefinedVars.getSocialNetworks().then(function(resp) {
+					if (resp.data.networks) {
+						$scope.networks = resp.data.networks;
+					}
+				});
 			});
 		}
+		$scope.loadForm = function(form) {
+			$scope.formPath = Routing.generate('inf_profile_' + form, {role: $scope.user.role});
+			$scope.formLoaded = form;
+		};
+		$scope.submitMain = function() {
+			$http({
+				url: Routing.generate('inf_update_user', {'id': $scope.user.id}),
+				method: 'POST',
+				data: $scope.user
+			}).then(function(resp) {
+				console.log(resp);
+			});
+			return false;
+		};
+		
 		$scope.feeds = {
 			facebook: [],
 			google: [],

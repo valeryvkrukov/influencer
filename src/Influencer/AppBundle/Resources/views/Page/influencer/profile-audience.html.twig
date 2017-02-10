@@ -1,0 +1,104 @@
+<div class="full-height margin-10">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4>Audience and influencer data info</h4>
+		</div>
+		<div class="panel-content" flow-init>
+			<div class="padding-20">
+	        	<form role="form" name="audienceAndInfluencerDataInfo">
+	        		<div class="row">
+    	        		<div class="col-md-7">
+    	        			<div class="row">
+        						<div class="col-sm-12" id="languages-list">
+        							<div pg-form-group class="form-group form-group-default form-group-default-select required" ng-class="{ 'has-error': user.languages.length == 0 }">
+        								<label>Languages</label>
+        								<ui-select name="languages" multiple ng-model="user.languages" theme="select2" style="width:100%">
+        									<ui-select-match placeholder="Select language...">{{ '{{ $item.lang }}' }}</ui-select-match>
+        									<ui-select-choices repeat="item in languages | filter: $select.search">
+        										<div ng-bind-html="trustAsHtml(('<strong>' + item.lang + '</strong> (' + item.code + ')' | highlight: $select.search))"></div>
+        									</ui-select-choices>
+        								</ui-select>
+        							</div>
+        							<label class="error" for="languages" ng-show="user.languages && user.languages.length == 0">At least one language required.</label>
+        						</div>
+        					</div>
+        					<div class="row">
+        						<div class="col-sm-12" id="countries-list">
+        							<div pg-form-group class="form-group form-group-default form-group-default-select required" ng-class="{ 'has-error': user.countries.length == 0 }">
+        								<label>Countries</label>
+        								<ui-select name="countries" multiple ng-model="user.countries" theme="select2" style="width:100%">
+        									<ui-select-match placeholder="Select countries...">{{ '{{ $item.country }}' }}</ui-select-match>
+        									<ui-select-choices repeat="item in countries | filter: $select.search">
+        										<div ng-bind-html="trustAsHtml(('<strong>' + item.country + '</strong> (' + item.code + ')' | highlight: $select.search))"></div>
+        									</ui-select-choices>
+        								</ui-select>
+        							</div>
+        							<label class="error" for="countries" ng-show="user.countries && user.countries.length == 0">At least one country required.</label>
+        						</div>
+        					</div>
+        					<div class="row">
+        						<div class="col-sm-12" id="audience-list">
+        							<div pg-form-group class="form-group form-group-default form-group-default-select required" ng-class="{ 'has-error': user.categories.length == 0 }">
+        								<label>Categories</label>
+        								<ui-select name="categories" multiple ng-model="user.audience" theme="select2" style="width:100%">
+        									<ui-select-match placeholder="Select categories...">{{ '{{ $item.name }}' }}</ui-select-match>
+        									<ui-select-choices repeat="item in categories | filter: $select.search">
+        										<div ng-bind-html="trustAsHtml(('<strong>' + item.name + '</strong>' | highlight: $select.search))"></div>
+        									</ui-select-choices>
+        								</ui-select>
+        							</div>
+        							<label class="error" for="categories" ng-show="user.categories && user.categories.length == 0">At least one category required.</label>
+        						</div>
+        					</div>
+        					<div class="row">
+        						<div class="col-sm-12" id="age-bracket">
+        							<div class="inline-group">
+            							<span class="spec-label">Type</span>
+        								<div class="radio radio-success">
+                                            <input type="radio" value="Male" name="user.gender" id="user-gender-male">
+                                            <label for="user-gender-male">Male</label>
+                                            <input type="radio" value="Female" name="user.gender" id="user-gender-female">
+                                            <label for="user-gender-female">Female</label>
+                                            <input type="radio" value="Couple" name="user.gender" id="user-gender-couple">
+                                            <label for="user-gender-couple">Couple</label>
+                                            <input type="radio" value="Group" name="user.gender" id="user-gender-group">
+                                            <label for="user-gender-group">Group</label>
+                                        </div>
+                                    </div>
+        						</div>
+        					</div>
+        					<div class="row">
+        						<div class="col-sm-12" id="age-bracket">
+        							<div class="inline-group">
+            							<span class="spec-label">Age Bracket</span>
+        								<div class="radio radio-success">
+                                            <input type="radio" value="18-24" ng-model="user.ageBracket" id="user-age-bracket1">
+                                            <label for="user-age-bracket1">18-24</label>
+                                            <input type="radio" value="25-29" ng-model="user.ageBracket" id="user-age-bracket2">
+                                            <label for="user-age-bracket2">25-29</label>
+                                            <input type="radio" value="30-34" ng-model="user.ageBracket" id="user-age-bracket3">
+                                            <label for="user-age-bracket3">30-34</label>
+                                            <input type="radio" value="35-39" ng-model="user.ageBracket" id="user-age-bracket4">
+                                            <label for="user-age-bracket4">35-39</label>
+                                            <input type="radio" value="40-44" ng-model="user.ageBracket" id="user-age-bracket5">
+                                            <label for="user-age-bracket5">40-44</label>
+                                            <input type="radio" value="45+" ng-model="user.ageBracket" id="user-age-bracket6">
+                                            <label for="user-age-bracket6">45+</label>
+                                        </div>
+                                    </div>
+        						</div>
+        					</div>
+        					<div class="row">
+        						<div class="col-sm-6">
+                					<button type="button" class="btn btn-primary btn-cons">
+                    					<span>Save Changes</span>
+                    				</button>
+                    			</div>
+                    		</div>
+    	        		</div>
+    	        	</div>
+    	        </form>
+    	    </div>
+    	</div>
+	</div>
+</div>
