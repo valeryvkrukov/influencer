@@ -10,11 +10,11 @@
 		<div class="p-l-50 m-l-20 p-r-50 m-r-20 p-t-50 m-t-30 sm-p-l-15 sm-p-r-15 sm-p-t-40">
 			<img src="{{ asset('assets/img/logo.png') }}" alt="logo" data-src="{{ asset('assets/img/logo.png') }}" ui-jq="unveil" data-src-retina="{{ asset('assets/img/logo_2x.png') }}" height="45">
 			<p class="p-t-35">Sign into your Influence account</p>
-			<p class="alert alert-danger" ng-show="login_error == true">Login or password incorrect</p>
+			<p class="alert alert-danger" ng-show="error">{{ '{{ error }}' }}</p>
 			<form class="p-t-15" role="form" novalidate method="post" ng-submit="login()" name="loginForm">
 				<div class="form-group has-feedback">
-					<input class="form-control input-lg" type="text" name="email" ng-model="user.email" placeholder="Email" required autofocus>
-					<span class="ion-at form-control-feedback"></span>
+					<input class="form-control input-lg" type="text" name="email" ng-model="user.email" placeholder="Username" required autofocus>
+					<span class="ion-person form-control-feedback"></span>
 				</div>
 				<div class="form-group has-feedback">
 					<input class="form-control input-lg" type="password" name="password" ng-model="user.password" placeholder="Password" required>
@@ -44,7 +44,7 @@
 				<i class="ion-social-twitter"></i> Sign in with Twitter
 			</button>
 			<p class="p-t-35">For Influencers</p>
-			<a href="" class="btn btn-block btn-black">
+			<a ui-sref="access.signup" class="btn btn-block btn-primary">
 				<span class="bold">Sign Up As Influencer</span>
 			</a>
 		</div>
