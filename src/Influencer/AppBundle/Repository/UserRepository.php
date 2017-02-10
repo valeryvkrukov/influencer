@@ -132,6 +132,7 @@ class UserRepository extends EntityRepository
 				}
 			}
 			$user->addRole('ROLE_INFLUENCER');
+			$user->setEnabled(true);
 			$em->persist($user);
 			if (isset($data->socials)) {
 				$socials = json_decode(json_encode($data->socials), true);

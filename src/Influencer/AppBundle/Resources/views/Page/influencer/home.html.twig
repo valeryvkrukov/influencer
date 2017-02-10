@@ -1,8 +1,31 @@
-<div class="container-fluid padding-25 sm-padding-10 sm-gutter" ng-init="init">
+<div class="jumbotron no-margin" data-pages="parallax">
+	<div class="container-fluid container-fixed-lg sm-p-l-20 sm-p-r-20">
+		<div class="inner">
+			<ul class="nav nav-tabs nav-tabs-simple">
+				<li ng-class="{'active': activeTab == ''}">
+					<a ng-click="setFeedFilter('')">All feeds</a>
+				</li>
+				<li ng-if="user.facebook != null" ng-class="{'active': activeTab == 'facebook'}">
+					<a ng-click="setFeedFilter('facebook')">Facebook</a>
+				</li>
+				<li ng-if="user.google != null" ng-class="{'active': activeTab == 'google'}">
+					<a ng-click="setFeedFilter('google')">YouTube</a>
+				</li>
+				<li ng-if="user.twitter != null" ng-class="{'active': activeTab == 'twitter'}">
+					<a ng-click="setFeedFilter('twitter')">Twitter</a>
+				</li>
+				<li ng-if="user.instagram != null" ng-class="{'active': activeTab == 'instagram'}">
+					<a ng-click="setFeedFilter('instagram')">Instagram</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<div class="container-fluid container-fixed-lg sm-p-l-20 sm-p-r-20">
 	<div class="row">
 		<div ng-if="feeds.length > 0">
 			<div masonry>
-				<div ng-repeat="item in feeds" class="card share col-md-3 col1 masonry-brick" data-social="item">
+				<div ng-repeat="item in feeds | filter:feedFilter" class="card share col-md-3 col1 masonry-brick" data-social="item">
 					<div class="card-header clearfix">
 						<div class="panel-title">
 							<h5>

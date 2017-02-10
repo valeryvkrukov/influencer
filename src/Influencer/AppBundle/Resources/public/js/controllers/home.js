@@ -29,6 +29,17 @@ angular.module('app')
 				}
 			});
 		}
+		$scope.feedFilter = '';
+		$scope.activeTab = '';
+		$scope.setFeedFilter = function(network) {
+			if (network == '') {
+				$scope.feedFilter = '';
+				$scope.activeTab = '';
+			} else {
+				$scope.feedFilter = {network: network};
+				$scope.activeTab = network;
+			}
+		};
 		/*if ($scope.feeds === undefined) {
 			console.log($scope.user);
 			LoadData.get($scope.user).then(function(data) {

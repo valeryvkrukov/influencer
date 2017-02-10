@@ -155,15 +155,23 @@ angular.module('app')
 		};
 		$scope.refreshFeed = function(network) {
 			var token = $auth.getToken();
+			var params = {'link_account': 1};
+			if ($scope.user[network] == null) {
+				params['link_to_user'] = $scope.user.id;
+			}
 			var loader = function(network) {
 				FeedLoader.loadFor(network, $auth.getToken(), $scope.user.id).then(function(resp) {
 					$scope.feeds[network] = resp;
 					$auth.setToken(token);
+					$scope.loadFeeds();
 				}, function() {
 					$auth.setToken(token);
 				});
 			};
-			$auth.link(network, {'link_account': 1}).then(function(resp) {
+			$auth.link(network, params).then(function(resp) {
+				if ($scope.user[network] == null) {
+					$scope.user[network] = resp.data.profile.id;
+				}
 				loader(network);
 			});
 		};

@@ -34,14 +34,17 @@ class TokenAuthenticator extends AbstractGuardAuthenticator
 		*/
 		$routeName = $request->get('_route');
 		if (in_array($routeName, array('inf_load_feeds'))) {
-			$input = json_decode($request->getContent());
-			$payload = [
-				'sub' => 2,
-				'iat' => time(),
-				'exp' => time() + (2 * 7 * 24 * 60 * 60)
-			];
-			//return JWT::encode($payload, 'auth-token-secret');
-			return $payload;
+			$params = $request->attributes->get('_route_params');
+			if (isset($params['network']) && isset($params['id'])) {
+				$input = json_decode($request->getContent());
+				$payload = [
+					'sub' => intval($params['id']),
+					'iat' => time(),
+					'exp' => time() + (2 * 7 * 24 * 60 * 60)
+				];
+				//return JWT::encode($payload, 'auth-token-secret');
+				return $payload;
+			}
 		}
 		if (!$request->headers->has('Authorization')) {
 			return;

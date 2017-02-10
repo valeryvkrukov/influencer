@@ -8,9 +8,21 @@
 	        	<form role="form" name="socialsInfluencerInfo">
 	        		<div class="row">
     	        		<div class="col-md-7">
-    	        			<div class="row">
-    	        			
-    	        			</div>
+    	        			<div class="row" ng-repeat="network in networks">
+        						<div class="col-sm-10">
+									<br>
+									<div class="input-group" style="width:100%;">
+            							<a ng-click="refreshFeed(network.tag)" class="btn btn-block" ng-class="{'btn-primary':(user[network.tag] == null), 'btn-success':(user[network.tag] != null)}">
+        									<span class="pull-left">
+        										<i class="fa fa-{{ '{{ network.tag }}' }}"></i>
+        									</span> 
+        									<span>{{ '{{ network.name }}' }}</span>
+        									<span ng-if="user[network.tag] != null" class="pull-right"> Connected (click to refresh feed) <i class="fa fa-check"></i></span>
+        									<span ng-if="user[network.tag] == null" class="pull-right"> Not Connected <i class="fa fa-times"></i></span>
+        								</a>
+        							</div>
+        						</div>
+        					</div>
     	        		</div>
     	        	</div>
     	        </form>
