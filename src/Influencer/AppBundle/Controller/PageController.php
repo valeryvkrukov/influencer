@@ -14,11 +14,11 @@ use Influencer\AppBundle\Controller\BaseController;
 class PageController extends BaseController
 {
 	/**
-	 * @Route("/home", name="inf_home", options={"expose"=true})
+	 * @Route("/home/{role}", name="inf_home", options={"expose"=true})
 	 */
-	public function homeAction(Request $request)
+	public function homeAction(Request $request, $role = null)
 	{
-		switch ($request->query->get('role')) {
+		switch ($role) {
 			case 'admin':
 				$tpl = 'admin/home';
 				break;
@@ -51,11 +51,11 @@ class PageController extends BaseController
 	}
 	
 	/**
-	 * @Route("/profile", name="inf_profile", options={"expose"=true})
+	 * @Route("/profile/{role}", name="inf_profile", options={"expose"=true})
 	 */
-	public function profileAction(Request $request)
+	public function profileAction(Request $request, $role = null)
 	{
-		switch ($request->query->get('role')) {
+		switch ($role) {
 			case 'admin':
 				$tpl = 'admin/profile';
 				break;
@@ -66,9 +66,87 @@ class PageController extends BaseController
 				$tpl = 'client/profile';
 				break;
 			default:
-				$tpl = 'home';
+				$tpl = 'profile';
 		}
-		return $this->render('InfluencerAppBundle:Page:admin/'.$tpl.'.html.twig');
+		return $this->render('InfluencerAppBundle:Page:'.$tpl.'.html.twig');
+	}
+	
+	/**
+	 * @Route("/{role}/profile/main", name="inf_profile_main", options={"expose"=true})
+	 */
+	public function profileMainAction(Request $request, $role = null)
+	{
+		switch ($role) {
+			case 'admin':
+				$tpl = 'admin/profile-main';
+				break;
+			case 'influencer':
+				$tpl = 'influencer/profile-main';
+				break;
+			case 'client':
+				$tpl = 'client/profile-main';
+				break;
+			default:
+				$tpl = 'profile-main';
+		}
+		return $this->render('InfluencerAppBundle:Page:'.$tpl.'.html.twig');
+	}
+	
+	/**
+	 * @Route("/{role}/profile/audience", name="inf_profile_audience", options={"expose"=true})
+	 */
+	public function profileAudienceAction(Request $request, $role = null)
+	{
+		switch ($role) {
+			case 'admin':
+				$tpl = 'admin/profile-audience';
+				break;
+			case 'influencer':
+				$tpl = 'influencer/profile-audience';
+				break;
+			case 'client':
+			default:
+				$tpl = 'error';
+		}
+		return $this->render('InfluencerAppBundle:Page:'.$tpl.'.html.twig');
+	}
+	
+	/**
+	 * @Route("/{role}/profile/campaigns", name="inf_profile_campaigns", options={"expose"=true})
+	 */
+	public function profileCampaignsAction(Request $request, $role = null)
+	{
+		switch ($role) {
+			case 'admin':
+				$tpl = 'admin/profile-campaigns';
+				break;
+			case 'influencer':
+				$tpl = 'influencer/profile-campaigns';
+				break;
+			case 'client':
+			default:
+				$tpl = 'error';
+		}
+		return $this->render('InfluencerAppBundle:Page:'.$tpl.'.html.twig');
+	}
+	
+	/**
+	 * @Route("/{role}/profile/socials", name="inf_profile_socials", options={"expose"=true})
+	 */
+	public function profileSocialsAction(Request $request, $role = null)
+	{
+		switch ($role) {
+			case 'admin':
+				$tpl = 'admin/profile-socials';
+				break;
+			case 'influencer':
+				$tpl = 'influencer/profile-socials';
+				break;
+			case 'client':
+			default:
+				$tpl = 'error';
+		}
+		return $this->render('InfluencerAppBundle:Page:'.$tpl.'.html.twig');
 	}
 	
 	/**

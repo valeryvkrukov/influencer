@@ -2,6 +2,7 @@
 namespace Influencer\AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -20,6 +21,60 @@ class UserController extends BaseController
 	{
 		$user = $this->getUserData();
 		return new JsonResponse($user);
+	}
+	
+	/**
+	 * @Route("/update/{id}", name="inf_update_user", options={"expose"=true})
+	 * @Method("POST")
+	 */
+	public function updateUser(Request $request, $id)
+	{
+		$input = json_decode($request->getContent());
+		if ($input->id == $id) {
+			unset($input->id);
+			unset($input->role);
+			$serializer = $this->get('serializer');
+			$em = $this->getDoctrine()->getManager();
+			$user = $em->getRepository('InfluencerAppBundle:User')->find($id);
+			if ($user) {
+				foreach ($input as $field => $value) {
+					$setter = 'set'.ucfirst($field);
+					if (!is_array($value)) {
+						if (method_exists($user, $setter)) {
+							$user->$setter($value);
+						}
+					} else {
+						$em->getRepository('InfluencerAppBundle:User')->addIfNotExists($id, $field, $value, $serializer);
+						//var_dump($res);die();
+						/*switch($field) {
+							case 'languages':
+								$em->getRepository('InfluencerAppBundle:User')->addIfNotExists($field, $value);
+								$current = json_decode($serializer->serialize($user->getLanguages(), 'json'));
+								foreach ($current as $curr) {
+									$add = true;
+									foreach ($value as $item) {
+										if ($curr->code == $item->code) {
+											$add = false;
+										}
+									}
+									if ($add) {
+										$lang = new Language();
+										$lang->setCode($item->code);
+										$lang->setName($item->lang);
+										$em->persist($lang);
+										$user->addLanguage($lang);
+									}
+								}
+								break;*/
+						//var_dump($field, $value);
+					}
+				}
+				//die();
+				$em->persist($user);
+				$em->flush();
+			}
+		}
+		return new JsonResponse($this->getUserData());
 	}
 	
 	/**
@@ -45,11 +100,11 @@ class UserController extends BaseController
 	public function feedsAction(Request $request)
 	{
 		$em = $this->getDoctrine()->getManager();
-		$userId = $this->getUser();
+		$user = $this->getUser();
 		$feeds = [];
-		$networks = $em->getRepository('InfluencerAppBundle:Feed')->getUserNetworks($userId);
+		$networks = $em->getRepository('InfluencerAppBundle:Feed')->getUserNetworks($user);
 		foreach ($networks as $n) {
-			$data = $em->getRepository('InfluencerAppBundle:Feed')->loadSavedFeedsFor($userId, $n['network'], 'array', 10);
+			$data = $em->getRepository('InfluencerAppBundle:Feed')->loadSavedFeedsFor($user, $n['network'], 'array', 10);
 			foreach ($data as $item) {
 				$feeds[$n['network']][] = $item;
 			}
@@ -94,4 +149,16 @@ class UserController extends BaseController
 		}
 	}
 	
+	/**
+	 * @Route("/list", name="inf_admin_get_users_list", options={"expose"=true})
+	 */
+	public function adminGetUsersList(Request $request)
+	{
+		$roles = $this->getUser()->getRoles();
+		if (in_array('ROLE_ADMIN', $roles)) {
+			$em = $this->getDoctrine()->getManager();
+			$users = $em->getRepository('InfluencerAppBundle:User')->getAllUsers();
+			return new JsonResponse($users);
+		}
+	}
 }

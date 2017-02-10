@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 use GuzzleHttp;
 use GuzzleHttp\Subscriber\Oauth\Oauth1;
+use Firebase\JWT\JWT;
 
 use Influencer\AppBundle\Controller\BaseController;
 use Influencer\AppBundle\Entity\User;
@@ -73,6 +74,15 @@ class AuthController extends BaseController
 		]);
 		$profile = json_decode($profileResponse->getBody(), true);
 		if (isset($input->link_account) && $input->link_account == 1) {
+			if (isset($input->link_to_user) && $input->link_to_user) {
+				$em = $this->getDoctrine()->getManager();
+				$user = $em->getRepository('InfluencerAppBundle:User')->find($input->link_to_user);
+				if ($user) {
+					$user->setFacebook($profile['id']);
+					$em->persist($user);
+					$em->flush();
+				}
+			}
 			return new JsonResponse([
 				'profile' => $profile,
 				'token' => $accessToken['access_token'],
@@ -158,6 +168,15 @@ class AuthController extends BaseController
 		]);
 		$profile = json_decode($profileResponse->getBody(), true);
 		if (isset($input->link_account) && $input->link_account == 1) {
+			if (isset($input->link_to_user) && $input->link_to_user) {
+				$em = $this->getDoctrine()->getManager();
+				$user = $em->getRepository('InfluencerAppBundle:User')->find($input->link_to_user);
+				if ($user) {
+					$user->setGoogle($profile['sub']);
+					$em->persist($user);
+					$em->flush();
+				}
+			}
 			return new JsonResponse([
 				'profile' => $profile,
 				'token' => $accessToken['access_token'],
@@ -262,6 +281,15 @@ class AuthController extends BaseController
 			$profileResponse = $client->request('GET', 'https://api.twitter.com/1.1/users/show.json?screen_name='.$accessToken['screen_name'], ['auth' => 'oauth']);
 			$profile = json_decode($profileResponse->getBody(), true);
 			if (isset($input->link_account) && $input->link_account == 1) {
+				if (isset($input->link_to_user) && $input->link_to_user) {
+					$em = $this->getDoctrine()->getManager();
+					$user = $em->getRepository('InfluencerAppBundle:User')->find($input->link_to_user);
+					if ($user) {
+						$user->setTwitter($profile['id']);
+						$em->persist($user);
+						$em->flush();
+					}
+				}
 				return new JsonResponse([
 					'profile' => $profile,
 					'token' => $accessToken['oauth_token'],
@@ -276,7 +304,7 @@ class AuthController extends BaseController
 					if ($user) {
 						return new JsonResponse(['message' => 'There is already a Twitter account that belongs to you'], 409);
 					}
-					$token = explode(' ', $request->header('Authorization'))[1];
+					$token = explode(' ', $request->headers->get('Authorization'))[1];
 					$payload = (array) JWT::decode($token, 'auth-token-secret', array('HS256'));
 					$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
 						'twitter' => $payload['sub'],
@@ -348,6 +376,15 @@ class AuthController extends BaseController
 		$accessToken = $this->get('app.social_connector')->getInstagramToken($input);
 		
 		if (isset($input->link_account) && $input->link_account == 1) {
+			if (isset($input->link_to_user) && $input->link_to_user) {
+				$em = $this->getDoctrine()->getManager();
+				$user = $em->getRepository('InfluencerAppBundle:User')->find($input->link_to_user);
+				if ($user) {
+					$user->setInstagram($profile['id']);
+					$em->persist($user);
+					$em->flush();
+				}
+			}
 			return new JsonResponse([
 				'profile' => $accessToken['user'],
 				'token' => $accessToken['access_token'],
@@ -359,7 +396,7 @@ class AuthController extends BaseController
 				if ($user) {
 					return new JsonResponse(['message' => 'There is already a Instagram account that belongs to you'], 409);
 				}
-				$token = explode(' ', $request->header('Authorization'))[1];
+				$token = explode(' ', $request->headers->get('Authorization'))[1];
 				$payload = (array) JWT::decode($token, 'auth-token-secret', array('HS256'));
 				$user = $em->getRepository('InfluencerAppBundle:User')->find($payload['sub']);
 				$user->setUsername($accessToken['user']['id']);

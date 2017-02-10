@@ -17,10 +17,39 @@ angular.module('app')
 			}
 		};
 	}])
-	.controller('HomeCtrl', ['$scope', '$http', 'LoadData', function($scope, $http, LoadData) {
-		$scope.init = function() {
+	.controller('HomeCtrl', ['$scope', '$http', 'Account', 'LoadData', function($scope, $http, Account, LoadData) {
+		if ($scope.templatePath === undefined) {
+			Account.getProfile().then(function(resp) {
+				console.log(resp.data.role);
+				$scope.templatePath = Routing.generate('inf_home', {role: resp.data.role});
+				if ($scope.feeds === undefined) {
+					LoadData.get(resp.data).then(function(data) {
+						$scope.feeds = data;
+					});
+				}
+			});
+		}
+		$scope.feedFilter = '';
+		$scope.activeTab = '';
+		$scope.setFeedFilter = function(network) {
+			if (network == '') {
+				$scope.feedFilter = '';
+				$scope.activeTab = '';
+			} else {
+				$scope.feedFilter = {network: network};
+				$scope.activeTab = network;
+			}
+		};
+		/*if ($scope.feeds === undefined) {
+			console.log($scope.user);
 			LoadData.get($scope.user).then(function(data) {
 				console.log(data);
 			});
-		};
+		}
+		/*$scope.init = function() {
+			console.log($scope.user);
+			LoadData.get($scope.user).then(function(data) {
+				console.log(data);
+			});
+		};*/
 	}]);

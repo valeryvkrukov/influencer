@@ -245,8 +245,13 @@ angular.module('app')
                     files: [
                         root + 'assets/plugins/bootstrap-collapse/bootstrap-tabcollapse.js'
                     ]
+                }, {
+                	name: 'ngImgCrop',
+                	files: [
+                		root + 'assets/plugins/ngImgCrop/compile/minified/ng-img-crop.css',
+                		root + 'assets/plugins/ngImgCrop/compile/minified/ng-img-crop.js'
+                	]
                 }
-
             ]
         });
     }]);

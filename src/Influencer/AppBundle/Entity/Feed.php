@@ -25,7 +25,7 @@ class Feed
 	
 	/**
 	 * @ORM\ManyToOne(targetEntity="User", inversedBy="feeds")
-	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
 	 */
 	protected $user;
 	

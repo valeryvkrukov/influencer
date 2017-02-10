@@ -22,9 +22,25 @@ class Price
 	protected $name;
 	
 	/**
+	 * @ORM\Column(name="event_tag", type="string", nullable=false)
+	 */
+	protected $tag;
+	
+	/**
+	 * @ORM\Column(name="event_icon", type="string", nullable=true)
+	 */
+	protected $icon;
+	
+	/**
 	 * @ORM\Column(name="event_cost", type="string", nullable=false)
 	 */
 	protected $cost;
+	
+	/**
+	 * @ORM\ManyToOne(targetEntity="User", inversedBy="prices")
+	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+	 */
+	protected $user;
 	
 	/**
 	 *
@@ -55,6 +71,40 @@ class Price
 	 *
 	 * @return the unknown_type
 	 */
+	public function getTag() {
+		return $this->tag;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $tag        	
+	 */
+	public function setTag($tag) {
+		$this->tag = $tag;
+		return $this;
+	}
+	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getIcon() {
+		return $this->icon;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $icon        	
+	 */
+	public function setIcon($icon) {
+		$this->icon = $icon;
+		return $this;
+	}
+		
+	/**
+	 *
+	 * @return the unknown_type
+	 */
 	public function getCost() {
 		return $this->cost;
 	}
@@ -67,5 +117,23 @@ class Price
 		$this->cost = $cost;
 		return $this;
 	}
+	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getUser() {
+		return $this->user;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $user        	
+	 */
+	public function setUser($user) {
+		$this->user = $user;
+		return $this;
+	}
+	
 	
 }

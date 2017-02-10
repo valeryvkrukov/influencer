@@ -1,9 +1,56 @@
-<div class="container-fluid padding-25 sm-padding-10 sm-gutter">
-	<div class="row">
-		<div class="col-md-12 col-xlg-12">
-			<div class="row">
-				
-			</div>
+<div class="jumbotron no-margin" data-pages="parallax">
+	<div class="container-fluid container-fixed-lg sm-p-l-20 sm-p-r-20">
+		<div class="inner">
+			<ul class="nav nav-tabs nav-tabs-simple">
+				<li ng-class="{'active': activeTab == ''}">
+					<a ng-click="setFeedFilter('')">All feeds</a>
+				</li>
+				<li ng-if="user.facebook != null" ng-class="{'active': activeTab == 'facebook'}">
+					<a ng-click="setFeedFilter('facebook')">Facebook</a>
+				</li>
+				<li ng-if="user.google != null" ng-class="{'active': activeTab == 'google'}">
+					<a ng-click="setFeedFilter('google')">YouTube</a>
+				</li>
+				<li ng-if="user.twitter != null" ng-class="{'active': activeTab == 'twitter'}">
+					<a ng-click="setFeedFilter('twitter')">Twitter</a>
+				</li>
+				<li ng-if="user.instagram != null" ng-class="{'active': activeTab == 'instagram'}">
+					<a ng-click="setFeedFilter('instagram')">Instagram</a>
+				</li>
+			</ul>
 		</div>
+	</div>
+</div>
+<div class="container-fluid container-fixed-lg sm-p-l-20 sm-p-r-20">
+	<div class="row">
+		<div ng-if="feeds.length > 0">
+			<div masonry>
+				<div ng-repeat="item in feeds | filter:feedFilter" class="card share col-md-3 col1 masonry-brick" data-social="item">
+					<div class="card-header clearfix">
+						<div class="panel-title">
+							<h5>
+								<i ng-if="item.network == 'facebook'" class="i fa fa-facebook"></i> 
+								<i ng-if="item.network == 'google'" class="i fa fa-youtube-play"></i> 
+								<i ng-if="item.network == 'twitter'" class="i fa fa-twitter"></i> 
+								<i ng-if="item.network == 'instagram'" class="i fa fa-instagram"></i> 
+								{{ '{{ item.title }}' }}
+							</h5>
+						</div>
+					</div>
+					<div class="card-content">
+						<img ng-if="item.picture" style="width:100%;" alt="Social post" ng-src="{{ '{{ item.picture }}' }}">
+						<div ng-if="item.contents" class="padding-10" style="overflow:hidden" ng-bind-html="item.contents|limitTo:200|trustHTML"></div>
+					</div>
+					<div class="card-footer clearfix">
+						<div class="time">{{ '{{ item.createdAt.date|datetime }}' }}</div>
+    					<ul class="reactions">
+    						<li><a href="#">{{ '{{ item.comments }}' }} <i class="fa fa-comment-o"></i></a></li>
+    						<li><a href="#">{{ '{{ item.likes }}' }} <i class="fa fa-heart-o"></i></a></li>
+    					</ul>
+					</div>
+					</div>
+    			</div>
+    		</div>
+    	</div>
 	</div>
 </div>
