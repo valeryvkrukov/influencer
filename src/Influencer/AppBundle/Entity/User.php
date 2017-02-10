@@ -59,7 +59,7 @@ class User extends BaseUser
 	protected $ageBracket;
 	
 	/**
-	 * @ORM\Column(name="gender", type="integer", nullable=true)
+	 * @ORM\Column(name="gender", type="string", nullable=true)
 	 */
 	protected $gender;
 	

@@ -155,10 +155,74 @@ class UserRepository extends EntityRepository
 		}
 	}
 	
-	public function addIfNotExists($id, $field, $values)
+	public function addIfNotExists($id, $field, $values, $serializer)
 	{
 		$em = $this->getEntityManager();
-		$dql = 'SELECT u ';
+		$user = $this->findOneById($id);
+		if (sizeof($values) > 0) {
+			$dql = 'DELETE FROM InfluencerAppBundle:%s i WHERE i.user = :user';
+			switch($field) {
+				case 'languages':
+					$dql = sprintf($dql, 'Language');
+					break;
+				case 'countries':
+					$dql = sprintf($dql, 'Country');
+					break;
+				case 'audience':
+					$dql = sprintf($dql, 'Audience');
+					break;
+				case 'prices':
+					$dql = sprintf($dql, 'Price');
+					break;
+			}
+			try {
+				$em->createQuery($dql)->setParameter('user', $user)->getResult();
+				$em->flush();
+			} catch(\Exception $e) {
+				var_dump($e->getMessage());die();
+			}
+			if (sizeof($values) > 0) {
+				foreach ($values as $val) {
+					switch($field) {
+						case 'languages':
+							$item = new Language();
+							$item->setCode($val->code);
+							$item->setName($val->lang);
+							$add = 'addLanguage';
+							break;
+						case 'countries':
+							$item = new Country();
+							$item->setCode($val->code);
+							$item->setName($val->country);
+							$add = 'addCountry';
+							break;
+						case 'audience':
+							$item = new Audience();
+							$item->setCode($val->tag);
+							$item->setName($val->name);
+							$add = 'addAudience';
+							break;
+						case 'prices':
+							$item = new Price();
+							$item->setTag($val->tag);
+							$item->setName($val->name);
+							if (isset($item->icon)) {
+								$item->setIcon($val->icon);
+							}
+							$item->setCost($val->cost);
+							$add = 'addPrice';
+							break;
+					}
+					if (isset($item)) {
+						$item->setUser($user);
+						$em->persist($item);
+						$user->$add($item);
+						$em->persist($user);
+					}
+				}
+				$em->flush();
+			}
+		}
 	}
 	
 	public function getAllUsers()

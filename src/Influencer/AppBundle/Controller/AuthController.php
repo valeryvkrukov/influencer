@@ -172,7 +172,7 @@ class AuthController extends BaseController
 				$em = $this->getDoctrine()->getManager();
 				$user = $em->getRepository('InfluencerAppBundle:User')->find($input->link_to_user);
 				if ($user) {
-					$user->setGoogle($profile['id']);
+					$user->setGoogle($profile['sub']);
 					$em->persist($user);
 					$em->flush();
 				}

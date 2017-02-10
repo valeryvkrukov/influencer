@@ -44,6 +44,9 @@ angular.module('app')
 				$scope.templatePath = Routing.generate('inf_profile', {role: resp.data.role});
 				$scope.formPath = Routing.generate('inf_profile_main', {role: resp.data.role});
 				$scope.formLoaded = 'main';
+				$scope.$watch('$scope.user.profileImage', function() {
+					console.log($scope.user.profileImage);
+				});
 				GetPredefinedVars.getIntl().then(function(resp) {
 					if (resp.data.countries) {
 						$scope.countries = resp.data.countries;
@@ -83,7 +86,7 @@ angular.module('app')
 			$scope.formPath = Routing.generate('inf_profile_' + form, {role: $scope.user.role});
 			$scope.formLoaded = form;
 		};
-		$scope.submitMain = function() {
+		$scope.submitProfile = function() {
 			$http({
 				url: Routing.generate('inf_update_user', {'id': $scope.user.id}),
 				method: 'POST',
@@ -93,7 +96,6 @@ angular.module('app')
 			});
 			return false;
 		};
-		
 		$scope.feeds = {
 			facebook: [],
 			google: [],
@@ -121,6 +123,13 @@ angular.module('app')
 					}
 				});
 			};
+			fileReader.readAsDataURL($file.file);
+		};
+		$scope.loadProfileImage = function($file, $event, $flow) {
+			var fileReader = new FileReader();
+			fileReader.onload = function(event) {
+				$scope.user.profileImage = event.target.result;
+			}
 			fileReader.readAsDataURL($file.file);
 		};
 		$scope.changeAvatar = function($file, $event, $flow) {

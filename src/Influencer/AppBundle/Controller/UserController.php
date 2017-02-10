@@ -39,39 +39,42 @@ class UserController extends BaseController
 			if ($user) {
 				foreach ($input as $field => $value) {
 					$setter = 'set'.ucfirst($field);
-					if (method_exists($user, $setter)) {
-						if (!is_array($value)) {
+					if (!is_array($value)) {
+						if (method_exists($user, $setter)) {
 							$user->$setter($value);
-						} else {
-							$em->getRepository('InfluencerAppBundle:User')->addIfNotExists($id, $field, $value);
-							/*switch($field) {
-								case 'languages':
-									$em->getRepository('InfluencerAppBundle:User')->addIfNotExists($field, $value);
-									$current = json_decode($serializer->serialize($user->getLanguages(), 'json'));
-									foreach ($current as $curr) {
-										$add = true;
-										foreach ($value as $item) {
-											if ($curr->code == $item->code) {
-												$add = false;
-											}
-										}
-										if ($add) {
-											$lang = new Language();
-											$lang->setCode($item->code);
-											$lang->setName($item->lang);
-											$em->persist($lang);
-											$user->addLanguage($lang);
+						}
+					} else {
+						$em->getRepository('InfluencerAppBundle:User')->addIfNotExists($id, $field, $value, $serializer);
+						//var_dump($res);die();
+						/*switch($field) {
+							case 'languages':
+								$em->getRepository('InfluencerAppBundle:User')->addIfNotExists($field, $value);
+								$current = json_decode($serializer->serialize($user->getLanguages(), 'json'));
+								foreach ($current as $curr) {
+									$add = true;
+									foreach ($value as $item) {
+										if ($curr->code == $item->code) {
+											$add = false;
 										}
 									}
-									break;
-							}*/
-						}
-						var_dump($field, $value);
+									if ($add) {
+										$lang = new Language();
+										$lang->setCode($item->code);
+										$lang->setName($item->lang);
+										$em->persist($lang);
+										$user->addLanguage($lang);
+									}
+								}
+								break;*/
+						//var_dump($field, $value);
 					}
 				}
+				//die();
+				$em->persist($user);
+				$em->flush();
 			}
 		}
-		die();
+		return new JsonResponse($this->getUserData());
 	}
 	
 	/**

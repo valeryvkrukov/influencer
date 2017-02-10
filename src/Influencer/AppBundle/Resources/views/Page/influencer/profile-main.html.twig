@@ -3,9 +3,9 @@
 		<div class="panel-heading">
 			<h4>Main Info</h4>
 		</div>
-		<div class="panel-content" flow-init>
+		<div class="panel-content" flow-init flow-file-added="loadProfileImage($file, $event, $flow)">
 			<div class="padding-20">
-	        	<form role="form" name="mainInfluencerInfo" ng-submit="submitMain()">
+	        	<form role="form" name="mainInfluencerInfo" ng-submit="submitProfile()">
 	        		<div class="row">
     	        		<div class="col-md-7">
     	        			<div class="row">

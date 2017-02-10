@@ -5,7 +5,7 @@
 		</div>
 		<div class="panel-content" flow-init>
 			<div class="padding-20">
-	        	<form role="form" name="audienceAndInfluencerDataInfo">
+	        	<form role="form" name="audienceAndInfluencerDataInfo" ng-submit="submitProfile()">
 	        		<div class="row">
     	        		<div class="col-md-7">
     	        			<div class="row">
@@ -55,13 +55,13 @@
         							<div class="inline-group">
             							<span class="spec-label">Type</span>
         								<div class="radio radio-success">
-                                            <input type="radio" value="Male" name="user.gender" id="user-gender-male">
+                                            <input type="radio" value="Male" ng-model="user.gender" id="user-gender-male">
                                             <label for="user-gender-male">Male</label>
-                                            <input type="radio" value="Female" name="user.gender" id="user-gender-female">
+                                            <input type="radio" value="Female" ng-model="user.gender" id="user-gender-female">
                                             <label for="user-gender-female">Female</label>
-                                            <input type="radio" value="Couple" name="user.gender" id="user-gender-couple">
+                                            <input type="radio" value="Couple" ng-model="user.gender" id="user-gender-couple">
                                             <label for="user-gender-couple">Couple</label>
-                                            <input type="radio" value="Group" name="user.gender" id="user-gender-group">
+                                            <input type="radio" value="Group" ng-model="user.gender" id="user-gender-group">
                                             <label for="user-gender-group">Group</label>
                                         </div>
                                     </div>
@@ -90,7 +90,7 @@
         					</div>
         					<div class="row">
         						<div class="col-sm-6">
-                					<button type="button" class="btn btn-primary btn-cons">
+                					<button type="submit" class="btn btn-primary btn-cons">
                     					<span>Save Changes</span>
                     				</button>
                     			</div>

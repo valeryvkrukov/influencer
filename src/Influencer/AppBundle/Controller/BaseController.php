@@ -51,7 +51,7 @@ class BaseController extends Controller
 				'tag' => $item->tag,
 				'cost' => floatval($item->cost),
 				'name' => $item->name,
-				'icon' => $item->icon,
+				'icon' => isset($item->icon)?$item->icon:null,
 			];
 		}
 		$age = $user->getAge();
@@ -88,6 +88,7 @@ class BaseController extends Controller
 			'lastName' => $user->getLastName(),
 			'age' => $age,
 			'ageBracket' => $bracket,
+			'gender' => $user->getGender(),
 			'contactNumber' => $user->getContactNumber(),
 			'secondaryNumber' => $user->getSecondaryNumber(),
 			'website' => $user->getWebsite(),

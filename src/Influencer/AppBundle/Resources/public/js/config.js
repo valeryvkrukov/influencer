@@ -60,7 +60,7 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 			url: '/profile',
 			templateUrl: Routing.generate('inf_profile'),
 			controller: 'ProfileCtrl',
-			resolve: lazyLoad(['profile'], ['wysihtml5', 'select', 'tagsInput', 'dropzone', 'inputMask'])
+			resolve: lazyLoad(['profile'], ['wysihtml5', 'select', 'tagsInput', 'dropzone', 'inputMask', 'ngImgCrop'])
 		})
 		.state('app.campaign', {
 			url: '/campaign',
