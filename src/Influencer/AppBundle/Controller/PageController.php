@@ -35,6 +35,27 @@ class PageController extends BaseController
 	}
 	
 	/**
+	 * @Route("/feeds/{role}", name="inf_feed", options={"expose"=true})
+	 */
+	public function feedsAction(Request $request, $role = null)
+	{
+		switch ($role) {
+			case 'admin':
+				$tpl = 'admin/feeds';
+				break;
+			case 'influencer':
+				$tpl = 'influencer/feeds';
+				break;
+			case 'client':
+				$tpl = 'client/feeds';
+				break;
+			default:
+				$tpl = 'feeds';
+		}
+		return $this->render('InfluencerAppBundle:Page:'.$tpl.'.html.twig');
+	}
+	
+	/**
 	 * @Route("/login", name="inf_login", options={"expose"=true})
 	 */
 	public function loginAction(Request $request)

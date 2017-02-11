@@ -56,6 +56,12 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 			templateUrl: Routing.generate('inf_home'),
 			resolve: lazyLoad(['home'], [])
 		})
+		.state('app.feeds', {
+			url: '/feeds',
+			controller: 'FeedCtrl',
+			templateUrl: Routing.generate('inf_feed'),
+			resolve: lazyLoad(['feed'], ['isotope'])
+		})
 		.state('app.profile', {
 			url: '/profile',
 			templateUrl: Routing.generate('inf_profile'),

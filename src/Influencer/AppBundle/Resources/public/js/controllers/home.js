@@ -22,11 +22,9 @@ angular.module('app')
 			Account.getProfile().then(function(resp) {
 				console.log(resp.data.role);
 				$scope.templatePath = Routing.generate('inf_home', {role: resp.data.role});
-				if ($scope.feeds === undefined) {
-					LoadData.get(resp.data).then(function(data) {
-						$scope.feeds = data;
-					});
-				}
+				LoadData.get(resp.data).then(function(data) {
+					$scope.feeds = data;
+				});
 			});
 		}
 		$scope.feedFilter = '';
@@ -40,16 +38,48 @@ angular.module('app')
 				$scope.activeTab = network;
 			}
 		};
-		/*if ($scope.feeds === undefined) {
-			console.log($scope.user);
-			LoadData.get($scope.user).then(function(data) {
-				console.log(data);
+		$scope.sizeOf = function(obj) {
+		    return Object.keys(obj).length;
+		};
+		$scope.changeCover = function($file, $event, $flow) {
+			var cover = '';
+			var fileReader = new FileReader();
+			fileReader.onload = function(event) {
+				cover = event.target.result;
+				$http({
+					url: Routing.generate('inf_user_update_field'),
+					method: 'POST',
+					data: {user: $scope.user.id, field: 'profileCover', value: cover}
+				}).then(function(resp) {
+					if (resp.status == 200) {
+						$scope.user.profileCover = cover;
+					}
+				});
+			};
+			fileReader.readAsDataURL($file.file);
+		};
+		$scope.changeAvatar = function($file, $event, $flow) {
+			var avatar = '';
+			var fileReader = new FileReader();
+			fileReader.onload = function(event) {
+				avatar = event.target.result;
+				$http({
+					url: Routing.generate('inf_user_update_field'),
+					method: 'POST',
+					data: {user: $scope.user.id, field: 'profileImage', value: avatar}
+				}).then(function(resp) {
+					if (resp.status == 200) {
+						$scope.user.profileImage = avatar;
+					}
+				});
+			};
+			fileReader.readAsDataURL($file.file);
+		};
+		$scope.updateProfileField = function(field) {
+			$http({
+				url: Routing.generate('inf_user_update_field'),
+				method: 'POST',
+				data: {user: $scope.user.id, field: field, value: $scope.user[field]}
 			});
-		}
-		/*$scope.init = function() {
-			console.log($scope.user);
-			LoadData.get($scope.user).then(function(data) {
-				console.log(data);
-			});
-		};*/
+		};
 	}]);

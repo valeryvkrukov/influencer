@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "angular-masonry": "^0.16.0",
+    "flag-icon-css": "^2.8.0",
     "satellizer": "^0.15.5"
   },
   "devDependencies": {},

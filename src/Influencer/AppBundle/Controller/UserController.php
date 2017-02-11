@@ -95,6 +95,23 @@ class UserController extends BaseController
 	}
 	
 	/**
+	 * @Route("/{role}/feed", name="inf_load_user_feed", options={"expose"=true})
+	 */
+	public function getUserFeedsAction(Request $request, $role)
+	{
+		$userId = $this->getUser()->getId();
+		$userRoles = $this->getUser()->getRoles();
+		if ($role === 'admin' && in_array('ROLE_ADMIN', $userRoles)) {
+			$data = $this->get('app.admin_data')->getDashboardData($userId);
+		} elseif ($role === 'influencer' && in_array('ROLE_INFLUENCER', $userRoles)) {
+			$data = $this->get('app.influencer_data')->getFeeds($userId);
+		} else {
+			$data = get('app.client_data')->getDashboardData($userId);
+		}
+		return new JsonResponse($data);
+	}
+	
+	/**
 	 * @Route("/feeds", name="inf_feeds", options={"expose"=true})
 	 */
 	public function feedsAction(Request $request)

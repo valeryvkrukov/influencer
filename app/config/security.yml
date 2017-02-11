@@ -30,7 +30,12 @@ security:
             guard:
                 authenticators:
                     - app.token_authenticator
-
+        
+        node_modules:
+            pattern: ^/node_modules
+            security: false
+            anonymous: true
+        
         main:
             anonymous: ~
             

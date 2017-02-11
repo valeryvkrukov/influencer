@@ -78,6 +78,16 @@
 	width: 100%;
 }
 
+.card.col1.wide2 {
+	width: 48%;
+	margin: 1%;
+}
+
+.card.col1.wide3 {
+	width: 30%;
+	margin: 1%;
+}
+
 .social-wrapper .social .jumbotron {
 	height: 30vh;
 }
@@ -107,4 +117,28 @@ label small {
 .col1.masonry-brick {
 	margin: 10px;
 	padding: 0;
+}
+
+.thumbnail-wrapper.d120 {
+	width: 120px;
+	height: 120px;
+}
+
+.social-user-profile.c120 {
+	width: 120px;
+	height: 120px;
+}
+
+.thumbnail-wrapper.d100 {
+	width: 100px;
+	height: 100px;
+}
+
+.social-user-profile.c100 {
+	width: 100px;
+	height: 100px;
+}
+
+.thumbnail-wrapper.bordered.b-thin {
+	border-width: 1px;
 }
