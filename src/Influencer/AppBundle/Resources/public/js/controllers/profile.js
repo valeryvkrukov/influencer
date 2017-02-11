@@ -32,7 +32,70 @@ angular.module('app')
 			}
 		};
 	}])
-	.controller('ProfileCtrl', ['$scope', '$http', '$auth', '$sce', 'FeedLoader', function($scope, $http, $auth, $sce, FeedLoader) {
+	.controller('ProfileCtrl', ['Account', '$scope', '$http', '$auth', '$sce', 'FeedLoader', 'GetPredefinedVars', function(Account, $scope, $http, $auth, $sce, FeedLoader, GetPredefinedVars) {
+		$scope.languages = [];
+		$scope.countries = [];
+		$scope.categories = [];
+		$scope.postTypes = [];
+		$scope.networks = [];
+		if ($scope.templatePath === undefined) {
+			Account.getProfile().then(function(resp) {
+				$scope.user = resp.data;
+				$scope.templatePath = Routing.generate('inf_profile', {role: resp.data.role});
+				$scope.formPath = Routing.generate('inf_profile_main', {role: resp.data.role});
+				$scope.formLoaded = 'main';
+				$scope.$watch('$scope.user.profileImage', function() {
+					console.log($scope.user.profileImage);
+				});
+				GetPredefinedVars.getIntl().then(function(resp) {
+					if (resp.data.countries) {
+						$scope.countries = resp.data.countries;
+					}
+					if (resp.data.languages){
+						$scope.languages = resp.data.languages;
+					}
+				});
+				GetPredefinedVars.getCategories().then(function(resp) {
+					if (resp.data.categories) {
+						$scope.categories = resp.data.categories;
+					}
+				});
+				GetPredefinedVars.getTypes().then(function(resp) {
+					if (resp.data.types) {
+						angular.forEach(resp.data.types, function(v1, k1) {
+							var add = true;
+							angular.forEach($scope.user.prices, function(v2, k2) {
+								if (v1.tag == v2.tag) {
+									add = false;
+								}
+							});
+							if (add) {
+								$scope.postTypes.push(v1);
+							}
+						});
+					}
+				});
+				GetPredefinedVars.getSocialNetworks().then(function(resp) {
+					if (resp.data.networks) {
+						$scope.networks = resp.data.networks;
+					}
+				});
+			});
+		}
+		$scope.loadForm = function(form) {
+			$scope.formPath = Routing.generate('inf_profile_' + form, {role: $scope.user.role});
+			$scope.formLoaded = form;
+		};
+		$scope.submitProfile = function() {
+			$http({
+				url: Routing.generate('inf_update_user', {'id': $scope.user.id}),
+				method: 'POST',
+				data: $scope.user
+			}).then(function(resp) {
+				console.log(resp);
+			});
+			return false;
+		};
 		$scope.feeds = {
 			facebook: [],
 			google: [],
@@ -60,6 +123,13 @@ angular.module('app')
 					}
 				});
 			};
+			fileReader.readAsDataURL($file.file);
+		};
+		$scope.loadProfileImage = function($file, $event, $flow) {
+			var fileReader = new FileReader();
+			fileReader.onload = function(event) {
+				$scope.user.profileImage = event.target.result;
+			}
 			fileReader.readAsDataURL($file.file);
 		};
 		$scope.changeAvatar = function($file, $event, $flow) {
@@ -94,15 +164,23 @@ angular.module('app')
 		};
 		$scope.refreshFeed = function(network) {
 			var token = $auth.getToken();
+			var params = {'link_account': 1};
+			if ($scope.user[network] == null) {
+				params['link_to_user'] = $scope.user.id;
+			}
 			var loader = function(network) {
 				FeedLoader.loadFor(network, $auth.getToken(), $scope.user.id).then(function(resp) {
 					$scope.feeds[network] = resp;
 					$auth.setToken(token);
+					$scope.loadFeeds();
 				}, function() {
 					$auth.setToken(token);
 				});
 			};
-			$auth.link(network, {'link_account': 1}).then(function(resp) {
+			$auth.link(network, params).then(function(resp) {
+				if ($scope.user[network] == null) {
+					$scope.user[network] = resp.data.profile.id;
+				}
 				loader(network);
 			});
 		};

@@ -7,6 +7,8 @@ class InfluencerData extends AbstractData
 {
 	public function getDashboardData($id)
 	{
-		return [];
+		$em = $this->getEntityManager();
+		$data = $em->getRepository('InfluencerAppBundle:Feed')->loadSavedFeedsFor($id, null, 'array');
+		return $data;
 	}
 }

@@ -19,6 +19,64 @@ class BaseController extends Controller
 	protected function getUserData()
 	{
 		$user = $this->getUser();
+		$serializer = $this->get('serializer');
+		$langItems = json_decode($serializer->serialize($user->getLanguages(), 'json'));
+		$languages = [];
+		foreach ($langItems as $item) {
+			$languages[] = [
+				'code' => $item->code,
+				'lang' => $item->name,
+			];
+		}
+		$countryItems = json_decode($serializer->serialize($user->getCountries(), 'json'));
+		$countries = [];
+		foreach ($countryItems as $item) {
+			$countries[] = [
+				'code' => $item->code,
+				'country' => $item->name,
+			];
+		}
+		$audienceItems = json_decode($serializer->serialize($user->getAudience(), 'json'));
+		$audience = [];
+		foreach ($audienceItems as $item) {
+			$audience[] = [
+				'tag' => $item->code,
+				'name' => $item->name,
+			];
+		}
+		$priceItems = json_decode($serializer->serialize($user->getPrices(), 'json'));
+		$prices = [];
+		foreach ($priceItems as $item) {
+			$prices[] = [
+				'tag' => $item->tag,
+				'cost' => floatval($item->cost),
+				'name' => $item->name,
+				'icon' => isset($item->icon)?$item->icon:null,
+			];
+		}
+		$age = $user->getAge();
+		switch ($age) {
+			case ($age > 17 && $age < 25):
+				$bracket = '18-24';
+				break;
+			case ($age > 24 && $age < 30):
+				$bracket = '25-29';
+				break;
+			case ($age > 29 && $age < 35):
+				$bracket = '30-34';
+				break;
+			case ($age > 34 && $age < 40):
+				$bracket = '35-39';
+				break;
+			case ($age > 39 && $age < 45):
+				$bracket = '40-44';
+				break;
+			case ($age > 44):
+				$bracket = '45+';
+				break;
+			default:
+				$bracket = 0;
+		}
 		return [
 			'id' => $user->getId(),
 			'username' => $user->getUsername(),
@@ -28,6 +86,16 @@ class BaseController extends Controller
 			'profileCover' => $user->getProfileCover(),
 			'firstName' => $user->getFirstName(),
 			'lastName' => $user->getLastName(),
+			'age' => $age,
+			'ageBracket' => $bracket,
+			'gender' => $user->getGender(),
+			'contactNumber' => $user->getContactNumber(),
+			'secondaryNumber' => $user->getSecondaryNumber(),
+			'website' => $user->getWebsite(),
+			'languages' => $languages,
+			'countries' => $countries,
+			'audience' => $audience,
+			'prices' => $prices,
 			'facebook' => $user->getFacebook(),
 			'google' => $user->getGoogle(),
 			'instagram' => $user->getInstagram(),

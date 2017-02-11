@@ -44,6 +44,7 @@ angular.module('app')
 	.controller('SignupCtrl', ['$scope', '$sce', '$location', '$auth', 'toastr', 'GetPredefinedVars', 'WizardHandler', 'Register', function($scope, $sce, $location, $auth, toastr, GetPredefinedVars, WizardHandler, Register) {
 		$scope.languages = [];
 		$scope.countries = [];
+		$scope.categories = [];
 		$scope.networks = [];
 		$scope.postTypes = [];
 		$scope.price = {};
@@ -55,6 +56,11 @@ angular.module('app')
 				}
 				if (resp.data.languages){
 					$scope.languages = resp.data.languages;
+				}
+			});
+			GetPredefinedVars.getCategories().then(function(resp) {
+				if (resp.data.categories) {
+					$scope.categories = resp.data.categories;
 				}
 			});
 			GetPredefinedVars.getTypes().then(function(resp) {
@@ -106,6 +112,13 @@ angular.module('app')
     	    });
         	form.$setSubmitted();
         };
+        $scope.setProfileImage = function($file, $event, $flow) {
+        	var fileReader = new FileReader();
+			fileReader.onload = function(event) {
+				$scope.user.profileImage = event.target.result;
+			};
+			fileReader.readAsDataURL($file.file);
+        };
         $scope.checkForMain = function() {
         	return $scope.steps['main'];
         };
@@ -129,10 +142,10 @@ angular.module('app')
         	if ($scope.user.website === undefined) {
         		$scope.user.website = '';
         	}
-        	angular.forEach(angular.element('#audience-list').find('.tag'), function(val, key) {
+        	/*angular.forEach(angular.element('#audience-list').find('.tag'), function(val, key) {
         		$scope.user.audience.push(val.innerText);
-			});
-        	if (audienceAndInfluencerDataInfo.$valid && $scope.user.audience.length > 0) {
+			});*/
+        	if (audienceAndInfluencerDataInfo.$valid) {
         		$scope.steps['audience'] = true;
         		WizardHandler.wizard().next();
         	} else {

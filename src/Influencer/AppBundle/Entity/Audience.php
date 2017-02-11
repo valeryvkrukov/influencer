@@ -15,11 +15,22 @@ class Audience
 	 * @ORM\GeneratedValue(strategy="AUTO")
 	 */
 	protected $id;
+
+	/**
+	 * @ORM\Column(name="code", type="string", nullable=false)
+	 */
+	protected $code;
 	
 	/**
 	 * @ORM\Column(name="name", type="string", nullable=false)
 	 */
 	protected $name;
+	
+	/**
+	 * @ORM\ManyToOne(targetEntity="User", inversedBy="audience")
+	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
+	 */
+	protected $user;
 	
 	/**
 	 *
@@ -29,6 +40,23 @@ class Audience
 		return $this->id;
 	}
 	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getCode() {
+		return $this->code;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $code        	
+	 */
+	public function setCode($code) {
+		$this->code = $code;
+		return $this;
+	}
+		
 	/**
 	 *
 	 * @return the unknown_type
@@ -45,5 +73,23 @@ class Audience
 		$this->name = $name;
 		return $this;
 	}
+	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getUser() {
+		return $this->user;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $user        	
+	 */
+	public function setUser($user) {
+		$this->user = $user;
+		return $this;
+	}
+	
 	
 }

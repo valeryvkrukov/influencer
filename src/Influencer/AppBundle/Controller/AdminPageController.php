@@ -5,6 +5,9 @@ namespace Influencer\AppBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
+/**
+ * @Route("/admin")
+ */
 class AdminPageController extends Controller
 {
     /**
@@ -13,6 +16,22 @@ class AdminPageController extends Controller
     public function settingsSignupAction()
     {
         return $this->render('InfluencerAppBundle:AdminPage:settings/signup.html.twig');
+    }
+    
+    /**
+     * @Route("/users/list", name="inf_admin_users_list", options={"expose"=true})
+     */
+    public function usersListAction()
+    {
+    	return $this->render('InfluencerAppBundle:AdminPage:users/list.html.twig');
+    }
+    
+    /**
+     * @Route("/users/list", name="inf_admin_users_create", options={"expose"=true})
+     */
+    public function usersCreateAction()
+    {
+    	return $this->render('InfluencerAppBundle:AdminPage:users/create.html.twig');
     }
 
 }

@@ -25,7 +25,7 @@ class RegisterController extends BaseController
 		if (isset($input->username) && isset($input->email)) {
 			$em = $this->getDoctrine()->getManager();
 			if ($em->getRepository('InfluencerAppBundle:User')->checkForUniqueUser($input->username, $input->email)) {
-				$user = $em->getRepository('InfluencerAppBundle:User')->createInfluencerUser($input);
+				$user = $em->getRepository('InfluencerAppBundle:User')->createInfluencerUser($input, $this->get('app.feed_loader'));
 				return new JsonResponse(['token' => $this->createToken($user)]);
 			} else {
 				return new JsonResponse(['error' => 'User with given username or/and password already registered'], 409);

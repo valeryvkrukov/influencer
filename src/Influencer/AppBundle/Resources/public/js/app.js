@@ -9,5 +9,6 @@ angular.module('app', [
 	'ui.select',
     'ui.utils',
     'flow',
-	'satellizer'
+	'satellizer',
+	'wu.masonry'
 ]);

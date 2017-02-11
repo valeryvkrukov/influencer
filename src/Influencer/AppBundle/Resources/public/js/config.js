@@ -48,7 +48,7 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 			url: '/home',
 			controller: 'HomeCtrl',
 			templateUrl: Routing.generate('inf_home'),
-			resolve: lazyLoad(['home'], [])
+			resolve: lazyLoad(['home'], ['isotope'])
 		})
 		.state('app.me', {
 			url: '/me',
@@ -60,7 +60,7 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 			url: '/profile',
 			templateUrl: Routing.generate('inf_profile'),
 			controller: 'ProfileCtrl',
-			resolve: lazyLoad(['profile'], ['wysihtml5'])
+			resolve: lazyLoad(['profile'], ['wysihtml5', 'select', 'tagsInput', 'dropzone', 'inputMask', 'ngImgCrop'])
 		})
 		.state('app.campaign', {
 			url: '/campaign',
@@ -81,6 +81,26 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 			controller: 'AdminSettingsSignupCtrl',
 			templateUrl: Routing.generate('inf_admin_settings_signup'),
 			resolve: lazyLoad(['admin/settings/signup'], [])
+		})
+		.state('app.users', {
+			abstract: true,
+			url: '/users',
+			template: '<div class="full-height" ui-view></div>',
+			resolve: {
+				loginRequired: loginRequired
+			}
+		})
+		.state('app.users.list', {
+			url: '/list',
+			controller: 'AdminUsersListCtrl',
+			templateUrl: Routing.generate('inf_admin_users_list'),
+			resolve: lazyLoad(['admin/users/list'], ['dataTables'])
+		})
+		.state('app.users.create', {
+			url: '/create',
+			controller: 'AdminUsersCreateCtrl',
+			templateUrl: Routing.generate('inf_admin_users_create'),
+			resolve: lazyLoad(['admin/users/create'], [])
 		})
 		.state('access', {
 			abstract: true,
@@ -113,7 +133,8 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 		scope: ['email', 'public_profile', 'user_friends']
 	});
 	$authProvider.google({
-		clientId: '758902806102-sh9om8tu0bbbbgvecsokav3uimkmaekj.apps.googleusercontent.com'
+		clientId: '758902806102-sh9om8tu0bbbbgvecsokav3uimkmaekj.apps.googleusercontent.com',
+		scope: ['profile', 'email', 'https://www.googleapis.com/auth/youtube', 'https://www.googleapis.com/auth/youtube.force-ssl', 'https://www.googleapis.com/auth/youtube.readonly']
 	});
 	$authProvider.instagram({
 		clientId: '0328e45f47f944ceb589dc0f1879d82b',
@@ -174,6 +195,13 @@ app.factory('GetPredefinedVars', ['$q', '$http', function($q, $http) {
 				deferred.resolve(resp.data);
 			});
 			return deferred.promise;
+		},
+		getCategories: function() {
+			var deferred = $q.defer();
+			$http.get(Routing.generate('inf_get_categories')).then(function(resp) {
+				deferred.resolve(resp.data);
+			});
+			return deferred.promise;
 		}
 	};
 }]);
@@ -195,9 +223,11 @@ app.controller('AppCtrl', ['$scope', '$rootScope', '$state', '$stateParams', 'Ac
 		return $state.includes(name);
     };
     $rootScope.getUserData = function(key) {
-    	Account.getProfile().then(function(resp) {
-    		$rootScope.user = resp.data;
-    	});
+    	if ($rootScope.user === undefined) {
+	    	Account.getProfile().then(function(resp) {
+	    		$rootScope.user = resp.data;
+	    	});
+    	}
     };
 }]);
 
@@ -257,7 +287,7 @@ app.filter('datetime', function() {
 });
 
 app.filter('trustHTML', ['$sce',function($sce) {
-	  return function(value, type) {
-		    return $sce.trustAs(type || 'html', value);
-		  }
-		}]);
+	return function(value, type) {
+		return $sce.trustAs(type || 'html', value);
+	};
+}]);

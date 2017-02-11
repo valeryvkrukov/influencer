@@ -29,10 +29,11 @@ class FeedLoader
 	public function loadGoogleFeed($token, $userId)
 	{
 		$client = new GuzzleHttp\Client();
-		$response = $client->request('GET', 'https://www.googleapis.com/plus/v1/activities', [
+		$response = $client->request('GET', 'https://www.googleapis.com/youtube/v3/activities', [
 			'headers' => ['Authorization' => 'Bearer ' . $token],
 			'query' => [
-				'query' => 'TEST',
+				'part' => 'snippet',
+				'home' => 'true',
 				'key' => $this->container->getParameter('google_id')
 			]
 		]);
