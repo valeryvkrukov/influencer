@@ -34,11 +34,11 @@ class AuthController extends BaseController
 		$em = $this->getDoctrine()->getManager();
 		$user = $em->getRepository('InfluencerAppBundle:User')->findByUsername($input->email);
 		$factory = $this->get('security.encoder_factory');
-		$encoder = $factory->getEncoder($user[0]);
 		
 		if (!isset($user[0])) {
 			return new JsonResponse(['message' => 'Wrong email and/or password'], 401);
 		} else {
+			$encoder = $factory->getEncoder($user[0]);
 			if ($encoder->isPasswordValid($user[0]->getPassword(), $input->password, $user[0]->getSalt())) {
 				return new JsonResponse(['token' => $this->createToken($user[0])]);
 			} else {
@@ -380,7 +380,7 @@ class AuthController extends BaseController
 				$em = $this->getDoctrine()->getManager();
 				$user = $em->getRepository('InfluencerAppBundle:User')->find($input->link_to_user);
 				if ($user) {
-					$user->setInstagram($profile['id']);
+					$user->setInstagram($accessToken['user']['id']);
 					$em->persist($user);
 					$em->flush();
 				}

@@ -134,6 +134,7 @@ class UserRepository extends EntityRepository
 			$user->addRole('ROLE_INFLUENCER');
 			$user->setEnabled(true);
 			$em->persist($user);
+			$em->flush();
 			if (isset($data->socials)) {
 				$socials = json_decode(json_encode($data->socials), true);
 				if (is_array($socials) && sizeof($socials) > 0) {
@@ -141,8 +142,9 @@ class UserRepository extends EntityRepository
 						$setter = 'set'.ucfirst($network);
 						//$getter = 'load'.ucfirst($network).'Feed';
 						$user->$setter($item['id']);
-						
-						//$em->getRepository('InfluencerAppBundle:Feed')->loadLatestForUser($data, $network, $user);
+						$getter = 'load'.ucfirst($network).'Feed';
+						$data = $this->get('app.feed_loader')->$getter($item['token'], $item['id']);
+						$em->getRepository('InfluencerAppBundle:Feed')->loadLatestForUser($data, $network, $user->getId());
 						//$em->getRepository('InfluencerAppBundle:Feed')->loadLatestForUser($network, $user, $item['id'], $item['token']);
 					}
 					$em->persist($user);
