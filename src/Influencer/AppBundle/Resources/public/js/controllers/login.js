@@ -1,12 +1,16 @@
 'use strict';
 
 angular.module('app')
-	.controller('LoginCtrl', ['$scope', '$state', '$auth', 'toastr', function($scope, $state, $auth, toastr) {
+	.controller('LoginCtrl', ['$scope', '$state', '$auth', 'Account', 'localStorageService', function($scope, $state, $auth, Account, localStorageService) {
 		$scope.login = function() {
 			$auth.login($scope.user).then(function() {
 				//toastr.success('You have successfully signed in!');
 				//$location.path('/');
-				$state.transitionTo('app.home');
+				Account.getProfile().then(function(resp) {
+					localStorageService.set('currentUser', resp.data);
+				    $scope.user = resp.data;
+				    $state.transitionTo('app.home');
+				});
 			}).catch(function(error) {
 				//toastr.error(error.data.message, error.status);
 				$scope.error = error.data.message;

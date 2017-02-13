@@ -35,7 +35,8 @@
 		"guzzlehttp/oauth-subscriber" : "^0.3.0",
 		"friendsofsymfony/user-bundle" : "~2.0-dev",
 		"sensio/generator-bundle" : "^3.1",
-		"jms/serializer-bundle": "^1.1"
+		"jms/serializer-bundle": "^1.1",
+		"google/apiclient": "^2.1"
 	},
 	"require-dev" : {
 		"symfony/phpunit-bridge" : "^3.0"

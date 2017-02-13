@@ -11,6 +11,10 @@ services:
         class: Influencer\AppBundle\Security\TokenAuthenticator
         arguments: ["@doctrine.orm.entity_manager", "@security.token_storage"]
         
+    app.user_entity:
+        class: Influencer\AppBundle\Entity\User
+        arguments: ["%kernel.root_dir%"]
+    
     app.social_connector:
         class: Influencer\AppBundle\Service\SocialConnect
         arguments: ["@service_container"]

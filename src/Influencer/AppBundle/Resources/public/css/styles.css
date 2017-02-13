@@ -16,6 +16,7 @@
 
 .btn-google-plus,
 .social-icon.fa-google-plus
+.social-icon.fa-youtube-play
  {
   color: #fff;
   background-color: #dd4b39;
@@ -141,4 +142,11 @@ label small {
 
 .thumbnail-wrapper.bordered.b-thin {
 	border-width: 1px;
+}
+
+.cropArea {
+	background: #E4E4E4;
+	overflow: hidden;
+	width:500px;
+	height:350px;
 }

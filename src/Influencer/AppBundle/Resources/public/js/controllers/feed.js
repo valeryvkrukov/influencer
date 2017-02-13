@@ -17,15 +17,12 @@ angular.module('app')
 			}
 		};
 	}])
-	.controller('FeedCtrl', ['$scope', '$http', 'Account', 'LoadFeedsData', function($scope, $http, Account, LoadFeedsData) {
+	.controller('FeedCtrl', ['$scope', '$http', 'Account', 'LoadFeedsData', 'localStorageService', function($scope, $http, Account, LoadFeedsData, localStorageService) {
 		if ($scope.templatePath === undefined) {
-			Account.getProfile().then(function(resp) {
-				$scope.templatePath = Routing.generate('inf_feed', {role: resp.data.role});
-				//if ($scope.feeds === undefined) {
-					LoadFeedsData.get(resp.data).then(function(data) {
-						$scope.feeds = data;
-					});
-				//}
+			$scope.user = localStorageService.get('currentUser');
+			$scope.templatePath = Routing.generate('inf_feed', {role: $scope.user.role});
+			LoadFeedsData.get($scope.user).then(function(data) {
+				$scope.feeds = data;
 			});
 		}
 		$scope.feedFilter = '';

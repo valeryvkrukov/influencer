@@ -8,9 +8,21 @@ use Influencer\AppBundle\Entity\Language;
 use Influencer\AppBundle\Entity\Country;
 use Influencer\AppBundle\Entity\Audience;
 use Influencer\AppBundle\Entity\Price;
+use Influencer\AppBundle\Entity\Network;
 
 class UserRepository extends EntityRepository
 {
+	public function findUserByNetworkId($network, $id)
+	{
+		$em = $this->getEntityManager();
+		$dql = sprintf('SELECT u FROM InfluencerAppBundle:User u LEFT JOIN u.%s AS n WHERE n.userId = :id AND n.code = :network', $network);
+		$user = $em->createQuery($dql)->setParameters([
+			'id' => $id,
+			'network' => $network,
+		])->getResult();
+		return $user;
+	}
+	
 	public function findByOrCondition($params)
 	{
 		$em = $this->getEntityManager();
@@ -141,10 +153,18 @@ class UserRepository extends EntityRepository
 					foreach ($socials as $network => $item) {
 						$setter = 'set'.ucfirst($network);
 						//$getter = 'load'.ucfirst($network).'Feed';
-						$user->$setter($item['id']);
+						$_network = new Network();
+						$_network->setCode($network);
+						$_network->setName($network);
+						$_network->setUserId($item['id']);
+						$_network->setUserName('username');
+						$_network->setToken($item['token']);
+						$em->persist($_network);
+						//$user->$setter($item['id']);
+						$user->$setter($_network);
 						$getter = 'load'.ucfirst($network).'Feed';
-						$data = $this->get('app.feed_loader')->$getter($item['token'], $item['id']);
-						$em->getRepository('InfluencerAppBundle:Feed')->loadLatestForUser($data, $network, $user->getId());
+						//$data = $this->get('app.feed_loader')->$getter($item['token'], $item['id']);
+						//$em->getRepository('InfluencerAppBundle:Feed')->loadLatestForUser($data, $network, $user->getId());
 						//$em->getRepository('InfluencerAppBundle:Feed')->loadLatestForUser($network, $user, $item['id'], $item['token']);
 					}
 					$em->persist($user);

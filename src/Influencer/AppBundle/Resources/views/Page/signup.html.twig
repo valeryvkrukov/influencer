@@ -1,5 +1,49 @@
 <div class="container-fluid container-fixed-lg m-t-30" ng-controller="SignupCtrl" ng-init="initIntlVars()">
 	<div class="container-sm-height full-height" flow-init flow-file-added="setProfileImage($file, $event, $flow)">
+		<script type="text/ng-template" id="leftBlockTemplate">
+			<div class="padding-30 m-t-50">
+				<div class="gallery-item" ng-if="$flow.files.length > 0">
+					<img ng-if="$flow.files[0] && !user.profileImage" flow-img="$flow.files[0]" class="img-responsive full-width"/>
+					<img ng-if="user.profileImage" ng-src="{{ '{{ user.profileImage }}' }}" class="img-responsive full-width"/>
+				</div>
+				<h5 ng-if="$flow.files.length > 0">
+					<a ng-click="cropProfileImage($flow)" data-toggle="modal" data-target="#imageCrop"><i class="text-primary pg-crop"></i></a>
+					<a ng-click="removeProfileImage($flow)"><i class="text-danger pg-close"></i></a>
+				</h5>
+				<h2 ng-if="(user.first_name || user.last_name)">{{ '{{ user.first_name }} {{ user.last_name }}' }}</h2>
+                <p ng-if="user.username"><strong>Username: </strong> {{ '{{ user.username }}' }}</p>
+                <p ng-if="user.email"><strong>Email: </strong> {{ '{{ user.email }}' }}</p>
+                <p ng-if="user.dob"><strong>DOB: </strong> {{ '{{ user.dob }}' }}</p>
+                <p ng-if="user.contact_number"><strong>Contact Number: </strong> {{ '{{ user.contact_number }}' }}</p>
+                <p ng-if="user.secondary_number"><strong>Secondary Number: </strong> {{ '{{ user.secondary_number }}' }}</p>
+                <p ng-if="user.website && user.website != ''"><strong>Website: </strong> {{ '{{ user.website }}' }}</p>
+                <p ng-if="user.socials && sizeOf(user.socials) > 0"><strong>Social Accounts:</strong></p>
+                <p ng-if="user.socials && sizeOf(user.socials) > 0" class="small hint-text" ng-repeat="(network, item) in user.socials" style="padding-left:10px;">
+                	<i class="fa fa-{{ '{{ network }}' }}"></i> {{ '{{ network|capitalize }}' }}
+                </p>
+                <p ng-if="user.countries.length > 0">
+            		<strong>Countries:</strong>
+            		<span ng-repeat="item in user.countries">{{ '{{ ($index > 0?", ":"") + item.country }}' }}</span>
+            	</p>
+            	<p ng-if="user.languages.length > 0">
+            		<strong>Languages:</strong>
+            		<span ng-repeat="item in user.languages">{{ '{{ ($index > 0?", ":"") + item.lang }}' }}</span>
+            	</p>
+            	<p ng-if="user.audience.length > 0">
+            		<strong>Audience:</strong>
+            		<span ng-repeat="item in user.audience">{{ '{{ ($index > 0?", ":"") + item }}' }}</span>
+            	</p>
+            	<p ng-if="price.selected_types.length > 0"><strong>Prices:</strong></p>
+            	<p ng-if="price.selected_types.length > 0" class="small hint-text" ng-repeat="pt in price.selected_types" style="padding-left:10px;">
+            		<strong>{{ '{{ pt.name }}' }}:</strong> ${{ '{{ user.prices[pt.tag] }}' }}
+            	</p>
+            	<p ng-if="user.frequency"><strong>Frequency:</strong> {{ '{{ user.frequency }}' }}</p>
+                <p ng-if="user.bio">
+                	<strong>Bio:</strong><br>
+                	<span>{{ '{{ user.bio }}' }}</span>
+                </p>
+			</div>
+		</script>
 		<div class="row row-sm-height">
 			<div class="col-sm-10 col-sm-height col-middle">
             	<h2>Sign Up as Influencer</h2>
@@ -11,10 +55,10 @@
                         <a data-toggle="tab" ng-click="goToStep(2)"><i class="fa fa-group tab-icon"></i> <span>Audience and influencer data info</span></a>
                     </li>
                     <li ng-class="{'active': getCurrentStep() == 3 }">
-                        <a data-toggle="tab" ng-click="goToStep(3)"><i class="fa fa-briefcase tab-icon"></i> <span>Campaign info</span></a>
+                        <a data-toggle="tab" ng-click="goToStep(4)"><i class="fa fa-comments tab-icon"></i> <span>Connecting assets</span></a>
                     </li>
                     <li ng-class="{'active': getCurrentStep() == 4 }">
-                        <a data-toggle="tab" ng-click="goToStep(4)"><i class="fa fa-comments tab-icon"></i> <span>Connecting assets</span></a>
+                        <a data-toggle="tab" ng-click="goToStep(3)"><i class="fa fa-briefcase tab-icon"></i> <span>Campaign info</span></a>
                     </li>
                     <li ng-class="{'active': getCurrentStep() == 5 }">
                         <a data-toggle="tab" ng-click="goToStep(5)"><i class="fa fa-check tab-icon"></i> <span>Thank you</span></a>
@@ -26,43 +70,7 @@
                     		<div class="row row-same-height" ng-init="user.user_type = 'influencer'">
                     			<input type="hidden" ng-model="user.user_type">
                     			<div class="col-md-5 b-r b-dashed b-grey sm-b-b">
-                    				<div class="padding-30 m-t-50">
-                    					<div class="gallery-item" ng-if="$flow.files.length > 0">
-                							<img flow-img="$flow.files[0]" class="img-responsive" />
-                						</div>
-                						<h2 ng-if="(user.first_name || user.last_name)">{{ '{{ user.first_name }} {{ user.last_name }}' }}</h2>
-                						<p ng-if="user.username"><strong>Username: </strong> {{ '{{ user.username }}' }}</p>
-                						<p ng-if="user.email"><strong>Email: </strong> {{ '{{ user.email }}' }}</p>
-                						<p ng-if="user.dob"><strong>DOB: </strong> {{ '{{ user.dob }}' }}</p>
-                						<p ng-if="user.contact_number"><strong>Contact Number: </strong> {{ '{{ user.contact_number }}' }}</p>
-                						<p ng-if="user.secondary_number"><strong>Secondary Number: </strong> {{ '{{ user.secondary_number }}' }}</p>
-                						<p ng-if="user.website && user.website != ''"><strong>Website: </strong> {{ '{{ user.website }}' }}</p>
-                						<p ng-if="user.socials && sizeOf(user.socials) > 0"><strong>Social Accounts:</strong></p>
-                						<p ng-if="user.socials && sizeOf(user.socials) > 0" class="small hint-text" ng-repeat="(network, item) in user.socials" style="padding-left:10px;">
-                							<i class="fa fa-{{ '{{ network }}' }}"></i> {{ '{{ network|capitalize }}' }}
-                						</p>
-                						<p ng-if="user.countries.length > 0">
-            								<strong>Countries:</strong>
-            								<span ng-repeat="item in user.countries">{{ '{{ ($index > 0?", ":"") + item.country }}' }}</span>
-            							</p>
-            							<p ng-if="user.languages.length > 0">
-            								<strong>Languages:</strong>
-            								<span ng-repeat="item in user.languages">{{ '{{ ($index > 0?", ":"") + item.lang }}' }}</span>
-            							</p>
-            							<p ng-if="user.audience.length > 0">
-            								<strong>Audience:</strong>
-            								<span ng-repeat="item in user.audience">{{ '{{ ($index > 0?", ":"") + item }}' }}</span>
-            							</p>
-            							<p ng-if="price.selected_types.length > 0"><strong>Prices:</strong></p>
-            							<p ng-if="price.selected_types.length > 0" class="small hint-text" ng-repeat="pt in price.selected_types" style="padding-left:10px;">
-            								<strong>{{ '{{ pt.name }}' }}:</strong> ${{ '{{ user.prices[pt.tag] }}' }}
-            							</p>
-            							<p ng-if="user.frequency"><strong>Frequency:</strong> {{ '{{ user.frequency }}' }}</p>
-                						<p ng-if="user.bio">
-                							<strong>Bio:</strong><br>
-                							<span>{{ '{{ user.bio }}' }}</span>
-                						</p>
-                    				</div>
+                    				<div ng-include="'leftBlockTemplate'"></div>
                     			</div>
                     			<div class="col-md-7">
                 					<div class="padding-30">
@@ -120,7 +128,9 @@
                     						<div class="col-sm-12">
                     							<div pg-form-group class="form-group form-group-default required" ng-class="{ 'has-error': mainInfluencerInfo.dob.$invalid && !mainInfluencerInfo.dob.$pristine }">
                     								<label>DOB <small>(Not shown on profile)</small></label>
-                    								<input type="text" name="dob" placeholder="DOB" class="form-control" ng-model="user.dob" ui-jq="mask" ui-options="'99/99/9999'" required>
+                    								<div class="input-group date">
+                    									<input type="text" name="dob" ui-jq="datepicker" placeholder="DOB" class="form-control" ng-model="user.dob" required><span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    								</div>
                     							</div>
                     							<label class="error" for="dob" ng-show="mainInfluencerInfo.dob.$invalid && !mainInfluencerInfo.dob.$pristine">This field is required.</label>
                     						</div>
@@ -165,43 +175,7 @@
                 		<form name="audienceAndInfluencerDataInfo" novalidate>
                 			<div class="row row-same-height">
                 				<div class="col-md-5 b-r b-dashed b-grey sm-b-b">
-                					<div class="padding-30 m-t-50">
-                						<div class="gallery-item" ng-if="$flow.files.length > 0">
-                							<img flow-img="$flow.files[0]" class="img-responsive" />
-                						</div>
-                						<h2 ng-if="(user.first_name || user.last_name)">{{ '{{ user.first_name }} {{ user.last_name }}' }}</h2>
-                						<p ng-if="user.username"><strong>Username: </strong> {{ '{{ user.username }}' }}</p>
-                						<p ng-if="user.email"><strong>Email: </strong> {{ '{{ user.email }}' }}</p>
-                						<p ng-if="user.dob"><strong>DOB: </strong> {{ '{{ user.dob }}' }}</p>
-                						<p ng-if="user.contact_number"><strong>Contact Number: </strong> {{ '{{ user.contact_number }}' }}</p>
-                						<p ng-if="user.secondary_number"><strong>Secondary Number: </strong> {{ '{{ user.secondary_number }}' }}</p>
-                						<p ng-if="user.website && user.website != ''"><strong>Website: </strong> {{ '{{ user.website }}' }}</p>
-                						<p ng-if="user.socials && sizeOf(user.socials) > 0"><strong>Social Accounts:</strong></p>
-                						<p ng-if="user.socials && sizeOf(user.socials) > 0" class="small hint-text" ng-repeat="(network, item) in user.socials" style="padding-left:10px;">
-                							<i class="fa fa-{{ '{{ network }}' }}"></i> {{ '{{ network|capitalize }}' }}
-                						</p>
-                						<p ng-if="user.countries.length > 0">
-            								<strong>Countries:</strong>
-            								<span ng-repeat="item in user.countries">{{ '{{ ($index > 0?", ":"") + item.country }}' }}</span>
-            							</p>
-            							<p ng-if="user.languages.length > 0">
-            								<strong>Languages:</strong>
-            								<span ng-repeat="item in user.languages">{{ '{{ ($index > 0?", ":"") + item.lang }}' }}</span>
-            							</p>
-            							<p ng-if="user.audience.length > 0">
-            								<strong>Audience:</strong>
-            								<span ng-repeat="item in user.audience">{{ '{{ ($index > 0?", ":"") + item }}' }}</span>
-            							</p>
-            							<p ng-if="price.selected_types.length > 0"><strong>Prices:</strong></p>
-            							<p ng-if="price.selected_types.length > 0" class="small hint-text" ng-repeat="pt in price.selected_types" style="padding-left:10px;">
-            								<strong>{{ '{{ pt.name }}' }}:</strong> ${{ '{{ user.prices[pt.tag] }}' }}
-            							</p>
-            							<p ng-if="user.frequency"><strong>Frequency:</strong> {{ '{{ user.frequency }}' }}</p>
-                						<p ng-if="user.bio">
-                							<strong>Bio:</strong><br>
-                							<span>{{ '{{ user.bio }}' }}</span>
-                						</p>
-                					</div>
+                					<div ng-include="'leftBlockTemplate'"></div>
                 				</div>
                 				<div class="col-md-7">
                 					<div class="padding-30">
@@ -282,47 +256,56 @@
             				</ul>
             			</div>
                 	</wz-step>
+                	<wz-step title="Connecting assets">
+                		<form name="socialsInfluencerInfo" novalidate>
+                			<div class="row row-same-height">
+                				<div class="col-md-5 b-r b-dashed b-grey sm-b-b">
+                					<div ng-include="'leftBlockTemplate'"></div>
+                				</div>
+                				<div class="col-md-7">
+                					<div class="padding-30">
+                						<div class="col-sm-12">
+                							<h4 ng-if="!user.socials || user.socials.length == 0" class="error">Connect please at least one social network</h4>
+                							<div class="row" ng-repeat="network in networks">
+                        						<div class="col-sm-10">
+                									<br>
+                									<div class="input-group" style="width:100%;">
+                            							<a ng-click="connectAccount(network.tag)" class="btn btn-block" ng-class="{'btn-primary':(user.socials[network.tag] == undefined), 'btn-success':(user.socials[network.tag])}">
+                        									<span class="pull-left">
+                        										<i class="fa fa-{{ '{{ network.tag }}' }}"></i>
+                        									</span> 
+                        									<span>{{ '{{ network.name }}' }}</span>
+                        									<span ng-if="user.socials[network.tag] != undefined && user.socials[network.tag] != null" class="pull-right"> Connected <i class="fa fa-check"></i></span>
+                        									<span ng-if="user.socials[network.tag] == undefined || user.socials[network.tag] == null" class="pull-right"> Not Connected <i class="fa fa-times"></i></span>
+                        								</a>
+                        							</div>
+                        						</div>
+                        					</div>
+                						</div>
+                					</div>
+                				</div>
+                			</div>
+                		</form>
+                		<div class="padding-20 bg-white">
+            				<ul class="pager wizard">
+            					<li class="next">
+            						<button type="button" class="btn btn-primary btn-cons btn-animated from-left fa fa-check pull-right" wz-next>
+            							<span>Next</span>
+            						</button>
+            					</li>
+            					<li class="previous">
+            						<button type="button" class="btn btn-default btn-cons pull-right" wz-previous>
+            							<span>Previous</span>
+            						</button>
+            					</li>
+            				</ul>
+            			</div>
+                	</wz-step>
                 	<wz-step title="Campaign info" canexit="checkForCampaign">
                 		<form name="campaignInfluencerInfo" novalidate>
                     		<div class="row row-same-height">
                     			<div class="col-md-5 b-r b-dashed b-grey sm-b-b">
-                					<div class="padding-30 m-t-50">
-                						<div class="gallery-item" ng-if="$flow.files.length > 0">
-                							<img flow-img="$flow.files[0]" class="img-responsive" />
-                						</div>
-                						<h2 ng-if="(user.first_name || user.last_name)">{{ '{{ user.first_name }} {{ user.last_name }}' }}</h2>
-                						<p ng-if="user.username"><strong>Username: </strong> {{ '{{ user.username }}' }}</p>
-                						<p ng-if="user.email"><strong>Email: </strong> {{ '{{ user.email }}' }}</p>
-                						<p ng-if="user.dob"><strong>DOB: </strong> {{ '{{ user.dob }}' }}</p>
-                						<p ng-if="user.contact_number"><strong>Contact Number: </strong> {{ '{{ user.contact_number }}' }}</p>
-                						<p ng-if="user.secondary_number"><strong>Secondary Number: </strong> {{ '{{ user.secondary_number }}' }}</p>
-                						<p ng-if="user.website && user.website != ''"><strong>Website: </strong> {{ '{{ user.website }}' }}</p>
-                						<p ng-if="user.socials && sizeOf(user.socials) > 0"><strong>Social Accounts:</strong></p>
-                						<p ng-if="user.socials && sizeOf(user.socials) > 0" class="small hint-text" ng-repeat="(network, item) in user.socials" style="padding-left:10px;">
-                							<i class="fa fa-{{ '{{ network }}' }}"></i> {{ '{{ network|capitalize }}' }}
-                						</p>
-                						<p ng-if="user.countries.length > 0">
-            								<strong>Countries:</strong>
-            								<span ng-repeat="item in user.countries">{{ '{{ ($index > 0?", ":"") + item.country }}' }}</span>
-            							</p>
-            							<p ng-if="user.languages.length > 0">
-            								<strong>Languages:</strong>
-            								<span ng-repeat="item in user.languages">{{ '{{ ($index > 0?", ":"") + item.lang }}' }}</span>
-            							</p>
-            							<p ng-if="user.audience.length > 0">
-            								<strong>Audience:</strong>
-            								<span ng-repeat="item in user.audience">{{ '{{ ($index > 0?", ":"") + item.name }}' }}</span>
-            							</p>
-            							<p ng-if="price.selected_types.length > 0"><strong>Prices:</strong></p>
-            							<p ng-if="price.selected_types.length > 0" class="small hint-text" ng-repeat="pt in price.selected_types" style="padding-left:10px;">
-            								<strong>{{ '{{ pt.name }}' }}:</strong> ${{ '{{ user.prices[pt.tag] }}' }}
-            							</p>
-            							<p ng-if="user.frequency"><strong>Frequency:</strong> {{ '{{ user.frequency }}' }}</p>
-                						<p ng-if="user.bio">
-                							<strong>Bio:</strong><br>
-                							<span>{{ '{{ user.bio }}' }}</span>
-                						</p>
-                					</div>
+                					<div ng-include="'leftBlockTemplate'"></div>
                 				</div>
                 				<div class="col-md-7">
                 					<div class="padding-30">
@@ -366,87 +349,6 @@
             				<ul class="pager wizard">
             					<li class="next">
             						<button type="button" class="btn btn-primary btn-cons btn-animated from-left fa fa-comments pull-right" wz-next ng-click="saveCampaignInfo(campaignInfluencerInfo)">
-            							<span>Next</span>
-            						</button>
-            					</li>
-            					<li class="previous">
-            						<button type="button" class="btn btn-default btn-cons pull-right" wz-previous>
-            							<span>Previous</span>
-            						</button>
-            					</li>
-            				</ul>
-            			</div>
-                	</wz-step>
-                	<wz-step title="Connecting assets">
-                		<form name="socialsInfluencerInfo" novalidate>
-                			<div class="row row-same-height">
-                				<div class="col-md-5 b-r b-dashed b-grey sm-b-b">
-                					<div class="padding-30 m-t-50">
-                						<div class="gallery-item" ng-if="$flow.files.length > 0">
-                							<img flow-img="$flow.files[0]" class="img-responsive" />
-                						</div>
-                						<h2 ng-if="(user.first_name || user.last_name)">{{ '{{ user.first_name }} {{ user.last_name }}' }}</h2>
-                						<p ng-if="user.username"><strong>Username: </strong> {{ '{{ user.username }}' }}</p>
-                						<p ng-if="user.email"><strong>Email: </strong> {{ '{{ user.email }}' }}</p>
-                						<p ng-if="user.dob"><strong>DOB: </strong> {{ '{{ user.dob }}' }}</p>
-                						<p ng-if="user.contact_number"><strong>Contact Number: </strong> {{ '{{ user.contact_number }}' }}</p>
-                						<p ng-if="user.secondary_number"><strong>Secondary Number: </strong> {{ '{{ user.secondary_number }}' }}</p>
-                						<p ng-if="user.website && user.website != ''"><strong>Website: </strong> {{ '{{ user.website }}' }}</p>
-                						<p ng-if="user.socials && sizeOf(user.socials) > 0"><strong>Social Accounts:</strong></p>
-                						<p ng-if="user.socials && sizeOf(user.socials) > 0" class="small hint-text" ng-repeat="(network, item) in user.socials" style="padding-left:10px;">
-                							<i class="fa fa-{{ '{{ network }}' }}"></i> {{ '{{ network|capitalize }}' }}
-                						</p>
-                						<p ng-if="user.countries.length > 0">
-            								<strong>Countries:</strong>
-            								<span ng-repeat="item in user.countries">{{ '{{ ($index > 0?", ":"") + item.country }}' }}</span>
-            							</p>
-            							<p ng-if="user.languages.length > 0">
-            								<strong>Languages:</strong>
-            								<span ng-repeat="item in user.languages">{{ '{{ ($index > 0?", ":"") + item.lang }}' }}</span>
-            							</p>
-            							<p ng-if="user.audience.length > 0">
-            								<strong>Audience:</strong>
-            								<span ng-repeat="item in user.audience">{{ '{{ ($index > 0?", ":"") + item }}' }}</span>
-            							</p>
-            							<p ng-if="price.selected_types.length > 0"><strong>Prices:</strong></p>
-            							<p ng-if="price.selected_types.length > 0" class="small hint-text" ng-repeat="pt in price.selected_types" style="padding-left:10px;">
-            								<strong>{{ '{{ pt.name }}' }}:</strong> ${{ '{{ user.prices[pt.tag] }}' }}
-            							</p>
-            							<p ng-if="user.frequency"><strong>Frequency:</strong> {{ '{{ user.frequency }}' }}</p>
-                						<p ng-if="user.bio">
-                							<strong>Bio:</strong><br>
-                							<span>{{ '{{ user.bio }}' }}</span>
-                						</p>
-                					</div>
-                				</div>
-                				<div class="col-md-7">
-                					<div class="padding-30">
-                						<div class="col-sm-12">
-                							<h4 ng-if="!user.socials || user.socials.length == 0" class="error">Connect please at least one social network</h4>
-                							<div class="row" ng-repeat="network in networks">
-                        						<div class="col-sm-10">
-                									<br>
-                									<div class="input-group" style="width:100%;">
-                            							<a ng-click="connectAccount(network.tag)" class="btn btn-block" ng-class="{'btn-primary':(user.socials[network.tag] == undefined), 'btn-success':(user.socials[network.tag])}">
-                        									<span class="pull-left">
-                        										<i class="fa fa-{{ '{{ network.tag }}' }}"></i>
-                        									</span> 
-                        									<span>{{ '{{ network.name }}' }}</span>
-                        									<span ng-if="user.socials[network.tag].userID != undefined" class="pull-right"> Connected <i class="fa fa-check"></i></span>
-                        									<span ng-if="user.socials[network.tag].userID == undefined" class="pull-right"> Not Connected <i class="fa fa-times"></i></span>
-                        								</a>
-                        							</div>
-                        						</div>
-                        					</div>
-                						</div>
-                					</div>
-                				</div>
-                			</div>
-                		</form>
-                		<div class="padding-20 bg-white">
-            				<ul class="pager wizard">
-            					<li class="next">
-            						<button type="button" class="btn btn-primary btn-cons btn-animated from-left fa fa-check pull-right" wz-next>
             							<span>Next</span>
             						</button>
             					</li>
@@ -537,6 +439,30 @@
                         </div>
                 	</wz-step>
                 </wizard>
+                <div class="modal fade fill-in" id="imageCrop" tabindex="-1" role="dialog" aria-labelledby="imageCropModal" aria-hidden="true">
+                	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="pg-close"></i></button>
+                	<div class="modal-dialog">
+                		<div class="modal-content">
+                			<div class="modal-header">
+                				<h5 class="text-left p-b-5"><span class="semi-bold">Crop</span> image</h5>
+                			</div>
+                			<div class="modal-body">
+                				<div class="row">
+                					<div class="col-md-9">
+                						<div class="cropArea">
+                							<img-crop image="sourceImage" result-image="croppedImage" area-type="square"></img-crop>
+                						</div>
+                					</div>
+                				</div>
+                			</div>
+                			<div class="modal-footer">
+                				<div class="col-md-3 text-center">
+            						<button type="button" ng-click="saveCroppedImage(croppedImage)" data-dismiss="modal" aria-hidden="true" class="btn btn-primary btn-lg btn-large fs-15">Crop</button>
+            					</div>
+                			</div>
+                		</div>
+                	</div>
+                </div>
 			</div>
 		</div>
 	</div>

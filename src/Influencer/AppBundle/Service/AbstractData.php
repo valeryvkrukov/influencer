@@ -22,5 +22,10 @@ abstract class AbstractData
 		return new Client();
 	}
 	
+	protected function getParameter($param)
+	{
+		return $this->container->getParameter($param);
+	}
+	
 	abstract public function getDashboardData($id);
 }

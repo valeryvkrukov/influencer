@@ -11,6 +11,7 @@ use Firebase\JWT\JWT;
 
 use Influencer\AppBundle\Controller\BaseController;
 use Influencer\AppBundle\Entity\User;
+use Influencer\AppBundle\Entity\Network;
 
 /**
  * @Route("/auth")
@@ -56,15 +57,6 @@ class AuthController extends BaseController
 		$accessToken = $this->get('app.social_connector')->getFacebookToken($input);
 		
 		$client = new GuzzleHttp\Client();
-		/*$params = [
-			'code' => $input->code,
-			'client_id' => $input->clientId,
-			'redirect_uri' => $input->redirectUri,
-			'client_secret' => $this->getParameter('facebook_secret')
-		];
-		$accessTokenResponse = $client->request('GET', 'https://graph.facebook.com/v2.8/oauth/access_token', ['query' => $params]);
-		$accessToken = json_decode($accessTokenResponse->getBody(), true);*/
-		
 		$fields = 'id,email,first_name,last_name,link,name,picture';
 		$profileResponse = $client->request('GET', 'https://graph.facebook.com/v2.8/me', [
 			'query' => [
@@ -78,7 +70,14 @@ class AuthController extends BaseController
 				$em = $this->getDoctrine()->getManager();
 				$user = $em->getRepository('InfluencerAppBundle:User')->find($input->link_to_user);
 				if ($user) {
-					$user->setFacebook($profile['id']);
+					$_network = new Network();
+					$_network->setCode('facebook');
+					$_network->setName('Facebook');
+					$_network->setUserId($profile['id']);
+					$_network->setUserName($profile['email']);
+					$_network->setToken($accessToken['access_token']);
+					$em->persist($_network);
+					$user->setFacebook($_network);
 					$em->persist($user);
 					$em->flush();
 				}
@@ -90,11 +89,7 @@ class AuthController extends BaseController
 		} else {
 			$em = $this->getDoctrine()->getManager();
 			if ($request->headers->has('Authorization')) {
-				$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
-					'facebook' => $profile['id'],
-					'email' => $profile['email'],
-					'username' => $profile['id'],
-				]);
+				$user = $em->getRepository('InfluencerAppBundle:User')->findUserByNetworkId('facebook', $profile['id']);
 				if ($user) {
 					return new JsonResponse(['message' => 'There is already a Facebook account that belongs to you'], 409);
 				}
@@ -102,7 +97,14 @@ class AuthController extends BaseController
 				$payload = (array) JWT::decode($token, 'auth-token-secret', array('HS256'));
 				$user = $em->getRepository('InfluencerAppBundle:User')->find($payload['sub']);
 				$user->setEnabled(1);
-				$user->setFacebook($profile['id']);
+				$_network = new Network();
+				$_network->setCode('facebook');
+				$_network->setName('Facebook');
+				$_network->setUserId($profile['id']);
+				$_network->setUserName($profile['email']);
+				$_network->setToken($accessToken['access_token']);
+				$em->persist($_network);
+				$user->setFacebook($_network);
 				if (!$user->getProfileImage()) {
 					$user->setProfileImage($profile['picture']['data']['url']);
 				}
@@ -115,11 +117,7 @@ class AuthController extends BaseController
 				$em->flush();
 				return new JsonResponse(['token' => $this->createToken($user)]);
 			} else {
-				$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
-					'facebook' => $profile['id'],
-					'email' => $profile['email'],
-					'username' => $profile['id'],
-				]);
+				$user = $em->getRepository('InfluencerAppBundle:User')->findUserByNetworkId('facebook', $profile['id']);
 				if ($user) {
 					return new JsonResponse(['token' => $this->createToken($user)]);
 				}
@@ -127,7 +125,14 @@ class AuthController extends BaseController
 				$user->setEnabled(1);
 				$user->setUsername($profile['id']);
 				$user->setEmail($profile['email']);
-				$user->setFacebook($profile['id']);
+				$_network = new Network();
+				$_network->setCode('facebook');
+				$_network->setName('Facebook');
+				$_network->setUserId($profile['id']);
+				$_network->setUserName($profile['email']);
+				$_network->setToken($accessToken['access_token']);
+				$em->persist($_network);
+				$user->setFacebook($_network);
 				$user->setProfileImage($profile['picture']['data']['url']);
 				$user->setFirstName($profile['first_name']);
 				$user->setLastName($profile['last_name']);
@@ -151,18 +156,6 @@ class AuthController extends BaseController
 		$accessToken = $this->get('app.social_connector')->getGoogleToken($input);
 		
 		$client = new GuzzleHttp\Client();
-		/*$params = [
-			'code' => $input->code,
-			'client_id' => $input->clientId,
-			'client_secret' => $this->getParameter('google_secret'),
-			'grant_type' => 'authorization_code',
-			'redirect_uri' => $input->redirectUri,
-		];
-		$accessTokenResponse = $client->request('POST', 'https://accounts.google.com/o/oauth2/token', [
-			'form_params' => $params
-		]);
-		$accessToken = json_decode($accessTokenResponse->getBody(), true);*/
-		
 		$profileResponse = $client->request('GET', 'https://www.googleapis.com/plus/v1/people/me/openIdConnect', [
 			'headers' => array('Authorization' => 'Bearer ' . $accessToken['access_token'])
 		]);
@@ -172,7 +165,14 @@ class AuthController extends BaseController
 				$em = $this->getDoctrine()->getManager();
 				$user = $em->getRepository('InfluencerAppBundle:User')->find($input->link_to_user);
 				if ($user) {
-					$user->setGoogle($profile['sub']);
+					$_network = new Network();
+					$_network->setCode('google');
+					$_network->setName('YouTube');
+					$_network->setUserId($profile['sub']);
+					$_network->setUserName($profile['email']);
+					$_network->setToken($accessToken['access_token']);
+					$em->persist($_network);
+					$user->setGoogle($_network);
 					$em->persist($user);
 					$em->flush();
 				}
@@ -184,18 +184,21 @@ class AuthController extends BaseController
 		} else {
 			$em = $this->getDoctrine()->getManager();
 			if ($request->headers->has('Authorization')) {
-				$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
-					'google' => $profile['id'],
-					'email' => $profile['email'],
-					'username' => $profile['id'],
-				]);
+				$user = $em->getRepository('InfluencerAppBundle:User')->findUserByNetworkId('google', $profile['sub']);
 				if ($user) {
 					return new JsonResponse(['message' => 'There is already a Google account that belongs to you'], 409);
 				}
 				$token = explode(' ', $request->headers->get('Authorization'))[1];
 				$payload = (array) JWT::decode($token, 'auth-token-secret', array('HS256'));
 				$user = $em->getRepository('InfluencerAppBundle:User')->find($payload['sub']);
-				$user->setGoogle($profile['id']);
+				$_network = new Network();
+				$_network->setCode('google');
+				$_network->setName('YouTube');
+				$_network->setUserId($profile['sub']);
+				$_network->setUserName($profile['email']);
+				$_network->setToken($accessToken['access_token']);
+				$em->persist($_network);
+				$user->setGoogle($_network);
 				$user->setEnabled(1);
 				if (!$user->getEmail()) {
 					$user->setEmail($profile['email']);
@@ -206,11 +209,7 @@ class AuthController extends BaseController
 				$em->flush();
 				return new JsonResponse(['token' => $this->createToken($user)]);
 			} else {
-				$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
-					'google' => $profile['sub'],
-					'email' => $profile['email'],
-					'username' => $profile['sub'],
-				]);
+				$user = $em->getRepository('InfluencerAppBundle:User')->findUserByNetworkId('google', $profile['sub']);
 				if ($user) {
 					return new JsonResponse(['token' => $this->createToken($user)]);
 				}
@@ -218,7 +217,14 @@ class AuthController extends BaseController
 				$user->setEnabled(1);
 				$user->setUsername($profile['sub']);
 				$user->setEmail($profile['email']);
-				$user->setGoogle($profile['sub']);
+				$_network = new Network();
+				$_network->setCode('google');
+				$_network->setName('YouTube');
+				$_network->setUserId($profile['sub']);
+				$_network->setUserName($profile['email']);
+				$_network->setToken($accessToken['access_token']);
+				$em->persist($_network);
+				$user->setGoogle($_network);
 				$user->setFirstName($profile['given_name']);
 				$user->setLastName($profile['family_name']);
 				if (!$user->getPassword()) {
@@ -242,33 +248,8 @@ class AuthController extends BaseController
 		$stack = GuzzleHttp\HandlerStack::create();
 		if (!isset($input->oauth_token) || !isset($input->oauth_verifier)) {
 			$oauthToken = $this->get('app.social_connector')->getTwitterToken1($input);
-			/*$stack = GuzzleHttp\HandlerStack::create();
-			$requestTokenOauth = new Oauth1([
-				'consumer_key' => $this->getParameter('twitter_consumer_key'),
-				'consumer_secret' => $this->getParameter('twitter_consumer_secret'),
-				'callback' => $input->redirectUri,
-				'token' => '',
-				'token_secret' => ''
-			]);
-			$stack->push($requestTokenOauth);
-			$client = new GuzzleHttp\Client(['handler' => $stack]);
-			$requestTokenResponse = $client->request('POST', 'https://api.twitter.com/oauth/request_token', ['auth' => 'oauth']);
-			$oauthToken = array();
-			parse_str($requestTokenResponse->getBody(), $oauthToken);*/
 			return new JsonResponse($oauthToken);
 		} else {
-			/*$accessTokenOauth = new Oauth1([
-				'consumer_key' => $this->getParameter('twitter_consumer_key'),
-				'consumer_secret' => $this->getParameter('twitter_consumer_secret'),
-				'token' => $input->oauth_token,
-				'verifier' => $input->oauth_verifier,
-				'token_secret' => ''
-			]);
-			$stack->push($accessTokenOauth);
-			$client = new GuzzleHttp\Client(['handler' => $stack]);
-			$accessTokenResponse = $client->request('POST', 'https://api.twitter.com/oauth/access_token', ['auth' => 'oauth']);
-			$accessToken = array();
-			parse_str($accessTokenResponse->getBody(), $accessToken);*/
 			$accessToken = $this->get('app.social_connector')->getTwitterToken2($input);
 			$profileOauth = new Oauth1([
 				'consumer_key' => $this->getParameter('twitter_consumer_key'),
@@ -285,7 +266,14 @@ class AuthController extends BaseController
 					$em = $this->getDoctrine()->getManager();
 					$user = $em->getRepository('InfluencerAppBundle:User')->find($input->link_to_user);
 					if ($user) {
-						$user->setTwitter($profile['id']);
+						$_network = new Network();
+						$_network->setCode('twitter');
+						$_network->setName('Twitter');
+						$_network->setUserId($profile['id']);
+						$_network->setUserName($profile['screen_name']);
+						$_network->setToken($accessToken['oauth_token']);
+						$em->persist($_network);
+						$user->setTwitter($_network);
 						$em->persist($user);
 						$em->flush();
 					}
@@ -297,21 +285,22 @@ class AuthController extends BaseController
 			} else {
 				$em = $this->getDoctrine()->getManager();
 				if ($request->headers->has('Authorization')) {
-					$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
-						'twitter' => $profile['id'],
-						'username' => $profile['id'],
-					]);
+					$user = $em->getRepository('InfluencerAppBundle:User')->findUserByNetworkId('twitter', $profile['id']);
 					if ($user) {
 						return new JsonResponse(['message' => 'There is already a Twitter account that belongs to you'], 409);
 					}
 					$token = explode(' ', $request->headers->get('Authorization'))[1];
 					$payload = (array) JWT::decode($token, 'auth-token-secret', array('HS256'));
-					$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
-						'twitter' => $payload['sub'],
-						'username' => $profile['id'],
-					]);
+					$user = $em->getRepository('InfluencerAppBundle:User')->find($payload['sub']);
 					$user->setEnabled(1);
-					$user->setTwitter($profile['id']);
+					$_network = new Network();
+					$_network->setCode('twitter');
+					$_network->setName('Twitter');
+					$_network->setUserId($profile['id']);
+					$_network->setUserName($profile['screen_name']);
+					$_network->setToken($accessToken['oauth_token']);
+					$em->persist($_network);
+					$user->setTwitter($_network);
 					if (!$user->getFirstName()) {
 						$splittedName = explode(' ', $profile['name']);
 						$firstName = $splittedName[0];
@@ -325,10 +314,7 @@ class AuthController extends BaseController
 					$em->flush();
 					return new JsonResponse(['token' => $this->createToken($user)]);
 				} else {
-					$user = $em->getRepository('InfluencerAppBundle:User')->findByOrCondition([
-						'twitter' => $profile['id'],
-						'username' => $profile['id'],
-					]);
+					$user = $em->getRepository('InfluencerAppBundle:User')->findUserByNetworkId('twitter', $profile['id']);
 					if ($user) {
 						return new JsonResponse(['token' => $this->createToken($user)]);
 					}
@@ -336,7 +322,14 @@ class AuthController extends BaseController
 					$user->setEnabled(1);
 					$user->setUsername($profile['id']);
 					$user->setEmail('none-@'.time());
-					$user->setTwitter($profile['id']);
+					$_network = new Network();
+					$_network->setCode('twitter');
+					$_network->setName('Twitter');
+					$_network->setUserId($profile['id']);
+					$_network->setUserName($profile['screen_name']);
+					$_network->setToken($accessToken['oauth_token']);
+					$em->persist($_network);
+					$user->setTwitter($_network);
 					$splittedName = explode(' ', $profile['name']);
 					$firstName = $splittedName[0];
 					$user->setFirstName($firstName);
@@ -362,17 +355,6 @@ class AuthController extends BaseController
 	public function instagramAction(Request $request)
 	{
 		$input = json_decode($request->getContent());
-		/*$client = new GuzzleHttp\Client();
-		$params = [
-			'code' => $input->code,
-			'client_id' => $input->clientId,
-			'client_secret' => $this->getParameter('instagram_secret'),
-			'redirect_uri' => $input->redirectUri,
-			'grant_type' => 'authorization_code',
-		];
-		$accessTokenResponse = $client->request('POST', 'https://api.instagram.com/oauth/access_token', ['form_params' => $params]);
-		$accessToken = json_decode($accessTokenResponse->getBody(), true);*/
-		
 		$accessToken = $this->get('app.social_connector')->getInstagramToken($input);
 		
 		if (isset($input->link_account) && $input->link_account == 1) {
@@ -380,7 +362,14 @@ class AuthController extends BaseController
 				$em = $this->getDoctrine()->getManager();
 				$user = $em->getRepository('InfluencerAppBundle:User')->find($input->link_to_user);
 				if ($user) {
-					$user->setInstagram($accessToken['user']['id']);
+					$_network = new Network();
+					$_network->setCode('instagram');
+					$_network->setName('Instagram');
+					$_network->setUserId($accessToken['user']['id']);
+					$_network->setUserName($accessToken['user']['username']);
+					$_network->setToken($accessToken['access_token']);
+					$em->persist($_network);
+					$user->setInstagram($_network);
 					$em->persist($user);
 					$em->flush();
 				}
@@ -392,7 +381,7 @@ class AuthController extends BaseController
 		} else {
 			$em = $this->getDoctrine()->getManager();
 			if ($request->headers->has('Authorization')) {
-				$user = $em->getRepository('InfluencerAppBundle:User')->findBy(['instagram' => $accessToken['user']['id']]);
+				$user = $em->getRepository('InfluencerAppBundle:User')->findUserByNetworkId('instagram', $accessToken['user']['id']);
 				if ($user) {
 					return new JsonResponse(['message' => 'There is already a Instagram account that belongs to you'], 409);
 				}
@@ -401,7 +390,14 @@ class AuthController extends BaseController
 				$user = $em->getRepository('InfluencerAppBundle:User')->find($payload['sub']);
 				$user->setUsername($accessToken['user']['id']);
 				$user->setEnabled(1);
-				$user->setInstagram($accessToken['user']['id']);
+				$_network = new Network();
+				$_network->setCode('instagram');
+				$_network->setName('Instagram');
+				$_network->setUserId($accessToken['user']['id']);
+				$_network->setUserName($accessToken['user']['username']);
+				$_network->setToken($accessToken['access_token']);
+				$em->persist($_network);
+				$user->setInstagram($_network);
 				if (!$user->getFirstName()) {
 					$splittedName = explode(' ', $accessToken['user']['full_name']);
 					$firstName = $splittedName[0];
@@ -415,7 +411,7 @@ class AuthController extends BaseController
 				$em->flush();
 				return new JsonResponse(['token' => $this->createToken($user)]);
 			} else {
-				$user = $em->getRepository('InfluencerAppBundle:User')->findBy(['instagram' => $accessToken['user']['id']]);
+				$user = $em->getRepository('InfluencerAppBundle:User')->findUserByNetworkId('instagram', $accessToken['user']['id']);
 				if ($user) {
 					return new JsonResponse(['token' => $this->createToken($user)]);
 				}
@@ -423,7 +419,14 @@ class AuthController extends BaseController
 				$user->setEnabled(1);
 				$user->setUsername($accessToken['user']['id']);
 				$user->setEmail('none-@'.time());
-				$user->setInstagram($accessToken['user']['id']);
+				$_network = new Network();
+				$_network->setCode('instagram');
+				$_network->setName('Instagram');
+				$_network->setUserId($accessToken['user']['id']);
+				$_network->setUserName($accessToken['user']['username']);
+				$_network->setToken($accessToken['access_token']);
+				$em->persist($_network);
+				$user->setInstagram($_network);
 				$splittedName = explode(' ', $accessToken['user']['full_name']);
 				$firstName = $splittedName[0];
 				$user->setFirstName($firstName);

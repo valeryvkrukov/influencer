@@ -18,6 +18,7 @@ parameters:
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
     
+    klout_key: dau6fd3nyw2fxyywzdd9m5yf
     facebook_id: 1230641216984423 #1223551571026721
     facebook_secret: 5c98f5c555f1600830b2f1167c166be0 #0fc7586b2a4f3de49b84eadf01056807
     google_id: 758902806102-sh9om8tu0bbbbgvecsokav3uimkmaekj.apps.googleusercontent.com

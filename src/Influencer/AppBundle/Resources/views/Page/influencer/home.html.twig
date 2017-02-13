@@ -26,11 +26,36 @@
             						<div class="panel-body">
             							<div class="social-user-profile col-xs-height text-center col-top c120" flow-init flow-file-added="changeAvatar($file, $event, $flow)">
             								<div class="thumbnail-wrapper d120 circular bordered b-white">
-            									<img ng-if="!$flow.files[0]" alt="Avatar" data-src-retina="{{ '{{ user.profileImage }}' }}" ng-src="{{ '{{ user.profileImage }}' }}">
-            									<img ng-if="$flow.files[0]" alt="Avatar" flow-img="$flow.files[0]">
+            									<img ng-if="user.profileImage" alt="Avatar" data-src-retina="{{ '{{ user.profileImage }}' }}" ng-src="{{ '{{ user.profileImage }}' }}">
+            									<img ng-if="$flow.files[0] && !user.profileImage" alt="Avatar" flow-img="$flow.files[0]">
             								</div>
             								<br>
+            								<a ng-click="cropProfileImage($file, $event, $flow)" data-toggle="modal" data-target="#imageCrop"><i class="text-primary pg-crop text-info fs-16 m-t-10"></i></a>
             								<span flow-btn><i class="fa fa-pencil text-info fs-16 m-t-10"></i></span>
+            								<div class="modal fade fill-in" id="imageCrop" tabindex="-1" role="dialog" aria-labelledby="imageCropModal" aria-hidden="true">
+                                            	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="pg-close"></i></button>
+                                            	<div class="modal-dialog">
+                                            		<div class="modal-content">
+                                            			<div class="modal-header">
+                                            				<h5 class="text-left p-b-5"><span class="semi-bold">Crop</span> image</h5>
+                                            			</div>
+                                            			<div class="modal-body">
+                                            				<div class="row">
+                                            					<div class="col-md-9">
+                                            						<div class="cropArea">
+                                            							<img-crop image="user.profileImage" result-image="croppedImage" area-type="square"></img-crop>
+                                            						</div>
+                                            					</div>
+                                            				</div>
+                                            			</div>
+                                            			<div class="modal-footer">
+                                            				<div class="col-md-3 text-center">
+                                        						<button type="button" ng-click="saveCroppedImage(croppedImage)" data-dismiss="modal" aria-hidden="true" class="btn btn-primary btn-lg btn-large fs-15">Crop</button>
+                                        					</div>
+                                            			</div>
+                                            		</div>
+                                            	</div>
+                                            </div>
                 						</div>
                 						<div class="col-xs-height p-l-20">
                 							<h3 class="no-margin"><span class="semi-bold">{{ '{{ user.firstName }}' }}</span> {{ '{{ user.lastName }}' }}</h3>
@@ -83,22 +108,22 @@
                 							<button type="button" class="btn btn-default btn-xs">
                 								<span class="p-t-5 p-b-5">0</span>
                 								<br>
-                								<span class="fs-11 font-montserrat text-uppercase">FB Fans</span>
+                								<span class="fs-11 font-montserrat text-uppercase"><i class="i fa fa-facebook"></i> Fans</span>
                 							</button>
                 							<button type="button" class="btn btn-default btn-xs">
-                								<span class="p-t-5 p-b-5">0</span>
+                								<span class="p-t-5 p-b-5">{{ '{{ user.twitterFollowers }}' }}</span>
                 								<br>
-                								<span class="fs-11 font-montserrat text-uppercase">TW Followers</span>
+                								<span class="fs-11 font-montserrat text-uppercase"><i class="i fa fa-twitter"></i> Followers</span>
                 							</button>
                 							<button type="button" class="btn btn-default btn-xs">
-                								<span class="p-t-5 p-b-5">0</span>
+                								<span class="p-t-5 p-b-5">{{ '{{ user.instagramFans }}' }}</span>
                 								<br>
-                								<span class="fs-11 font-montserrat text-uppercase">In Fans</span>
+                								<span class="fs-11 font-montserrat text-uppercase"><i class="i fa fa-instagram"></i> Fans</span>
                 							</button>
                 							<button type="button" class="btn btn-default btn-xs">
-                								<span class="p-t-5 p-b-5">0</span>
+                								<span class="p-t-5 p-b-5">{{ '{{ user.youtubeViews }}' }}</span>
                 								<br>
-                								<span class="fs-11 font-montserrat text-uppercase">YT Views</span>
+                								<span class="fs-11 font-montserrat text-uppercase"><i class="i fa fa-youtube-play"></i> Views</span>
                 							</button>
                 							<button type="button" class="btn btn-default btn-xs">
                 								<span class="p-t-5 p-b-5">0</span>
@@ -117,7 +142,7 @@
                         									<div class="col-sm-12 col-sm-height col-middle">
                         										<span>
                         											<strong class="fs-14">Klout Score</strong><br>
-                        											<span class="fs-16">12</span>
+                        											<span class="fs-16">{{ '{{ user.kloutScore.score.score }}' }}</span>
                         										</span>
                         									</div>
                         								</div>
@@ -213,10 +238,12 @@
                             			<div ng-repeat="item in feeds.facebook" class="card share share-self col1" ng-class="{'wide': sizeOf(feeds) > 2, 'wide2': sizeOf(feeds) ==  2, 'wide3': sizeOf(feeds) < 2}" data-social="item">
                             				<div class="circle" data-toggle="tooltip" title="Label"></div>
                             				<div class="card-header clearfix">
-                            					<h5><i class="social-icon fa fa-facebook"></i> {{ '{{ item.title }}' }}</h5>
+                            					<h5><a href="{{ '{{ item.link }}' }}" target="blank"><i class="i fa fa-facebook"></i> {{ '{{ item.title }}' }}</a></h5>
                             				</div>
                             				<div class="card-content">
-                            					<img ng-if="item.picture" alt="Social post" ng-src="{{ '{{ item.picture }}' }}">
+                            					<a href="{{ '{{ item.link }}' }}" target="blank">
+                            						<img ng-if="item.picture" alt="Social post" ng-src="{{ '{{ item.picture }}' }}">
+                            					</a>
                             					<div ng-if="item.contents" ng-bind-html="item.contents|limitTo:200|trustHTML" class="padding-10"></div>
                             				</div>
                             				<div class="card-footer clearfix">
@@ -239,10 +266,12 @@
                             			<div ng-repeat="item in feeds.instagram" class="card share share-self col1" ng-class="{'wide': sizeOf(feeds) > 2, 'wide2': sizeOf(feeds) ==  2, 'wide3': sizeOf(feeds) < 2}" data-social="item">
                             				<div class="circle" data-toggle="tooltip" title="Label"></div>
                             				<div class="card-header clearfix">
-                            					<h5><i class="social-icon fa fa-instagram"></i> {{ '{{ item.title }}' }}</h5>
+                            					<h5><a href="{{ '{{ item.link }}' }}" target="blank"><i class="i fa fa-instagram"></i> {{ '{{ item.title }}' }}</a></h5>
                             				</div>
                             				<div class="card-content">
-                            					<img alt="Social post" ng-src="{{ '{{ item.picture }}' }}">
+                            					<a href="{{ '{{ item.link }}' }}" target="blank">
+                            						<img alt="Social post" ng-src="{{ '{{ item.picture }}' }}">
+                            					</a>
                             				</div>
                             				<div class="card-footer clearfix">
                             					<div class="time">{{ '{{ item.createdAt.date|datetime }}' }}</div>
@@ -264,10 +293,12 @@
                             			<div ng-repeat="item in feeds.google" class="card share share-self col1" ng-class="{'wide': sizeOf(feeds) > 2, 'wide2': sizeOf(feeds) ==  2, 'wide3': sizeOf(feeds) < 2}" data-social="item">
                             				<div class="circle" data-toggle="tooltip" title="Label"></div>
                             				<div class="card-header clearfix">
-                            					<h5><i class="social-icon fa fa-google-plus"></i> {{ '{{ item.title }}' }}</h5>
+                            					<h5><a href="{{ '{{ item.link }}' }}" target="blank"><i class="i fa fa-youtube-play"></i> {{ '{{ item.title }}' }}</a></h5>
                             				</div>
                             				<div class="card-content">
-                            					<img ng-if="item.picture" alt="Social post" ng-src="{{ '{{ item.picture }}' }}">
+                            					<a href="{{ '{{ item.link }}' }}" target="blank">
+                            						<img ng-if="item.picture" alt="Social post" ng-src="{{ '{{ item.picture }}' }}">
+                            					</a>
                             					<div ng-if="item.contents" ng-bind-html="item.contents|limitTo:200|trustHTML" class="padding-10"></div>
                             				</div>
                             				<div class="card-footer clearfix">
@@ -290,10 +321,12 @@
                             			<div ng-repeat="item in feeds.twitter" class="card share share-self col1" ng-class="{'wide': sizeOf(feeds) > 2, 'wide2': sizeOf(feeds) ==  2, 'wide3': sizeOf(feeds) < 2}" data-social="item">
                             				<div class="circle" data-toggle="tooltip" title="Label"></div>
                             				<div class="card-header clearfix">
-                            					<h5><i class="social-icon fa fa-twitter"></i> {{ '{{ item.title }}' }}</h5>
+                            					<h5><a href="{{ '{{ item.link }}' }}" target="blank"><i class="i fa fa-twitter"></i> {{ '{{ item.title }}' }}</a></h5>
                             				</div>
                             				<div class="card-content">
-                            					<img ng-if="item.picture" alt="Social post" ng-src="{{ '{{ item.picture }}' }}">
+                            					<a href="{{ '{{ item.link }}' }}" target="blank">
+                            						<img ng-if="item.picture" alt="Social post" ng-src="{{ '{{ item.picture }}' }}">
+                            					</a>
                             					<div ng-if="item.contents" ng-bind-html="item.contents|limitTo:200|trustHTML" class="padding-10"></div>
                             				</div>
                             				<div class="card-footer clearfix">

@@ -17,14 +17,13 @@ angular.module('app')
 			}
 		};
 	}])
-	.controller('HomeCtrl', ['$scope', '$http', 'Account', 'LoadData', function($scope, $http, Account, LoadData) {
+	.controller('HomeCtrl', ['$rootScope', '$scope', '$http', '$timeout', 'Account', 'LoadData', 'localStorageService', 'ImageUtils', function($rootScope, $scope, $http, $timeout, Account, LoadData, localStorageService, ImageUtils) {
 		if ($scope.templatePath === undefined) {
-			Account.getProfile().then(function(resp) {
-				console.log(resp.data.role);
-				$scope.templatePath = Routing.generate('inf_home', {role: resp.data.role});
-				LoadData.get(resp.data).then(function(data) {
-					$scope.feeds = data;
-				});
+			$scope.user = localStorageService.get('currentUser');
+			
+			$scope.templatePath = Routing.generate('inf_home', {role: $scope.user.role});
+			LoadData.get($scope.user).then(function(data) {
+				$scope.feeds = data;
 			});
 		}
 		$scope.feedFilter = '';
@@ -53,6 +52,8 @@ angular.module('app')
 				}).then(function(resp) {
 					if (resp.status == 200) {
 						$scope.user.profileCover = cover;
+						localStorageService.set('currentUser', $scope.user);
+						$rootScope.$broadcast('profile-update', 'cover');
 					}
 				});
 			};
@@ -70,6 +71,8 @@ angular.module('app')
 				}).then(function(resp) {
 					if (resp.status == 200) {
 						$scope.user.profileImage = avatar;
+						localStorageService.set('currentUser', $scope.user);
+						$rootScope.$broadcast('profile-update', 'avatar');
 					}
 				});
 			};
@@ -80,6 +83,47 @@ angular.module('app')
 				url: Routing.generate('inf_user_update_field'),
 				method: 'POST',
 				data: {user: $scope.user.id, field: field, value: $scope.user[field]}
+			}).then(function(resp) {
+				if (resp.status == 200) {
+					localStorageService.set('currentUser', $scope.user);
+				}
 			});
 		};
+		$scope.cropProfileImage = function($flow) {
+			$scope.croppedImage = '';
+			if (ImageUtils.isDataUrl($scope.user.profileImage)) {
+				var fileReader = new FileReader();
+				fileReader.onload = function(event) {
+					$scope.croppedImage = event.target.result;
+				};
+				fileReader.readAsDataURL($scope.user.profileImage);
+			} else {
+				ImageUtils.toDataUrl($scope.croppedImage, function(image) {
+					$scope.croppedImage = image;
+				});
+			}
+		};
+        $scope.saveCroppedImage = function(croppedImage) {
+        	$http({
+				url: Routing.generate('inf_user_update_field'),
+				method: 'POST',
+				data: {user: $scope.user.id, field: 'profileImage', value: croppedImage}
+			}).then(function(resp) {
+				if (resp.status == 200) {
+					$scope.user.profileImage = resp.data.profileImage;
+					localStorageService.set('currentUser', $scope.user);
+				}
+			});
+        };
+        $scope.getTwitterFollowersCount = function(id) {
+        	$http({
+				url: Routing.generate('inf_user_get_stat', {'network': 'twitter', 'id': id}),
+				method: 'GET'
+			}).then(function(resp) {
+				console.log('RESP: ', resp);
+				if (resp.status == 200) {
+					$scope.twitterFollowersCount = resp;
+				}
+			});
+        };
 	}]);

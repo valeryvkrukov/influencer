@@ -98,10 +98,39 @@
                     		</div>
                     	</div>
                     	<div class="col-md-5">
-                    		<div class="gallery-item">
-    							<img ng-if="$flow.files.length > 0" flow-img="$flow.files[0]" class="img-responsive" />
-    							<img ng-if="!$flow.files[0] && user.profileImage" ng-src="{{ '{{ user.profileImage }}' }}" class="img-responsive" />
+                    		<div class="gallery-item bg-transparent">
+    							<img ng-if="$flow.files.length > 0" flow-img="$flow.files[0]" class="img-responsive" class="full-width"/>
+    							<img ng-if="!$flow.files[0] && user.profileImage" ng-src="{{ '{{ user.profileImage }}' }}" class="img-responsive"  class="full-width"/>
     						</div>
+    						<h5 ng-if="user.profileImage">
+    							<a ng-click="cropProfileImage($flow)" data-toggle="modal" data-target="#imageCrop"><i class="text-primary pg-crop"></i></a>
+    							<a ng-click="removeProfileImage($flow)"><i class="text-danger pg-close"></i></a>
+    						</h5>
+    						<div class="modal fade fill-in" id="imageCrop" tabindex="-1" role="dialog" aria-labelledby="imageCropModal" aria-hidden="true">
+                            	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="pg-close"></i></button>
+                            	<div class="modal-dialog">
+                            		<div class="modal-content">
+                            			<div class="modal-header">
+                            				<h5 class="text-left p-b-5"><span class="semi-bold">Crop</span> image</h5>
+                            			</div>
+                            			<div class="modal-body">
+                            				<div class="row">
+                            					<div class="col-md-9">
+                            						<div class="cropArea">
+                            							<img-crop image="user.profileImage" result-image="croppedImage" area-type="square"></img-crop>
+                            						</div>
+                            					</div>
+                            				</div>
+                            			</div>
+                            			<div class="modal-footer">
+                            				<div class="col-md-3 text-center">
+                        						<button type="button" ng-click="saveCroppedImage(croppedImage)" data-dismiss="modal" aria-hidden="true" class="btn btn-primary btn-lg btn-large fs-15">Crop</button>
+                        						<button type="button" data-dismiss="modal" aria-hidden="true" class="btn btn-default btn-lg btn-large fs-15">Cancel</button>
+                        					</div>
+                            			</div>
+                            		</div>
+                            	</div>
+                            </div>
                     	</div>
                     </div>
 	        	</form>

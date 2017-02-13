@@ -33,12 +33,14 @@
 								<i ng-if="item.network == 'google'" class="i fa fa-youtube-play"></i> 
 								<i ng-if="item.network == 'twitter'" class="i fa fa-twitter"></i> 
 								<i ng-if="item.network == 'instagram'" class="i fa fa-instagram"></i> 
-								{{ '{{ item.title }}' }}
+								<a href="{{ '{{ item.link }}' }}" target="blank">{{ '{{ item.title }}' }}</a>
 							</h5>
 						</div>
 					</div>
 					<div class="card-content">
-						<img ng-if="item.picture" style="width:100%;" alt="Social post" ng-src="{{ '{{ item.picture }}' }}">
+						<a href="{{ '{{ item.link }}' }}" target="blank">
+							<img ng-if="item.picture" style="width:100%;" alt="Social post" ng-src="{{ '{{ item.picture }}' }}">
+						</a>
 						<div ng-if="item.contents" class="padding-10" style="overflow:hidden" ng-bind-html="item.contents|limitTo:200|trustHTML"></div>
 					</div>
 					<div class="card-footer clearfix">

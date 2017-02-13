@@ -45,31 +45,8 @@ class UserController extends BaseController
 						}
 					} else {
 						$em->getRepository('InfluencerAppBundle:User')->addIfNotExists($id, $field, $value, $serializer);
-						//var_dump($res);die();
-						/*switch($field) {
-							case 'languages':
-								$em->getRepository('InfluencerAppBundle:User')->addIfNotExists($field, $value);
-								$current = json_decode($serializer->serialize($user->getLanguages(), 'json'));
-								foreach ($current as $curr) {
-									$add = true;
-									foreach ($value as $item) {
-										if ($curr->code == $item->code) {
-											$add = false;
-										}
-									}
-									if ($add) {
-										$lang = new Language();
-										$lang->setCode($item->code);
-										$lang->setName($item->lang);
-										$em->persist($lang);
-										$user->addLanguage($lang);
-									}
-								}
-								break;*/
-						//var_dump($field, $value);
 					}
 				}
-				//die();
 				$em->persist($user);
 				$em->flush();
 			}
@@ -131,6 +108,16 @@ class UserController extends BaseController
 	}
 	
 	/**
+	 * @Route("/get-stat/{network}/{id}", name="inf_user_get_stat", options={"expose"=true})
+	 */
+	public function getStatAction(Request $request, $network, $id)
+	{
+		$serv = 'get'.ucfirst($network).'Stats';
+		$stat = $this->get('app.influencer_data')->$serv($id);
+		return new JsonResponse($stat);
+	}
+	
+	/**
 	 * @Route("/update-field", name="inf_user_update_field", options={"expose"=true})
 	 */
 	public function updateFieldAction(Request $request)
@@ -140,11 +127,12 @@ class UserController extends BaseController
 			$em = $this->getDoctrine()->getManager();
 			$user = $this->getUser();
 			$setter = 'set'.ucfirst($input->field);
+			$getter = 'get'.ucfirst($input->field);
 			$value = isset($input->value)?$input->value:null;
 			$user->$setter($value);
 			$em->persist($user);
 			$em->flush();
-			return new JsonResponse($user);
+			return new JsonResponse([$input->field => $user->$getter()]);
 		}
 	}
 	

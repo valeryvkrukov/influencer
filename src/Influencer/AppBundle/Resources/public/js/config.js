@@ -2,8 +2,12 @@
 
 var app = angular.module('app');
 
-app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLoadProvider) {
+app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLoadProvider, localStorageServiceProvider) {
 	var controllersRoot = (Routing.generate('inf_root')).replace('app_dev.php/', '') + 'bundles/influencerapp/js/controllers/';
+	localStorageServiceProvider
+		.setPrefix('incluencer_app')
+		.setStorageType('localStorage')
+		.setNotify(true, true);
 	var skipIfLoggedIn = function($q, $auth) {
 		var deferred = $q.defer();
 		if ($auth.isAuthenticated()) {
@@ -48,7 +52,7 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 			url: '/home',
 			controller: 'HomeCtrl',
 			templateUrl: Routing.generate('inf_home'),
-			resolve: lazyLoad(['home'], ['isotope'])
+			resolve: lazyLoad(['home'], ['isotope', 'ngImgCrop'])
 		})
 		.state('app.me', {
 			url: '/me',
@@ -125,7 +129,7 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 			url: '/signup',
 			templateUrl: Routing.generate('inf_signup'),
 			controller: 'SignupCtrl',
-			resolve: lazyLoad(['signup'], ['select', 'wizard', 'tagsInput', 'dropzone', 'inputMask'])
+			resolve: lazyLoad(['signup'], ['datepicker', 'select', 'wizard', 'tagsInput', 'dropzone', 'inputMask', 'ngImgCrop'])
 		})
 		.state('logout', {
 			url: '/logout',
@@ -140,7 +144,7 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 	});
 	$authProvider.google({
 		clientId: '758902806102-sh9om8tu0bbbbgvecsokav3uimkmaekj.apps.googleusercontent.com',
-		scope: ['profile', 'email', 'https://www.googleapis.com/auth/youtube', 'https://www.googleapis.com/auth/youtube.force-ssl', 'https://www.googleapis.com/auth/youtube.readonly']
+		scope: ['profile', 'email', 'https://www.googleapis.com/auth/youtube', 'https://www.googleapis.com/auth/youtube.force-ssl', 'https://www.googleapis.com/auth/youtube.readonly', 'https://www.googleapis.com/auth/youtubepartner']
 	});
 	$authProvider.instagram({
 		clientId: '0328e45f47f944ceb589dc0f1879d82b',
@@ -212,7 +216,48 @@ app.factory('GetPredefinedVars', ['$q', '$http', function($q, $http) {
 	};
 }]);
 
-app.controller('AppCtrl', ['$scope', '$rootScope', '$state', '$stateParams', 'Account', function($scope, $rootScope, $state, $stateParams, Account) {
+app.factory('userService', ['Account', 'localStorageService', function(Account, localStorageService) {
+	return {
+		getCurrent: function() {
+			var user;
+			if (!localStorageService.get('currentUser')) {
+				Account.getProfile().then(function(resp) {
+					localStorageService.set('currentUser', resp.data);
+				    user = resp.data;
+				});
+			} else {
+				user = localStorageService.get('currentUser');
+			}
+			return user;
+		}
+	}
+}]);
+
+app.factory('ImageUtils', function() {
+	return {
+		isDataUrl: function(input) {
+			var regex = /^\s*data:([a-z]+\/[a-z]+(;[a-z\-]+\=[a-z\-]+)?)?(;base64)?,[a-z0-9\!\$\&\'\,\(\)\*\+\,\;\=\-\.\_\~\:\@\/\?\%\s]*\s*$/i;
+			return !!input.match(regex);
+		},
+		toDataUrl: function(src, callback) {
+			var img = new Image();
+			img.crossOrigin = 'Anonymous';
+			img.onload = function() {
+				var canvas = document.createElement('CANVAS');
+				var ctx = canvas.getContext('2d');
+				var dataURL;
+				canvas.height = this.height;
+			    canvas.width = this.width;
+			    ctx.drawImage(this, 0, 0);
+			    dataURL = canvas.toDataURL('image/png');
+			    callback(dataURL);
+			};
+			img.src = src;
+		}
+	};
+});
+
+app.controller('AppCtrl', ['$scope', '$rootScope', '$state', '$stateParams', '$auth', 'userService', function($scope, $rootScope, $state, $stateParams, $auth, userService) {
 	$scope.app = {
 		name: 'Influence',
 		description: 'Influence by insydo',
@@ -228,13 +273,7 @@ app.controller('AppCtrl', ['$scope', '$rootScope', '$state', '$stateParams', 'Ac
 	$scope.includes = function(name) {
 		return $state.includes(name);
     };
-    $rootScope.getUserData = function(key) {
-    	if ($rootScope.user === undefined) {
-	    	Account.getProfile().then(function(resp) {
-	    		$rootScope.user = resp.data;
-	    	});
-    	}
-    };
+    $scope.user = userService.getCurrent();
 }]);
 
 app.directive('includeReplace', function() {
