@@ -144,7 +144,9 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 	});
 	$authProvider.google({
 		clientId: '758902806102-sh9om8tu0bbbbgvecsokav3uimkmaekj.apps.googleusercontent.com',
-		scope: ['profile', 'email', 'https://www.googleapis.com/auth/youtube', 'https://www.googleapis.com/auth/youtube.force-ssl', 'https://www.googleapis.com/auth/youtube.readonly', 'https://www.googleapis.com/auth/youtubepartner']
+		scope: ['profile', 'email', 'https://www.googleapis.com/auth/youtube', 'https://www.googleapis.com/auth/youtube.force-ssl', 'https://www.googleapis.com/auth/youtube.readonly', 'https://www.googleapis.com/auth/youtubepartner'],
+		optionalUrlParams: ['access_type'],
+		accessType: 'offline'
 	});
 	$authProvider.instagram({
 		clientId: '0328e45f47f944ceb589dc0f1879d82b',

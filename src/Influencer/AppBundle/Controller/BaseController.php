@@ -103,9 +103,9 @@ class BaseController extends Controller
 			'klout' => $user->getKlout(),
 			'kloutScore' => $this->get('app.influencer_data')->getKloutScore($user->getKlout()),
 			'role' => $this->getReadableRole($user),
-			'twitterFollowers' => $this->get('app.influencer_data')->getTwitterStats($user->getId()),
-			'instagramFans' => $this->get('app.influencer_data')->getInstagramStats($user->getId()),
-			'youtubeViews' => 0,//$this->get('app.influencer_data')->getGoogleStats($user->getId()),
+			//'twitterFollowers' => $this->get('app.influencer_data')->getTwitterStats($user->getId()),
+			//'instagramFans' => $this->get('app.influencer_data')->getInstagramStats($user->getId()),
+			//'youtubeViews' => 0,//$this->get('app.influencer_data')->getGoogleStats($user->getId()),
 		];
 	}
 	

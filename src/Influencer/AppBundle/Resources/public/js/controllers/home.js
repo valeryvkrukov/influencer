@@ -17,14 +17,34 @@ angular.module('app')
 			}
 		};
 	}])
-	.controller('HomeCtrl', ['$rootScope', '$scope', '$http', '$timeout', 'Account', 'LoadData', 'localStorageService', 'ImageUtils', function($rootScope, $scope, $http, $timeout, Account, LoadData, localStorageService, ImageUtils) {
-		if ($scope.templatePath === undefined) {
+	.factory('LoadStatistics', ['$q', '$http', function($q, $http) {
+		return {
+			forAllNetworks: function() {
+				var deferred = $q.defer();
+				$http({
+					url: Routing.generate('inf_get_user_statistics', {'network': 'all'}),
+					method: 'GET'
+				}).then(function(resp) {
+					deferred.resolve(resp.data);
+				});
+				return deferred.promise;
+			}
+		};
+	}])
+	.controller('HomeCtrl', ['$rootScope', '$scope', '$http', '$timeout', 'Account', 'LoadData', 'LoadStatistics', 'localStorageService', 'ImageUtils', function($rootScope, $scope, $http, $timeout, Account, LoadData, LoadStatistics, localStorageService, ImageUtils) {
+		if ($scope.templatePath === undefined) { 
 			$scope.user = localStorageService.get('currentUser');
 			
 			$scope.templatePath = Routing.generate('inf_home', {role: $scope.user.role});
 			LoadData.get($scope.user).then(function(data) {
 				$scope.feeds = data;
 			});
+			$scope.statistics = [];
+			if ($scope.user.google) {
+				LoadStatistics.forAllNetworks().then(function(resp) {
+					$scope.statistics = resp;
+				});
+			}
 		}
 		$scope.feedFilter = '';
 		$scope.activeTab = '';
@@ -125,5 +145,9 @@ angular.module('app')
 					$scope.twitterFollowersCount = resp;
 				}
 			});
+        };
+        
+        $scope.getGoogleStat = function() {
+        	
         };
 	}]);

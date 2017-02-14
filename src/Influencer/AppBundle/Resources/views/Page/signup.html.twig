@@ -310,7 +310,7 @@
                 				<div class="col-md-7">
                 					<div class="padding-30">
                 						<div class="col-sm-12">
-                							<div class="row">
+                							<!-- div class="row">
                     							<div pg-form-group class="form-group form-group-default form-group-default-select required" ng-class="{ 'has-error': user.audience.length == 0 }">
                     								<label>Post Types</label>
                     								<ui-select name="post_types" multiple ng-model="price.selected_types" theme="select2" style="width:100%" ng-disabled="disabled">
@@ -327,6 +327,15 @@
                         							<div pg-form-group class="form-group form-group-default input-group">
                         								<label>{{ '{{ post_type.name }}' }} Price</label>
                         								<input type="number" name="prices_{{ '{{ post_type.tag }}' }}" placeholder="{{ '{{ post_type.name }}' }} Price" class="form-control" ng-model="user.prices[post_type.tag]">
+                        								<span class="input-group-addon">$</span>
+                        							</div>
+                        						</div>
+                        					</div-->
+                        					<div class="row" ng-repeat="(network,data) in user.socials">
+                        						<div class="col-sm-12">
+                        							<div pg-form-group class="form-group form-group-default input-group">
+                        								<label>{{ '{{ postTypes[network].name }}' }} Price</label>
+                        								<input type="number" name="prices_{{ '{{ postTypes[network].tag }}' }}" placeholder="{{ '{{ postTypes[network].name }}' }} Price" class="form-control" ng-model="user.prices[postTypes[network].tag]">
                         								<span class="input-group-addon">$</span>
                         							</div>
                         						</div>

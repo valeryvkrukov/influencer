@@ -168,9 +168,6 @@ angular.module('app')
         	if ($scope.user.website === undefined) {
         		$scope.user.website = '';
         	}
-        	/*angular.forEach(angular.element('#audience-list').find('.tag'), function(val, key) {
-        		$scope.user.audience.push(val.innerText);
-			});*/
         	if (audienceAndInfluencerDataInfo.$valid) {
         		$scope.steps['audience'] = true;
         		WizardHandler.wizard().next();

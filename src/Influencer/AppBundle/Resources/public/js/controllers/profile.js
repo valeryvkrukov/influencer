@@ -188,9 +188,9 @@ angular.module('app')
 		$scope.refreshFeed = function(network) {
 			var token = $auth.getToken();
 			var params = {'link_account': 1};
-			if ($scope.user[network] == null) {
+			//if ($scope.user[network] == null) {
 				params['link_to_user'] = $scope.user.id;
-			}
+			//}
 			var loader = function(network) {
 				FeedLoader.loadFor(network, $auth.getToken(), $scope.user.id).then(function(resp) {
 					$scope.feeds[network] = resp;

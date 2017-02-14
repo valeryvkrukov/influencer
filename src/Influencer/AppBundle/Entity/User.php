@@ -152,6 +152,24 @@ class User extends BaseUser
 		$this->feeds = new \Doctrine\Common\Collections\ArrayCollection();
 	}
 	
+	public function getNetworks()
+	{
+		$networks = [];
+		if ($this->facebook) {
+			$networks[] = 'facebook';
+		}
+		if ($this->google) {
+			$networks[] = 'google';
+		}
+		if ($this->twitter) {
+			$networks[] = 'twitter';
+		}
+		if ($this->instagram) {
+			$networks[] = 'instagram';
+		}
+		return $networks;
+	}
+	
 	/**
 	 *
 	 * @return the unknown_type

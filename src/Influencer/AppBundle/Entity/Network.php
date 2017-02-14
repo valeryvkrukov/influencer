@@ -42,6 +42,11 @@ class Network
 	protected $token;
 	
 	/**
+	 * @ORM\Column(name="refresh_token", type="string", nullable=true)
+	 */
+	protected $refreshToken;
+	
+	/**
 	 * @ORM\Column(name="followers", type="integer", nullable=true)
 	 */
 	protected $followers;
@@ -144,4 +149,21 @@ class Network
 		return $this;
 	}
 	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getRefreshToken() {
+		return $this->refreshToken;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $refreshToken        	
+	 */
+	public function setRefreshToken($refreshToken) {
+		$this->refreshToken = $refreshToken;
+		return $this;
+	}
+		
 }

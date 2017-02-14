@@ -47,22 +47,22 @@ class UtilController extends Controller
     public function getPostTypesAction()
     {
     	$types = [
-    		[
+    		'twitter' => [
     			'name' => 'Event',
     			'tag' => 'event',
     			'icon' => 'pg-calender',
     		],
-    		[
+    		'google' => [
     			'name' => 'Video',
     			'tag' => 'video',
     			'icon' => 'pg-movie',
     		],
-    		[
+    		'instagram' => [
     			'name' => 'Photoshoot',
     			'tag' => 'photo',
     			'icon' => 'pg-camera',
     		],
-    		[
+    		'facebook' => [
     			'name' => 'Social media',
     			'tag' => 'social',
     			'icon' => 'pg-social',

@@ -70,15 +70,20 @@ class AuthController extends BaseController
 				$em = $this->getDoctrine()->getManager();
 				$user = $em->getRepository('InfluencerAppBundle:User')->find($input->link_to_user);
 				if ($user) {
-					$_network = new Network();
-					$_network->setCode('facebook');
-					$_network->setName('Facebook');
-					$_network->setUserId($profile['id']);
-					$_network->setUserName($profile['email']);
-					$_network->setToken($accessToken['access_token']);
-					$em->persist($_network);
-					$user->setFacebook($_network);
-					$em->persist($user);
+					if ($_network = $user->getGoogle()) {
+						$_network->setToken($accessToken['access_token']);
+						$em->persist($_network);
+					} else {
+						$_network = new Network();
+						$_network->setCode('facebook');
+						$_network->setName('Facebook');
+						$_network->setUserId($profile['id']);
+						$_network->setUserName($profile['email']);
+						$_network->setToken($accessToken['access_token']);
+						$em->persist($_network);
+						$user->setFacebook($_network);
+						$em->persist($user);
+					}
 					$em->flush();
 				}
 			}
@@ -165,15 +170,20 @@ class AuthController extends BaseController
 				$em = $this->getDoctrine()->getManager();
 				$user = $em->getRepository('InfluencerAppBundle:User')->find($input->link_to_user);
 				if ($user) {
-					$_network = new Network();
-					$_network->setCode('google');
-					$_network->setName('YouTube');
-					$_network->setUserId($profile['sub']);
-					$_network->setUserName($profile['email']);
-					$_network->setToken($accessToken['access_token']);
-					$em->persist($_network);
-					$user->setGoogle($_network);
-					$em->persist($user);
+					if ($_network = $user->getGoogle()) {
+						$_network->setToken($accessToken['access_token']);
+						$em->persist($_network);
+					} else {
+						$_network = new Network();
+						$_network->setCode('google');
+						$_network->setName('YouTube');
+						$_network->setUserId($profile['sub']);
+						$_network->setUserName($profile['email']);
+						$_network->setToken($accessToken['access_token']);
+						$em->persist($_network);
+						$user->setGoogle($_network);
+						$em->persist($user);
+					}
 					$em->flush();
 				}
 			}

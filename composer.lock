@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "93199bf3a51f0855e6d7f29be07ee6bc",
+    "content-hash": "02e80ee66f33f7e776989642f207fb2f",
     "packages": [
         {
             "name": "adoy/oauth2",
@@ -1449,6 +1449,57 @@
                 "uri"
             ],
             "time": "2016-06-24T23:00:38+00:00"
+        },
+        {
+            "name": "happyr/google-api-bundle",
+            "version": "2.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Happyr/GoogleApiBundle.git",
+                "reference": "094982dd9708ca93cdf6410c7626fdcaf46926da"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Happyr/GoogleApiBundle/zipball/094982dd9708ca93cdf6410c7626fdcaf46926da",
+                "reference": "094982dd9708ca93cdf6410c7626fdcaf46926da",
+                "shasum": ""
+            },
+            "require": {
+                "google/apiclient": "1.*|2.*",
+                "php": ">=5.3.2",
+                "symfony/framework-bundle": "2.*|~3.0",
+                "symfony/yaml": "2.*|~3.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "*"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.3.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "HappyR\\Google\\ApiBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tobias Nyholm",
+                    "email": "tobias@happyr.com"
+                }
+            ],
+            "description": "A Symfony2 Wrapper for the Google APIs Client Library for PHP",
+            "homepage": "http://developer.happyr.com/symfony2-bundles/google-api-bundle",
+            "keywords": [
+                "google api"
+            ],
+            "time": "2016-02-11T12:56:54+00:00"
         },
         {
             "name": "incenteev/composer-parameter-handler",

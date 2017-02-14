@@ -37,6 +37,11 @@ class InfluencerData extends AbstractData
 		}
 	}
 	
+	public function getFacebookStats($id)
+	{
+		return false;
+	}
+	
 	public function getGoogleStats($id)
 	{
 		$em = $this->getEntityManager();
@@ -48,7 +53,10 @@ class InfluencerData extends AbstractData
 				$feeds = $em->getRepository('InfluencerAppBundle:Feed')->loadSavedFeedsFor($id, 'google');
 				$ids = [];
 				foreach ($feeds as $item) {
-					$ids[] = $item->getInternalId();
+					$_id = $item->getInternalId();
+					if (!in_array($_id, $ids)) {
+						$ids[] = $_id;
+					}
 				}
 				if (sizeof($ids) > 0) {
 					try {
@@ -59,27 +67,38 @@ class InfluencerData extends AbstractData
 							],
 							'query' => [
 								'part' => 'statistics',
-								'id' => implode(',', $ids),
-								'key' => $this->container->getParameter('google_id'),
+								'chart' => 'mostPopular'
+								//'id' => implode(',', $ids),
+								//'key' => $this->container->getParameter('google_id'),
 							]
 						]);
 						$response = json_decode($response->getBody());
 						if (isset($response->items)) {
-							$count = 0;
+							$viewsCount = 0;
+							$commentsCount = 0;
+							$likesCount = 0;
 							foreach ($response->items as $item) {
-								$count += intval($item->statistics->viewCount);
+								$viewsCount += intval($item->statistics->viewCount);
+								$commentsCount += intval($item->statistics->commentCount);
+								$likesCount += intval($item->statistics->likeCount);
 							}
-							return $count;
+							$data = [
+								'viewCount' => $viewsCount,
+								'commentCount' => $commentsCount,
+								'likeCount' => $likesCount,
+							];
+							return $data;
 						} else {
-							return 0;
+							return false;
 						}
 					} catch(\Exception $e) {
 						var_dump($e->getMessage());
+						return false;
 					}
 				}
 			}
 		}
-		return 0;
+		return false;
 	}
 	
 	public function getTwitterStats($id)
@@ -99,7 +118,10 @@ class InfluencerData extends AbstractData
 					]);
 					$response = json_decode($response->getBody());
 					if (isset($response[0])) {
-						return $response[0]->followers_count;
+						$data = [
+							'followersCount' => $response[0]->followers_count,
+						];
+						return $data;
 					} else {
 						return 0;
 					}
@@ -127,8 +149,8 @@ class InfluencerData extends AbstractData
 						]
 					]);
 					$response = json_decode($response->getBody());
-					if (isset($response->data) && is_array($response->data)) {
-						return $response->data->counts->followed_by;
+					if (isset($response->data)) {
+						return $response->data->counts;
 					}
 					return 0;
 				} catch(\Exception $e) {

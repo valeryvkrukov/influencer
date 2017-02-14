@@ -166,4 +166,27 @@ class UserController extends BaseController
 			return new JsonResponse($users);
 		}
 	}
+	
+	/**
+	 * @Route("/get-statisticts/{network}", name="inf_get_user_statistics", options={"expose"=true})
+	 */
+	public function getStatisticsAction(Request $request, $network)
+	{
+		$input = json_decode($request->getContent());
+		$user = $this->getUser();
+		$networks = $user->getNetworks();
+		$statistics = [];
+		if (is_array($networks) && sizeof($networks) > 0) {
+			foreach ($networks as $source) {
+				if ($network == $source || $network == 'all') {
+					$getter = 'get'.ucfirst($source).'Stats';
+					$data = $this->get('app.influencer_data')->$getter($user->getId());
+					if ($data) {
+						$statistics[$source] = $data;
+					}
+				}
+			}
+		}
+		return new JsonResponse($statistics);
+	}
 }

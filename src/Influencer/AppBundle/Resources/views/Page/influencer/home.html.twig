@@ -111,17 +111,17 @@
                 								<span class="fs-11 font-montserrat text-uppercase"><i class="i fa fa-facebook"></i> Fans</span>
                 							</button>
                 							<button type="button" class="btn btn-default btn-xs">
-                								<span class="p-t-5 p-b-5">{{ '{{ user.twitterFollowers }}' }}</span>
+                								<span class="p-t-5 p-b-5">{{ '{{ statistics.twitter.followersCount }}' }}</span>
                 								<br>
                 								<span class="fs-11 font-montserrat text-uppercase"><i class="i fa fa-twitter"></i> Followers</span>
                 							</button>
                 							<button type="button" class="btn btn-default btn-xs">
-                								<span class="p-t-5 p-b-5">{{ '{{ user.instagramFans }}' }}</span>
+                								<span class="p-t-5 p-b-5">{{ '{{ statistics.instagram.followed_by }}' }}</span>
                 								<br>
                 								<span class="fs-11 font-montserrat text-uppercase"><i class="i fa fa-instagram"></i> Fans</span>
                 							</button>
                 							<button type="button" class="btn btn-default btn-xs">
-                								<span class="p-t-5 p-b-5">{{ '{{ user.youtubeViews }}' }}</span>
+                								<span class="p-t-5 p-b-5">{{ '{{ statistics.google.viewCount }}' }}</span>
                 								<br>
                 								<span class="fs-11 font-montserrat text-uppercase"><i class="i fa fa-youtube-play"></i> Views</span>
                 							</button>
@@ -142,7 +142,7 @@
                         									<div class="col-sm-12 col-sm-height col-middle">
                         										<span>
                         											<strong class="fs-14">Klout Score</strong><br>
-                        											<span class="fs-16">{{ '{{ user.kloutScore.score.score }}' }}</span>
+                        											<span class="fs-16">{{ '{{ user.kloutScore.score.score|number:3 }}' }}</span>
                         										</span>
                         									</div>
                         								</div>
