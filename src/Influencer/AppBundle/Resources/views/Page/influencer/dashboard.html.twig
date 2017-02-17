@@ -1,0 +1,342 @@
+<div class="content sm-gutter">
+	<div class="container-fluid padding-25 sm-padding-10">
+		<div class="row">
+			<div class="col-md-3">
+				<div class="row">
+					<div class="col-md-12 m-b-10">
+						<div class="ar-1-1">
+							<div class="widget-2 panel no-border bg-primary widget widget-loader-circle-lg no-margin" style="background-image:url({{ '{{ user.profileImage }}' }})">
+								<div class="panel-heading top-right">
+									<div class="panel-controls">
+
+									</div>
+								</div>
+								<div class="panel-body">
+									<div class="pull-bottom bottom-left bottom-right padding-25">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="widget-12 panel no-border widget-loader-circle no-margin">
+							<div class="row">
+								<div class="panel-body">
+									<div class="row">
+										<div class="col-md-8">
+											<div class="p-l-10 p-r-10">
+												<h1 class="pull-left">{{ '{{ user.firstName }}' }} {{ '{{ user.lastName }}' }}</h1>
+												<div class="clearfix"></div>
+												<div class="full-width">
+													<h3>Overview</h3>
+													<p>{{ '{{ user.brief }}' }}</p>
+												</div>
+												<div class="clearfix"></div>
+												<div class="full-width">
+													<h3>Scores</h3>
+													<div class="col-md-6">
+														<h4>
+															<img src="{{ asset('assets/img/logo.png') }}" height="40px"> 
+															<span ng-if="user.brScore.score != undefined">{{ '{{ user.brScore.score|number:3 }}' }}</span>
+															<span ng-if="user.brScore.score == undefined" class="hint-text">0</span>
+														</h4>
+													</div>
+													<div class="col-md-6">
+														<h4>
+															<img src="{{ asset('img/klout-thumb.png') }}" height="40px"> 
+															<span ng-if="user.kloutScore.score.score != undefined">{{ '{{ user.kloutScore.score.score|number:3 }}' }}</span>
+															<span ng-if="user.kloutScore.score.score == undefined" class="hint-text">0</span>
+														</h4>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-4">
+											<div class="company-stat-boxes">
+                    							<div class="company-stat-box m-t-15 active padding-20 bg-master-lightest">
+                    								<div>
+                    									<p class="company-name pull-left text-uppercase bold no-margin">
+                    										<span class="i fa fa-facebook fs-14"></span> Fans
+                    									</p>
+                    									<small ng-if="statistics.facebook.followersCount != undefined" class="hint-text m-l-10">{{ '{{ statistics.facebook.followersCount }}' }}</small>
+                    									<small ng-if="statistics.facebook.followersCount == undefined" class="hint-text m-l-10">N/A</small>
+                    									<div class="clearfix"></div>
+                    								</div>
+                    							</div>
+                    							<div class="company-stat-box m-t-15 active padding-20 bg-master-lightest">
+                    								<div>
+                    									<p class="company-name pull-left text-uppercase bold no-margin">
+                    										<span class="i fa fa-twitter fs-14"></span> Followers
+                    									</p>
+                    									<small ng-if="statistics.twitter.followersCount != undefined" class="hint-text m-l-10">{{ '{{ statistics.twitter.followersCount }}' }}</small>
+                    									<small ng-if="statistics.twitter.followersCount == undefined" class="hint-text m-l-10">N/A</small>
+                    									<div class="clearfix"></div>
+                    								</div>
+                    							</div>
+                    							<div class="company-stat-box m-t-15 active padding-20 bg-master-lightest">
+                    								<div>
+                    									<p class="company-name pull-left text-uppercase bold no-margin">
+                    										<span class="i fa fa-instagram fs-14"></span> Fans
+                    									</p>
+                    									<small ng-if="statistics.instagram.followed_by != undefined" class="hint-text m-l-10">{{ '{{ statistics.instagram.followed_by }}' }}</small>
+                    									<small ng-if="statistics.instagram.followed_by == undefined" class="hint-text m-l-10">N/A</small>
+                    									<div class="clearfix"></div>
+                    								</div>
+                    							</div>
+                    							<div class="company-stat-box m-t-15 active padding-20 bg-master-lightest">
+                    								<div>
+                    									<p class="company-name pull-left text-uppercase bold no-margin">
+                    										<span class="i fa fa-youtube-play fs-14"></span> Views
+                    									</p>
+                    									<small ng-if="statistics.google.viewCount != undefined" class="hint-text m-l-10">{{ '{{ statistics.google.viewCount }}' }}</small>
+                    									<small ng-if="statistics.google.viewCount == undefined" class="hint-text m-l-10">N/A</small>
+                    									<div class="clearfix"></div>
+                    								</div>
+                    							</div>
+                    							<div class="company-stat-box m-t-15 active padding-20 bg-master-lightest">
+                    								<div>
+                    									<p class="company-name pull-left text-uppercase bold no-margin">
+                    										<span class="i fa fa-circle text-success fs-14"></span> Blog Views
+                    									</p>
+                    									<small ng-if="statistics.blog.viewsCount != undefined" class="hint-text m-l-10">{{ '{{ statistics.blog.viewsCount }}' }}</small>
+                    									<small ng-if="statistics.blog.viewsCount == undefined" class="hint-text m-l-10">N/A</small>
+                    									<div class="clearfix"></div>
+                    								</div>
+                    							</div>
+    										</div>
+    									</div>
+    								</div>
+    							</div>
+    						</div>
+    					</div>
+    				</div>
+    			</div>
+    		</div>
+    		<div class="col-md-3">
+    			<div class="row">
+    				<div class="col-sm-6 m-b-10">
+    					<div class="ar-1-1">
+    						<div class="widget-2 panel no-border bg-primary widget widget-loader-circle-lg no-margin">
+    							<div class="panel-heading">
+    								<div class="panel-controls">
+
+    								</div>
+    							</div>
+    							<div class="panel-body no-padding">
+    								<div class="pull-bottom bottom-left bottom-right padding-25">
+    									<h1 class="text-white semi-bold">{{ '{{ campaignsStat.new }}' }}</h1>
+    									<h4 class="text-white">New Campaigns</h4>
+    								</div>
+    							</div>
+    						</div>
+    					</div>
+        			</div>
+        			<div class="col-sm-6 m-b-10">
+    					<div class="ar-1-1">
+    						<div class="widget-2 panel no-border bg-complete widget widget-loader-circle-lg no-margin">
+    							<div class="panel-body no-padding">
+    								<div class="metro live-tile" data-mode="carousel" data-start-now="true" data-delay="3100" ui-jq="liveTile">
+            							<div class="slide-front tiles slide active">
+            								<div class="pull-bottom bottom-left bottom-right padding-25">
+            									<h1 class="text-white semi-bold">{{ '{{ campaignsStat.pending }}' }}</h1>
+            									<h4 class="text-white">Pending Campaigns</h4>
+            								</div>
+            							</div>
+            							<div class="slide-back tiles slide">
+            								<div class="pull-bottom bottom-left bottom-right padding-25">
+            									<h1 class="text-white semi-bold">{{ '{{ campaignsStat.live }}' }}</h1>
+            									<h4 class="text-white">Live Campaigns</h4>
+            								</div>
+            							</div>
+            						</div>
+    							</div>
+    						</div>
+    					</div>
+        			</div>
+        		</div>
+        		<div class="row">
+        			<div class="col-sm-6 m-b-10">
+        				<div class="ar-1-1">
+            				<div class="widget-2 panel no-border bg-master widget widget-loader-circle-lg no-margin">
+    							<div class="panel-body no-padding">
+    								<div class="metro live-tile" data-mode="carousel" data-start-now="true" data-delay="2400" ui-jq="liveTile">
+            							<div class="slide-front tiles slide active">
+            								<div class="pull-bottom bottom-left bottom-right padding-25">
+            									<h1 class="text-white semi-bold">{{ '{{ campaignsStat.finished }}' }}</h1>
+            									<h4 class="text-white">Finished Campaigns</h4>
+            								</div>
+            							</div>
+            							<div class="slide-back tiles slide">
+            								<div class="pull-bottom bottom-left bottom-right padding-25">
+            									<h1 class="text-white semi-bold">{{ '{{ campaignsStat.rejected }}' }}</h1>
+            									<h4 class="text-white">Rejected Campaigns</h4>
+            								</div>
+            							</div>
+            						</div>
+        						</div>
+        					</div>
+    					</div>
+        			</div>
+        			<div class="col-sm-6 m-b-10">
+    					<div class="ar-1-1">
+    						<div class="widget-2 panel no-border bg-success widget widget-loader-circle-lg no-margin">
+    							<div class="panel-heading">
+    								<div class="panel-controls">
+
+    								</div>
+    							</div>
+    							<div class="panel-body">
+    								<div class="pull-bottom bottom-left bottom-right padding-25">
+    									<h1 class="text-white semi-bold">
+    										<sup>
+    											<small class="semi-bold text-white">$</small>
+    										</sup>
+    										0
+    									</h1>
+    									<h4 class="text-white">Balance</h4>
+    								</div>
+    							</div>
+    						</div>
+    					</div>
+        			</div>
+    			</div>
+    		</div>
+    	</div>
+    	<div class="row m-b-10">
+			<div class="col-md-12 bg-white">
+				<div class="row">
+					<div class="col-md-2 m-b-10">
+						<div class="panel no-border no-margin widget-loader-bar">
+							<div class="panel-heading top-left top-right">
+								<div class="panel-title text-black hint-text">
+									<div class="font-montserrat fs-11 all-caps">
+										Countries
+									</div>
+								</div>
+							</div>
+							<div class="panel-body p-t-40">
+								<div class="row">
+									<table class="table table-condensed">
+										<tbody>
+											<tr ng-repeat="item in user.countries">
+												<td style="width:20%;">
+													<div class="flag-icon flag-icon-{{ '{{ item.code|lowercase }}' }} fs-16"></div>
+												</td>
+												<td class="font-montserrat all-caps fs-12">{{ '{{ item.country }}' }}</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-2 m-b-10">
+						<div class="panel no-border no-margin widget-loader-bar">
+							<div class="panel-heading top-left top-right">
+								<div class="panel-title text-black hint-text">
+									<div class="font-montserrat fs-11 all-caps">
+										Languages
+									</div>
+								</div>
+							</div>
+							<div class="panel-body p-t-40">
+								<div class="row">
+									<table class="table table-condensed">
+										<tbody>
+											<tr ng-repeat="item in user.languages">
+												<td class="font-montserrat all-caps fs-12">{{ '{{ item.lang }}' }}</td>
+												<td class="text-right" style="width:20%;">
+													<span class="hint-text small">({{ '{{ item.code }}' }})</span>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-8 m-b-10">
+						<div class="panel no-border bg-white no-margin widget-loader-bar">
+							<div class="panel-heading top-left top-right">
+								<div class="panel-title text-black hint-text">
+									<div class="font-montserrat fs-11 all-caps">
+										Industries
+									</div>
+								</div>
+							</div>
+							<div class="panel-body p-t-40">
+								<div class="row">
+									<div class="col-md-12 p-t-30">
+    									<ul class="nav nav-pills">
+    										<li ng-repeat="item in user.audience">
+    											<a class="b-a b-grey text-master text-center">
+    											    <i class="fa {{ '{{ item.icon }}' }}" style="font-size:24px"></i><br>
+    											    {{ '{{ item.name }}' }}
+    											</a>
+    										</li>
+    									</ul>
+    								</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 bg-white">
+				<div class="row">
+					<div class="widget-13 panel no-border  no-margin widget-loader-circle">
+						<div class="container-sm-height">
+							<div class="row row-sm-height">
+								<div class="col-md-2 col-sm-height col-top no-padding b-r b-dashed b-grey">
+									<div class="panel-heading">
+										<div class="panel-title"><h4>&nbsp;</h4></div>
+									</div>
+									<div class="panel-body p-r-0">
+										<ul class="nav nav-tabs nav-tabs-left nav-tabs-simple full-width pull-right">
+											<li class="active" ng-class="{'bg-master-light': filterDisplayTitle == 'all'}">
+												<a data-toggle="tab" href="#all" pg-tab ng-click="applyStatusFilter(dtInstance, 'all')">All</a>
+											</li>
+											<li ng-class="{'bg-master-light': filterDisplayTitle == 'new'}">
+												<a data-toggle="tab" href="#new" pg-tab ng-click="applyStatusFilter(dtInstance, 'new')">New</a>
+											</li>
+											<li ng-class="{'bg-master-light': filterDisplayTitle == 'live'}">
+												<a data-toggle="tab" href="#live" pg-tab ng-click="applyStatusFilter(dtInstance, 'live')">Live</a>
+											</li>
+											<li ng-class="{'bg-master-light': filterDisplayTitle == 'pending'}">
+												<a data-toggle="tab" href="#pending" pg-tab ng-click="applyStatusFilter(dtInstance, 'pending')">Pending Approval</a>
+											</li>
+											<li ng-class="{'bg-master-light': filterDisplayTitle == 'rejected'}">
+												<a data-toggle="tab" href="#rejected" pg-tab ng-click="applyStatusFilter(dtInstance, 'rejected')">Rejected</a>
+											</li>
+											<li ng-class="{'bg-master-light': filterDisplayTitle == 'finished'}">
+												<a data-toggle="tab" href="#finished" pg-tab ng-click="applyStatusFilter(dtInstance, 'finished')">Finished</a>
+											</li>
+										</ul>
+									</div>
+								</div>
+								<div class="col-md-10 col-sm-height col-top no-padding relative">
+									<div class="row">
+										<div class="panel panel-transparent">
+											<div class="panel-heading">
+        										<div class="panel-title"><h4>{{ '{{ filterDisplayTitle }}' }} Campaigns</h4></div>
+        									</div>
+        									<div class="panel-body">
+            									<table datatable="" dt-options="dtOptions" dt-columns="dtColumns" dt-instance="dtInstance" class="table table-striped table-bordered"></table>
+            								</div>
+            							</div>
+            						</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

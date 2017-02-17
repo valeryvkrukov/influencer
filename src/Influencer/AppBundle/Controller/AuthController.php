@@ -33,7 +33,7 @@ class AuthController extends BaseController
 	{
 		$input = json_decode($request->getContent());
 		$em = $this->getDoctrine()->getManager();
-		$user = $em->getRepository('InfluencerAppBundle:User')->findByUsername($input->email);
+		$user = $em->getRepository('InfluencerAppBundle:User')->findByEmail($input->email);
 		$factory = $this->get('security.encoder_factory');
 		
 		if (!isset($user[0])) {

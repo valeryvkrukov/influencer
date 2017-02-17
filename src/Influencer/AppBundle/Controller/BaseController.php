@@ -42,6 +42,7 @@ class BaseController extends Controller
 			$audience[] = [
 				'tag' => $item->code,
 				'name' => $item->name,
+				'icon' => isset($item->icon)?$item->icon:null,
 			];
 		}
 		$priceItems = json_decode($serializer->serialize($user->getPrices(), 'json'));

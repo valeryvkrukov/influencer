@@ -23,9 +23,9 @@ security:
             stateless: true
             simple_preauth:
                 authenticator: jwt_auth.jwt_authenticator
-
+        
         user:
-            pattern: ^/user
+            pattern: ^/(user|admin)
             stateless: true
             guard:
                 authenticators:

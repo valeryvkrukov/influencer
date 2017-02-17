@@ -34,3 +34,9 @@ services:
     app.client_data:
         class: Influencer\AppBundle\Service\ClientData
         arguments: ["@service_container"]
+
+    app.faker_provider_age_bracket:
+        class: Influencer\AppBundle\DataFixtures\Faker\AgeBracketProvider
+        tags: 
+            - { name: nelmio_alice.faker.provider }
+        

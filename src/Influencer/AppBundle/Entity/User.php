@@ -139,7 +139,7 @@ class User extends BaseUser
 	
 	private $rootDir;
 	
-	public function __construct($rootDir)
+	public function __construct()
 	{
 		parent::__construct();
 		
@@ -206,6 +206,8 @@ class User extends BaseUser
 			fwrite($fp, base64_decode($data));
 			fclose($fp);
 			$this->profileImage = $filename;
+		} else {
+			$this->profileImage = $profileImage;
 		}
 		return $this;
 	}
@@ -238,6 +240,8 @@ class User extends BaseUser
 			fwrite($fp, base64_decode($data));
 			fclose($fp);
 			$this->profileCover = $filename;
+		} else {
+			$this->profileCover = $profileCover;
 		}
 		return $this;
 	}

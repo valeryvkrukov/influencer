@@ -7,7 +7,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 use Influencer\AppBundle\Controller\BaseController;
-use GuzzleHttp;
 
 /**
  * @Route("/user")
@@ -108,6 +107,31 @@ class UserController extends BaseController
 	}
 	
 	/**
+	 * @Route("/get-campaign-stat", name="inf_campaigns_stat", options={"expose"=true})
+	 */
+	public function getCampaignsStatAction(Request $request)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$user = $this->getUser();
+		$statistics = $em->getRepository('InfluencerAppBundle:Campaign')->getStatisticsForUser($user);
+		
+		return new JsonResponse(['data' => $statistics]);
+	}
+	
+	/**
+	 * @Route("/campaigns", name="inf_campaigns", options={"expose"=true})
+	 */
+	public function getCampaignsAction(Request $request)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$user = $this->getUser();
+		$status = $request->query->get('status');
+		$campaigns = $em->getRepository('InfluencerAppBundle:Campaign')->getCampaignsRelatedToUser($user, $status);
+
+		return new JsonResponse($campaigns);
+	}
+	
+	/**
 	 * @Route("/get-stat/{network}/{id}", name="inf_user_get_stat", options={"expose"=true})
 	 */
 	public function getStatAction(Request $request, $network, $id)
@@ -125,9 +149,20 @@ class UserController extends BaseController
 		$input = json_decode($request->getContent());
 		if (isset($input->user) && isset($input->field)) {
 			$em = $this->getDoctrine()->getManager();
-			$user = $this->getUser();
+			$user = $em->getRepository('InfluencerAppBundle:User')->find($input->user);
+			if ($user) {
+				$current = $this->getUser();
+				if ($current->getId() != $user->getId()) {
+					if (!in_array('ROLE_ADMIN', $current->getRoles())) {
+						return new JsonResponse(['message' => 'Access Denied'], 409);
+					}
+				}
+			}
 			$setter = 'set'.ucfirst($input->field);
 			$getter = 'get'.ucfirst($input->field);
+			if (!method_exists($getter, $user)) {
+				$getter = 'is'.ucfirst($input->field);
+			}
 			$value = isset($input->value)?$input->value:null;
 			$user->$setter($value);
 			$em->persist($user);

@@ -1,0 +1,69 @@
+Influencer\AppBundle\Entity\User:
+    user (template):
+        firstName: '<firstName()>'
+        lastName: '<lastName()>'
+        profileImage: '<imageUrl()>'
+        profileCover: '<imageUrl()>'
+        contactNumber: '<tollFreePhoneNumber()>'
+        secondaryNumber: '<tollFreePhoneNumber()>'
+        age: '<numberBetween(18, 55)>'
+        gender: '<randomElement(["male", "female"])>'
+        brief: '<text()>'
+        website: '<url()>'
+        frequency: '<sentence()>'
+        plainPassword: 'B!e281ckr'
+        
+    admin (extends user):
+        username (unique): 'admin'
+        email (unique): 'admin@email.com'
+        gender: 'male'
+        roles: ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN']
+            
+    client{1..120} (extends user):
+        username (unique): '<username()>'
+        email (unique): '<email()>'
+        roles: ['ROLE_CLIENT']
+            
+    influencer{1..50} (extends user):
+        username (unique): '<username()>'
+        email (unique): '<email()>'
+        roles: ['ROLE_INFLUENCER']
+
+Influencer\AppBundle\Entity\Language:
+    language{1..40}:
+        code: '<languageCode()>'
+        name: '<(Influencer\AppBundle\DataFixtures\ORM\LoadFixtures::getLanguageNameByCode($code))>'
+        user: '@influencer*'
+        
+Influencer\AppBundle\Entity\Country:
+    country{1..40}:
+        code: '<countryCode()>'
+        name: '<(Influencer\AppBundle\DataFixtures\ORM\LoadFixtures::getCountryNameByCode($code))>'
+        user: '@influencer*'
+        
+Influencer\AppBundle\Entity\Audience:
+    audience{1..100}:
+        code: '<(Influencer\AppBundle\DataFixtures\ORM\LoadFixtures::getAudienceCode())>'
+        name: '<(Influencer\AppBundle\DataFixtures\ORM\LoadFixtures::getAudienceName($code))>'
+        icon: '<(Influencer\AppBundle\DataFixtures\ORM\LoadFixtures::getAudienceIcon($code))>'
+        user: '@influencer*'
+          
+Influencer\AppBundle\Entity\Campaign:
+    campaign{1..200}:
+        client: '@client*'
+        influencer: '<numberBetween(1, 4)>x @influencer*'
+        name: '<sentence()>'
+        brand: '<company()>'
+        location: '{lat: <latitude()>, lng: <longitude()>}'
+        budget: '<randomFloat()>'
+        target: ''
+        deadline: '<dateTimeBetween("now", "+5 years")>'
+        description: '<realText()>'
+        language: '<languageCode()>'
+        status: '<randomElement(["done","new","pending","rejected","live","finished"])>'
+        caption: '<sentence()>'
+        emojii: ''
+        restrictions: '<text()>'
+            
+            
+            

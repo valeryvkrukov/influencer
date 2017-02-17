@@ -53,9 +53,6 @@ angular.module('app')
 				$scope.formLoaded = 'main';
 			}
 			$scope.loadForm($scope.formLoaded);
-			$scope.$watch('$scope.user.profileImage', function() {
-				console.log($scope.user.profileImage);
-			});
 			GetPredefinedVars.getIntl().then(function(resp) {
 				if (resp.data.countries) {
 					$scope.countries = resp.data.countries;
@@ -206,6 +203,9 @@ angular.module('app')
 				}
 				loader(network);
 			});
+		};
+		$scope.resetPassword = function() {
+			
 		};
 		$scope.linkSocial = function(network) {
 			

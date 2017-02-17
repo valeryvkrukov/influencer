@@ -9,7 +9,7 @@ angular.module('app')
 				Account.getProfile().then(function(resp) {
 					localStorageService.set('currentUser', resp.data);
 				    $scope.user = resp.data;
-				    $state.transitionTo('app.home');
+				    $state.transitionTo('app.dashboard');
 				});
 			}).catch(function(error) {
 				//toastr.error(error.data.message, error.status);
@@ -20,7 +20,7 @@ angular.module('app')
 			$auth.authenticate(provider).then(function() {
 				//toastr.success('You have successfully signed in with ' + provider + '!');
 				//$location.path('/');
-				$state.transitionTo('app.home');
+				$state.transitionTo('app.dashboard');
 				
 			}).catch(function(error) {
 				if (error.message) {
@@ -34,5 +34,8 @@ angular.module('app')
 					$scope.error = error;
 				}
 			});
+		};
+		$scope.resetPassword = function() {
+			
 		};
 	}]);

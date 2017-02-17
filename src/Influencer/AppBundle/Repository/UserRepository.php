@@ -35,12 +35,11 @@ class UserRepository extends EntityRepository
 		return $em->createQuery($dql)->setParameters($params)->getOneOrNullResult();
 	}
 	
-	public function checkForUniqueUser($username, $email)
+	public function checkForUniqueUser($email)
 	{
 		$em = $this->getEntityManager();
-		$user = $em->createQuery('SELECT u.id FROM InfluencerAppBundle:User u WHERE u.username = :username OR u.email = :email')
+		$user = $em->createQuery('SELECT u.id FROM InfluencerAppBundle:User u WHERE u.email = :email')
 			->setParameters([
-				'username' => $username,
 				'email' => $email,
 			])
 			->getOneOrNullResult();
@@ -60,12 +59,12 @@ class UserRepository extends EntityRepository
 		try {
 			$em = $this->getEntityManager();
 			$user = new User();
-			$user->setUsername($data->username);
+			$user->setUsername(md5($data->email.'::'.time().'::'.$data->contact_number));
 			if (isset($data->profileImage)) {
 				$user->setProfileImage($data->profileImage);
 			}
 			$user->setEmail($data->email);
-			$user->setPlainPassword('B!e281ckr');
+			$user->setPlainPassword($data->password);
 			$user->setFirstName($data->first_name);
 			$user->setLastName($data->last_name);
 			$user->setContactNumber($data->contact_number);
@@ -222,6 +221,7 @@ class UserRepository extends EntityRepository
 							$item = new Audience();
 							$item->setCode($val->tag);
 							$item->setName($val->name);
+							$item->setIcon($val->icon);
 							$add = 'addAudience';
 							break;
 						case 'prices':
@@ -247,10 +247,42 @@ class UserRepository extends EntityRepository
 		}
 	}
 	
-	public function getAllUsers()
+	public function getUsers($field = null, $value = null)
 	{
 		$em = $this->getEntityManager();
-		$dql = 'SELECT u.';
+		$dql = 'SELECT u FROM InfluencerAppBundle:User u WHERE u.roles NOT LIKE :admin_roles ';
+		$params = ['admin_roles' => '%ROLE_ADMIN%'];
+		if ($field !== null) {
+			if ($field == 'role') {
+				$dql .= 'AND u.roles LIKE :role ';
+				$params['role'] = '%'.$value.'%';
+			} else {
+				$dql .= sprintf('AND u.%s = :value ', $field);
+				$params['value'] = $value;
+			}
+		}
+		$users = $em->createQuery($dql)->setParameters($params)->getArrayResult();
+		
+		return $users;
+	}
+	
+	public function getUserForAdminEdit($id, $hydration = 'array')
+	{
+		$em = $this->getEntityManager();
+		$dql = 'SELECT u FROM InfluencerAppBundle:User u ';
+		$dql .= 'WHERE u.id = :userId';
+		if ($hydration === 'array') {
+			$user = $em->createQuery($dql)->setParameter('userId', $id)->getArrayResult();
+			if (isset($user[0])) {
+				return $user[0];
+			}
+		} else {
+			$user = $em->createQuery($dql)->setParameter('userId', $id)->getSingleResult();
+			if ($user) {
+				return $user;
+			}
+		}
+		return false;
 	}
 	
 }

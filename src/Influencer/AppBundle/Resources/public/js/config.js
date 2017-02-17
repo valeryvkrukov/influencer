@@ -48,6 +48,12 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 				loginRequired: loginRequired
 			}
 		})
+		.state('app.dashboard', {
+			url: '/dashboard',
+			controller: 'DashboardCtrl',
+			templateUrl: Routing.generate('inf_dashboard'),
+			resolve: lazyLoad(['dashboard'], ['dataTables', 'metrojs'])
+		})
 		.state('app.home', {
 			url: '/home',
 			controller: 'HomeCtrl',
@@ -104,7 +110,18 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 			url: '/list',
 			controller: 'AdminUsersListCtrl',
 			templateUrl: Routing.generate('inf_admin_users_list'),
-			resolve: lazyLoad(['admin/users/list'], ['dataTables'])
+			resolve: lazyLoad(['admin/users/list'], [])
+		})
+		.state('app.users.edit', {
+			url: '/edit/:id',
+			controller: 'AdminUsersEditCtrl',
+			templateUrl: function($stateParams) {
+				if ($stateParams.id) {
+					return Routing.generate('inf_admin_users_edit', {id: $stateParams.id});
+				}
+				return Routing.generate('inf_error', {code: 10001});
+			},
+			resolve: lazyLoad(['admin/users/edit'], [])
 		})
 		.state('app.users.create', {
 			url: '/create',

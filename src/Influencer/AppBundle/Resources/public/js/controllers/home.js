@@ -1,36 +1,6 @@
 'use strict';
 
 angular.module('app')
-	.factory('LoadData', ['$q', '$http', function($q, $http) {
-		return {
-			get: function(user) {
-				var deferred = $q.defer();
-				try {
-					var url = Routing.generate('inf_load_user_home', {'role': user.role});
-					$http.get(url).then(function(resp) {
-						deferred.resolve(resp.data);
-					});
-				} catch(e) {
-					deferred.reject('Route not exists');
-				}
-				return deferred.promise;
-			}
-		};
-	}])
-	.factory('LoadStatistics', ['$q', '$http', function($q, $http) {
-		return {
-			forAllNetworks: function() {
-				var deferred = $q.defer();
-				$http({
-					url: Routing.generate('inf_get_user_statistics', {'network': 'all'}),
-					method: 'GET'
-				}).then(function(resp) {
-					deferred.resolve(resp.data);
-				});
-				return deferred.promise;
-			}
-		};
-	}])
 	.controller('HomeCtrl', ['$rootScope', '$scope', '$http', '$timeout', 'Account', 'LoadData', 'LoadStatistics', 'localStorageService', 'ImageUtils', function($rootScope, $scope, $http, $timeout, Account, LoadData, LoadStatistics, localStorageService, ImageUtils) {
 		if ($scope.templatePath === undefined) { 
 			$scope.user = localStorageService.get('currentUser');

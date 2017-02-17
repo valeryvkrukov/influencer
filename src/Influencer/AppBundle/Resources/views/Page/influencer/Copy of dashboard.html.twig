@@ -1,0 +1,191 @@
+<div class="page-cover bg-info-light">
+	<div class="container-fluid container-fixed-lg">
+		<div class="inner">
+			<h3 class="text-white">DASHBOARD</h3>
+		</div>
+	</div>
+</div>
+<div class="page-cover bg-white">
+    <div class="container-fluid container-fixed-lg">
+    	<div class="inner">
+    		<div class="panel panel-transparent">
+    			<div class="panel-heading">
+    				<div class="panel-title full-width b-b b-transparent">
+    					<h4>Your Profile Status</h4>
+    				</div>
+    			</div>
+    			<div class="panel-body text-center">
+    				<div class="row">
+    					<div class="col-md-2 panel panel-transparent">
+                			<div class="panel-body text-left">
+    							<div class="bordered b-white">
+                            		<img class="full-width" ng-if="user.profileImage" alt="Avatar" data-src-retina="{{ '{{ user.profileImage }}' }}" ng-src="{{ '{{ user.profileImage }}' }}">
+                            	</div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-5 panel panel-transparent">
+                			<div class="panel-body text-center">
+                				<div class="col-md-6">
+                					<div class="padding-10 margin-10 bg-transparent">
+                						<h5>
+                							<img src="{{ asset('assets/img/logo.png') }}" style="height:35px;">
+                							<strong class="text-master">{{ '{{ user.kloutScore.score.score|number:3 }}' }}</strong>
+                						</h5>
+                					</div>
+                				</div>
+                				<div class="col-md-6">
+                					<div class="padding-10 margin-10 bg-transparent">
+                						<h5>
+                							<img src="{{ asset('img/klout-thumb.png') }}" style="height:35px;">
+                							<strong class="text-master">{{ '{{ user.kloutScore.score.score|number:3 }}' }}</strong>
+                						</h5>
+                					</div>
+                				</div>
+                				<br><br>
+                				<div class="col-md-3">
+            						<div class="ar-2-2">
+                						<h4 class="p-t-5 p-b-5 bg-complete-lighter b-rad-lg" ng-if="statistics.facebook != undefined">0</h4>
+                						<h4 class="p-t-5 p-b-5 fs-14 hint-text bg-info-lighter b-rad-lg" ng-if="statistics.facebook == undefined">N/A</h4>
+                						<h5 class="m-t-20"><i class="i fa fa-facebook" style="font-size:x-large;"></i> fans</h5>
+                					</div>
+                				</div>
+                				<div class="col-md-3">
+            						<div class="ar-2-2">
+                						<h4 class="p-t-5 p-b-5 bg-complete-lighter b-rad-lg" ng-if="statistics.twitter.followersCount != undefined">{{ '{{ statistics.twitter.followersCount }}' }}</h4>
+                						<h4 class="p-t-5 p-b-5 fs-14 hint-text bg-info-lighter b-rad-lg" ng-if="statistics.twitter.followersCount == undefined">N/A</h4>
+                						<h5 class="m-t-20"><i class="i fa fa-twitter" style="font-size:x-large;"></i> followers</h5>
+                					</div>
+                				</div>
+                				<div class="col-md-3">
+            						<div class="ar-2-2">
+                						<h4 class="p-t-5 p-b-5 bg-complete-lighter b-rad-lg" ng-if="statistics.instagram.followed_by != undefined">{{ '{{ statistics.instagram.followed_by }}' }}</h4>
+                						<h4 class="p-t-5 p-b-5 fs-14 hint-text bg-info-lighter b-rad-lg" ng-if="statistics.instagram.followed_by == undefined">N/A</h4>
+                						<h5 class="m-t-20"><i class="i fa fa-instagram" style="font-size:x-large;"></i> fans</h5>
+                					</div>
+                				</div>
+                				<div class="col-md-3">
+            						<div class="ar-2-2">
+                						<h4 class="p-t-5 p-b-5 bg-complete-lighter b-rad-lg" ng-if="statistics.google.viewCount != undefined">{{ '{{ statistics.google.viewCount }}' }}</h4>
+                						<h4 class="p-t-5 p-b-5 fs-14 hint-text bg-info-lighter b-rad-lg" ng-if="statistics.google.viewCount == undefined">N/A</h4>
+                						<h5 class="m-t-20"><i class="i fa fa-youtube-play" style="font-size:x-large;"></i> views</h5>
+                					</div>
+                				</div>
+                			</div>
+                		</div>
+                		
+                        <div class="col-md-1 panel panel-default bg-primary-lighter p-l-0 p-r-0 m-t-30 m-r-10">
+                			<div class="panel-heading no-padding">
+                				<div class="panel-title full-width bg-info text-master-light p-t-10 p-b-10">New<br>Campaigns</div>
+                			</div>
+                			<div class="panel-body text-center">
+                				<h4 class="p-t-5 p-b-5">0</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-1 panel panel-default bg-primary-lighter p-l-0 p-r-0 m-t-30 m-r-10">
+                			<div class="panel-heading no-padding">
+                				<div class="panel-title full-width bg-info text-master-light p-t-10 p-b-10">Pending<br>Campaigns</div>
+                			</div>
+                			<div class="panel-body text-center">
+                				<h4 class="p-t-5 p-b-5">0</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-1 panel panel-default bg-primary-lighter p-l-0 p-r-0 m-t-30 m-r-10">
+                			<div class="panel-heading no-padding">
+                				<div class="panel-title full-width bg-info text-master-light p-t-10 p-b-10">Finished<br>Campaigns</div>
+                			</div>
+                			<div class="panel-body text-center">
+                				<h4 class="p-t-5 p-b-5">0</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-1 panel panel-default bg-primary-lighter p-l-0 p-r-0 m-t-30 m-r-10">
+                			<div class="panel-heading no-padding">
+                				<div class="panel-title full-width bg-info text-master-light p-t-10 p-b-10">Balance<br>&nbsp;</div>
+                			</div>
+                			<div class="panel-body text-center">
+                				<h4 class="p-t-5 p-b-5">$0</h4>
+                            </div>
+                        </div>
+                    </div>
+    			</div>
+    		</div>
+    		<div class="panel panel-transparent">
+    			<div class="panel-heading">
+    				<div class="panel-title full-width b-b b-transparent">
+    					<h4>Activities & Actions</h4>
+    				</div>
+    			</div>
+    			<div class="panel-body text-center">
+    				<div class="row">
+    				
+    				</div>
+    			</div>
+    		</div>
+    		<div class="panel panel-transparent">
+    			<div class="panel-heading">
+    				<div class="panel-title full-width b-b b-transparent">
+    					<h4>Campaigns</h4>
+    				</div>
+    			</div>
+    			<div class="panel-body text-center">
+    				<div class="row">
+    					<div class="panel">
+    						<ul class="nav nav-tabs nav-tabs-left nav-tabs-simple">
+    							<li class="active">
+    								<a role="tab" data-toggle="tab" href="#all" pg-tab>All</a>
+    							</li>
+    							<li>
+    								<a role="tab" data-toggle="tab" href="#new" pg-tab>New</a>
+    							</li>
+    							<li>
+    								<a role="tab" data-toggle="tab" href="#live" pg-tab>Live</a>
+    							</li>
+    							<li>
+    								<a role="tab" data-toggle="tab" href="#pending" pg-tab>Pending Approval</a>
+    							</li>
+    							<li>
+    								<a role="tab" data-toggle="tab" href="#rejected" pg-tab>Rejected</a>
+    							</li>
+    							<li>
+    								<a role="tab" data-toggle="tab" href="#finished" pg-tab>Finished</a>
+    							</li>
+    						</ul>
+    						<div class="tab-content">
+    							<div class="tab-pane active" id="all">
+    								<div class="row column-seperation">
+    								
+    								</div>
+    							</div>
+    							<div class="tab-pane" id="new">
+    								<div class="row column-seperation">
+    								
+    								</div>
+    							</div>
+    							<div class="tab-pane" id="live">
+    								<div class="row column-seperation">
+    								
+    								</div>
+    							</div>
+    							<div class="tab-pane" id="pending">
+    								<div class="row column-seperation">
+    								
+    								</div>
+    							</div>
+    							<div class="tab-pane" id="rejected">
+    								<div class="row column-seperation">
+    								
+    								</div>
+    							</div>
+    							<div class="tab-pane" id="finished">
+    								<div class="row column-seperation">
+    								
+    								</div>
+    							</div>
+    						</div>
+    					</div>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+</div>

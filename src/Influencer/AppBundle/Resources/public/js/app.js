@@ -11,5 +11,7 @@ angular.module('app', [
     'LocalStorageModule',
     'flow',
 	'satellizer',
-	'wu.masonry'
+	'wu.masonry',
+	'datatables',
+	'datatables.bootstrap'
 ]);

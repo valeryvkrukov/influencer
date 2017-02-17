@@ -1,53 +1,51 @@
 <div class="container-fluid container-fixed-lg">
 	<ul class="breadcrumb">
 		<li><p>users</p></li>
-		<li><a href="#" class="active">create new</a></li>
+		<li><a ui-sref="app.users.list" class="fs-12">list</a></li>
+		<li><a href="#" class="active">edit</a></li>
 	</ul>
 </div>
 
-<div class="container-fluid no-margin full-width bg-white" ng-controller="AdminUsersCreateCtrl">
+<div class="container-fluid no-margin full-width bg-white" ng-controller="AdminUsersEditCtrl">
 	<div class="row full-height no-margin">
 		<div class="col-md-12 full-height">
 			<div class="panel panel-transparent">
 				<div class="panel-heading">
-					<div class="panel-title">
-						<h4 ng-if="!newUser.firstName && !newUser.lastName" class="text-hint">Unnamed</h4>
-						<h4 ng-if="newUser.firstName || newUser.lastName">{{ '{{ newUser.firstName }} {{ newUser.lastName }}' }}</h4>
-					</div>
+					<div class="panel-title"><h4>{{ '{{ selected.firstName }} {{ selected.lastName }}' }}</h4></div>
 				</div>
 				<div class="panel-body">
-					<form role="form" name="createUserForm" ng-submit="updateUser()" novalidate>
+					<form role="form" ng-submit="updateUser()" novalidate>
 						<div class="row row-same-height">
 							<div class="col-md-6 b-r b-dashed b-grey">
             					<div class="padding-30">
             						<h4>User Info</h4>
             						<div class="row">
                 						<div class="col-sm-12 col-md-6">
-                							<div pg-form-group class="form-group form-group-default required" ng-class="{ 'has-error': createUserForm.firstName.$invalid && !createUserForm.firstName.$pristine }">
+                							<div pg-form-group class="form-group form-group-default required" ng-class="{ 'has-error': firstName.$invalid && !firstName.$pristine }">
                 								<label>First Name</label>
-                								<input type="text" name="firstName" placeholder="First Name" class="form-control" ng-model="newUser.firstName" required>
+                								<input type="text" name="firstName" placeholder="First Name" class="form-control" ng-model="selected.firstName" required>
                 							</div>
                 						</div>
                 						<div class="col-sm-12 col-md-6">
-                							<div pg-form-group class="form-group form-group-default required" ng-class="{ 'has-error': createUserForm.lastName.$invalid && !createUserForm.lastName.$pristine }">
+                							<div pg-form-group class="form-group form-group-default required" ng-class="{ 'has-error': lastName.$invalid && !lastName.$pristine }">
                 								<label>Last Name</label>
-                								<input type="text" name="lastName" placeholder="Last Name" class="form-control" ng-model="newUser.lastName" required>
+                								<input type="text" name="lastName" placeholder="Last Name" class="form-control" ng-model="selected.lastName" required>
                 							</div>
                 						</div>
                 					</div>
                 					<div class="row">
                 						<div class="col-sm-12 col-sm-6">
-                							<div pg-form-group class="form-group form-group-default required" ng-class="{ 'has-error': (createUserForm.email.$invalid && !createUserForm.email.$pristine) || createUserForm.newUser.email == false }">
+                							<div pg-form-group class="form-group form-group-default required" ng-class="{ 'has-error': (email.$invalid && !email.$pristine) || selected.email == false }">
                 								<label>Email</label>
-                								<input inf-unique inf-unique-property="email" type="email" name="email" placeholder="Email" class="form-control" ng-model="newUser.email" required>
+                								<input inf-unique inf-unique-property="email" type="email" name="email" placeholder="Email" class="form-control" ng-model="selected.email" required>
                 							</div>
                 							<label class="error" for="email" ng-show="email.$invalid && !email.$pristine && !email.$error.unique">Enter a valid email.</label>
                 							<label class="error" for="email" ng-show="email.$error.unique == true">Email already in use.</label>
                 						</div>
                 						<div class="col-sm-12 col-md-6">
-                							<div pg-form-group class="form-group form-group-default required" ng-class="{ 'has-error': createUserForm.gender.$invalid && !createUserForm.gender.$pristine }">
+                							<div pg-form-group class="form-group form-group-default required" ng-class="{ 'has-error': contactNumber.$invalid && !contactNumber.$pristine }">
                 								<label>Gender</label>
-                								<select name="gender" class="form-control" ng-model="newUser.gender" required>
+                								<select name="gender" class="form-control" ng-model="selected.gender" required>
                 									<option value="male">Male</option>
                 									<option value="female">Female</option>
                 								</select>
@@ -56,15 +54,15 @@
                 					</div>
                 					<div class="row">
                 						<div class="col-sm-12 col-md-6">
-                							<div pg-form-group class="form-group form-group-default required" ng-class="{ 'has-error': createUserForm.contactNumber.$invalid && !createUserForm.contactNumber.$pristine }">
+                							<div pg-form-group class="form-group form-group-default required" ng-class="{ 'has-error': contactNumber.$invalid && !contactNumber.$pristine }">
                 								<label>Contact Number</label>
-                								<input type="text" name="contactNumber" placeholder="Contact Number" class="form-control" ng-model="newUser.contactNumber" required>
+                								<input type="text" name="contactNumber" placeholder="Contact Number" class="form-control" ng-model="selected.contactNumber" required>
                 							</div>
                 						</div>
                 						<div class="col-sm-12 col-md-6">
                 							<div pg-form-group class="form-group form-group-default">
                 								<label>Second Number</label>
-                								<input type="text" name="secondNumber" placeholder="Second Number" class="form-control" ng-model="newUser.secondNumber">
+                								<input type="text" name="secondNumber" placeholder="Second Number" class="form-control" ng-model="selected.secondNumber">
                 							</div>
                 						</div>
                 					</div>
@@ -72,7 +70,7 @@
                 						<div class="col-sm-12 col-md-12">
                 							<div pg-form-group class="form-group form-group-default">
                 								<label>Website</label>
-                								<input type="text" name="website" placeholder="Website" class="form-control" ng-model="newUser.website">
+                								<input type="text" name="website" placeholder="Website" class="form-control" ng-model="selected.website">
                 							</div>
                 						</div>
                 					</div>
@@ -80,7 +78,7 @@
                 						<div class="col-sm-12 col-md-12">
                 							<div pg-form-group class="form-group form-group-default" style="min-height:200px">
                 								<label>Overview</label>
-                								<textarea name="brief" placeholder="Overview" class="form-control" ng-model="newUser.brief" style="min-height:200px"></textarea>
+                								<textarea name="brief" placeholder="Overview" class="form-control" ng-model="selected.brief" style="min-height:200px"></textarea>
                 							</div>
                 						</div>
                 					</div>
@@ -91,15 +89,15 @@
             						<h4>User Settings</h4>
             						<div class="row">
                 						<div class="col-sm-12 col-md-6">
-                							<div pg-form-group class="form-group form-group-default required">
+                							<div pg-form-group class="form-group form-group-default">
                 								<label>Status</label>
-                								<select name="enabled" class="form-control" ng-model="newUser.enabled" ng-options="boolToStr(item) for item in [true, false]"></select>
+                								<select name="enabled" class="form-control" ng-model="selected.enabled" ng-options="boolToStr(item) for item in [true, false]"></select>
                 							</div>
                 						</div>
                 						<div class="col-sm-12 col-md-6">
-                							<div pg-form-group class="form-group form-group-default required">
+                							<div pg-form-group class="form-group form-group-default">
                 								<label>Role</label>
-                								<select name="enabled" class="form-control" ng-model="newUser.roles[0]" required>
+                								<select name="enabled" class="form-control" ng-model="selected.roles[0]">
                 									<option value="ROLE_CLIENT">Client</option>
                 									<option value="ROLE_INFLUENCER">Influencer</option>
                 								</select>
@@ -110,7 +108,7 @@
             				</div>
             				<div class="col-md-12">
             					<div class="padding-30">
-            						<button type="submit" class="btn btn-primary">Create User</button>
+            						<button type="submit" class="btn btn-primary">Update User</button>
             					</div>
             				</div>
 						</div>

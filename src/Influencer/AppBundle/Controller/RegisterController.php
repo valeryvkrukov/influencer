@@ -22,9 +22,9 @@ class RegisterController extends BaseController
 	public function saveAction(Request $request)
 	{
 		$input = json_decode($request->getContent());
-		if (isset($input->username) && isset($input->email)) {
+		if (isset($input->email)) {
 			$em = $this->getDoctrine()->getManager();
-			if ($em->getRepository('InfluencerAppBundle:User')->checkForUniqueUser($input->username, $input->email)) {
+			if ($em->getRepository('InfluencerAppBundle:User')->checkForUniqueUser($input->email)) {
 				$user = $em->getRepository('InfluencerAppBundle:User')->createInfluencerUser($input, $this->get('app.feed_loader'));
 				return new JsonResponse(['token' => $this->createToken($user)]);
 			} else {

@@ -32,6 +32,14 @@ class DefaultController extends Controller
     }
     
     /**
+     * @Route("/header-blank", name="inf_header_blank", options={"expose"=true})
+     */
+    public function headerBlankAction()
+    {
+    	return $this->render('InfluencerAppBundle:Default:header-blank.html.twig');
+    }
+    
+    /**
      * @Route("/sidebar", name="inf_sidebar", options={"expose"=true})
      */
     public function sidebarAction()
@@ -69,5 +77,27 @@ class DefaultController extends Controller
     public function footerAction()
     {
     	return $this->render('InfluencerAppBundle:Default:footer.html.twig');
+    }
+    
+    /**
+     * @Route("/error/{code}", name="inf_error", options={"expose"=true})
+     */
+    public function errorAction($code)
+    {
+    	switch($code) {
+    		case 10001:
+    			$code = 500;
+    			$message1 = 'Error';
+    			$message2 = 'Invalid request parameters';
+    			break;
+    		default:
+    			$message1 = 'Sorry but we couldnt find this page';
+    			$message2 = 'This page you are looking for does not exsist';
+    	}
+    	return $this->render('InfluencerAppBundle:Default:error.html.twig', [
+    		'code' => $code,
+    		'message1' => $message1,
+    		'message2' => $message2,
+    	]);
     }
 }
