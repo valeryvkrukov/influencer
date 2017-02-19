@@ -11,8 +11,15 @@
 	<div class="sidebar-menu">
 		<ul class="menu-items">
 			<li class="m-t-30 open" ui-sref-active="active">
-				<a ui-sref="app.home" class="detailed">
+				<a ui-sref="app.dashboard" class="detailed">
 					<span class="title">Dashboard</span>
+					<span class="details"></span>
+				</a>
+				<span class="icon-thumbnail"><i class="pg-settings"></i></span>
+			</li>
+			<li class="m-t-30 open" ui-sref-active="active">
+				<a ui-sref="app.home" class="detailed">
+					<span class="title">Home</span>
 					<span class="details"></span>
 				</a>
 				<span class="icon-thumbnail"><i class="pg-home"></i></span>
@@ -46,6 +53,13 @@
 						<span class="icon-thumbnail">c</span>
 					</li>
 				</ul>
+			</li>
+			<li ng-if="user.role == 'influencer'" ui-sref-active="active">
+				<a ui-sref="app.feeds" class="detailed">
+					<span class="title">Feeds</span>
+					<span class="details"></span>
+				</a>
+				<span class="icon-thumbnail"><i class="pg-social"></i></span>
 			</li>
 			<li ng-if="user.role == 'client'" ui-sref-active="active">
 				<a ui-sref="app.campaign" class="detailed">

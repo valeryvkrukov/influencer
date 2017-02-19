@@ -49,6 +49,10 @@ angular.module('app')
 		$scope.postTypes = [];
 		$scope.price = {};
 		$scope.user = {};
+		$scope.dateOptions = {
+			maxDate: '-10y',
+			dateFormat: 'yy-mm-dd'
+		};
 		$scope.initIntlVars = function() {
 			GetPredefinedVars.getIntl().then(function(resp) {
 				if (resp.data.countries) {
@@ -116,8 +120,30 @@ angular.module('app')
         	var fileReader = new FileReader();
 			fileReader.onload = function(event) {
 				$scope.user.profileImage = event.target.result;
+				//delete $flow.files[0];
+				$scope.$apply(function($scope){
+	                  $scope.myImage=event.target.result;
+	                });
 			};
 			fileReader.readAsDataURL($file.file);
+        };
+        $scope.cropProfileImage = function(obj) {
+        	$scope.sourceImage = '';
+        	$scope.croppedImage = '';
+            var fileReader = new FileReader();
+            fileReader.onload = function(event) {
+				$scope.$apply(function($scope){
+					$scope.sourceImage = event.target.result;
+	            });
+			};
+			fileReader.readAsDataURL(obj.files[0].file);
+        };
+        $scope.saveCroppedImage = function(croppedImage) {
+        	$scope.user.profileImage = croppedImage;
+        };
+        $scope.removeProfileImage = function(obj) {
+        	obj.cancel();
+        	$scope.user.profileImage = null;
         };
         $scope.checkForMain = function() {
         	return $scope.steps['main'];
@@ -142,9 +168,6 @@ angular.module('app')
         	if ($scope.user.website === undefined) {
         		$scope.user.website = '';
         	}
-        	/*angular.forEach(angular.element('#audience-list').find('.tag'), function(val, key) {
-        		$scope.user.audience.push(val.innerText);
-			});*/
         	if (audienceAndInfluencerDataInfo.$valid) {
         		$scope.steps['audience'] = true;
         		WizardHandler.wizard().next();

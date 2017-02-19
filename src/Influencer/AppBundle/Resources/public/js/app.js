@@ -8,7 +8,10 @@ angular.module('app', [
 	'ui.router', 
 	'ui.select',
     'ui.utils',
+    'LocalStorageModule',
     'flow',
 	'satellizer',
-	'wu.masonry'
+	'wu.masonry',
+	'datatables',
+	'datatables.bootstrap'
 ]);

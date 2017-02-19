@@ -16,6 +16,7 @@
 
 .btn-google-plus,
 .social-icon.fa-google-plus
+.social-icon.fa-youtube-play
  {
   color: #fff;
   background-color: #dd4b39;
@@ -78,6 +79,16 @@
 	width: 100%;
 }
 
+.card.col1.wide2 {
+	width: 48%;
+	margin: 1%;
+}
+
+.card.col1.wide3 {
+	width: 30%;
+	margin: 1%;
+}
+
 .social-wrapper .social .jumbotron {
 	height: 30vh;
 }
@@ -107,4 +118,33 @@ label small {
 .col1.masonry-brick {
 	margin: 10px;
 	padding: 0;
+}
+
+.thumbnail-wrapper.d120,
+.social-user-profile.c120 {
+	width: 120px;
+	height: 120px;
+}
+
+.thumbnail-wrapper.d100,
+.social-user-profile.c100 {
+	width: 100px;
+	height: 100px;
+}
+
+.thumbnail-wrapper.full,
+.social-user-profile.full {
+	width: 100px;
+	height: 100px;
+}
+
+.thumbnail-wrapper.bordered.b-thin {
+	border-width: 1px;
+}
+
+.cropArea {
+	background: #E4E4E4;
+	overflow: hidden;
+	width:500px;
+	height:350px;
 }

@@ -27,6 +27,11 @@ class Audience
 	protected $name;
 	
 	/**
+	 * @ORM\Column(name="icon", type="string", nullable=true)
+	 */
+	protected $icon;
+	
+	/**
 	 * @ORM\ManyToOne(targetEntity="User", inversedBy="audience")
 	 * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE", nullable=true)
 	 */
@@ -74,6 +79,23 @@ class Audience
 		return $this;
 	}
 	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getIcon() {
+		return $this->icon;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $icon        	
+	 */
+	public function setIcon($icon) {
+		$this->icon = $icon;
+		return $this;
+	}
+		
 	/**
 	 *
 	 * @return the unknown_type

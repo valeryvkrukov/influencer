@@ -40,7 +40,7 @@ class FeedLoader
 		return json_decode($response->getBody(), true);
 	}
 	
-	public function loadTwitterFeed($token, $userId)
+	public function loadTwitterFeed($token, $network)
 	{
 		$stack = GuzzleHttp\HandlerStack::create();
 		$profileOauth = new Oauth1([
@@ -51,7 +51,7 @@ class FeedLoader
 		]);
 		$stack->push($profileOauth);
 		$client = new GuzzleHttp\Client(['handler' => $stack]);
-		$response = $client->request('GET', 'https://api.twitter.com/1.1/statuses/user_timeline.json?user_id='.$userId, ['auth' => 'oauth']);
+		$response = $client->request('GET', 'https://api.twitter.com/1.1/statuses/user_timeline.json?user_id='.$network->getUserId(), ['auth' => 'oauth']);
 		return json_decode($response->getBody(), true);
 	}
 	

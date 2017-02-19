@@ -47,22 +47,22 @@ class UtilController extends Controller
     public function getPostTypesAction()
     {
     	$types = [
-    		[
+    		'twitter' => [
     			'name' => 'Event',
     			'tag' => 'event',
     			'icon' => 'pg-calender',
     		],
-    		[
+    		'google' => [
     			'name' => 'Video',
     			'tag' => 'video',
     			'icon' => 'pg-movie',
     		],
-    		[
+    		'instagram' => [
     			'name' => 'Photoshoot',
     			'tag' => 'photo',
     			'icon' => 'pg-camera',
     		],
-    		[
+    		'facebook' => [
     			'name' => 'Social media',
     			'tag' => 'social',
     			'icon' => 'pg-social',
@@ -85,27 +85,27 @@ class UtilController extends Controller
     		[
     			'name' => 'Art & Design',
     			'tag' => 'art-n-design',
-    			'icon' => '',
+    			'icon' => 'fa-paint-brush',
     		],
     		[
     			'name' => 'Beauty',
     			'tag' => 'beauty',
-    			'icon' => '',
+    			'icon' => 'fa-circle',
     		],
     		[
     			'name' => 'Women’s Fashion & Jewelry',
     			'tag' => 'women-fashion-n-jewelry',
-    			'icon' => '',
+    			'icon' => 'fa-female',
     		],
     		[
     			'name' => 'Men’s Fashion & Jewelry',
     			'tag' => 'men-fashion-n-jewelry',
-    			'icon' => '',
+    			'icon' => 'fa-male',
     		],
     		[
     			'name' => 'Travel',
     			'tag' => 'travel',
-    			'icon' => '',
+    			'icon' => 'fa-globe',
     		],
     		[
     			'name' => 'Adventure',
@@ -115,62 +115,62 @@ class UtilController extends Controller
     		[
     			'name' => 'Auto',
     			'tag' => 'auto',
-    			'icon' => '',
+    			'icon' => 'fa-car',
     		],
     		[
     			'name' => 'Sports',
     			'tag' => 'sport',
-    			'icon' => '',
+    			'icon' => 'fa-soccer-ball-o',
     		],
     		[
     			'name' => 'Food',
     			'tag' => 'food',
-    			'icon' => '',
+    			'icon' => 'fa-cutlery',
     		],
     		[
     			'name' => 'Fitness',
     			'tag' => 'fitness',
-    			'icon' => '',
+    			'icon' => 'fa-circle',
     		],
     		[
     			'name' => 'Wellness & Nutrition',
     			'tag' => 'wellness-n-nutrition',
-    			'icon' => '',
+    			'icon' => 'fa-circle',
     		],
     		[
     			'name' => 'Parenting',
     			'tag' => 'parenting',
-    			'icon' => '',
+    			'icon' => 'fa-child',
     		],
     		[
     			'name' => 'Life Coach',
     			'tag' => 'life-coach',
-    			'icon' => '',
+    			'icon' => 'fa-circle',
     		],
     		[
     			'name' => 'Music',
     			'tag' => 'music',
-    			'icon' => '',
+    			'icon' => 'fa-music',
     		],
     		[
     			'name' => 'Nightlife',
     			'tag' => 'nightlife',
-    			'icon' => '',
+    			'icon' => 'fa-circle',
     		],
     		[
     			'name' => 'Entertainment',
     			'tag' => 'entertainment',
-    			'icon' => '',
+    			'icon' => 'fa-circle',
     		],
     		[
     			'name' => 'Pets',
     			'tag' => 'pets',
-    			'icon' => '',
+    			'icon' => 'fa-paw',
     		],
     		[
     			'name' => 'Tech',
     			'tag' => 'tech',
-    			'icon' => '',
+    			'icon' => 'fa-cogs',
     		],
     	];
     	return new JsonResponse([

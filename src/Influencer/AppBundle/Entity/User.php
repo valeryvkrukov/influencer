@@ -104,22 +104,26 @@ class User extends BaseUser
 	protected $frequency;
 
 	/**
-	 * @ORM\Column(name="facebook", type="string", nullable=true)
+	 * @ORM\OneToOne(targetEntity="Network", cascade={"persist", "remove"})
+	 * @ORM\JoinColumn(name="facebook_id", referencedColumnName="id")
 	 */
 	protected $facebook;
 	
 	/**
-	 * @ORM\Column(name="google", type="string", nullable=true)
+	 * @ORM\OneToOne(targetEntity="Network", cascade={"persist", "remove"})
+	 * @ORM\JoinColumn(name="google_id", referencedColumnName="id")
 	 */
 	protected $google;
 
 	/**
-	 * @ORM\Column(name="twitter", type="string", nullable=true)
+	 * @ORM\OneToOne(targetEntity="Network", cascade={"persist", "remove"})
+	 * @ORM\JoinColumn(name="twitter_id", referencedColumnName="id")
 	 */
 	protected $twitter;
 
 	/**
-	 * @ORM\Column(name="instagram", type="string", nullable=true)
+	 * @ORM\OneToOne(targetEntity="Network", cascade={"persist", "remove"})
+	 * @ORM\JoinColumn(name="instagram_id", referencedColumnName="id")
 	 */
 	protected $instagram;
 	
@@ -128,15 +132,42 @@ class User extends BaseUser
 	 */
 	protected $klout;
 	
+	/**
+	 * @ORM\OneToOne(targetEntity="UserStatistics", mappedBy="user", cascade={"persist", "remove"})
+	 */
+	protected $statistics;
+	
+	private $rootDir;
+	
 	public function __construct()
 	{
 		parent::__construct();
+		
+		$this->rootDir = realpath(__DIR__.'/../../../../');
 		
 		$this->languages = new \Doctrine\Common\Collections\ArrayCollection();
 		$this->countries = new \Doctrine\Common\Collections\ArrayCollection();
 		$this->audience = new \Doctrine\Common\Collections\ArrayCollection();
 		$this->prices = new \Doctrine\Common\Collections\ArrayCollection();
 		$this->feeds = new \Doctrine\Common\Collections\ArrayCollection();
+	}
+	
+	public function getNetworks()
+	{
+		$networks = [];
+		if ($this->facebook) {
+			$networks[] = 'facebook';
+		}
+		if ($this->google) {
+			$networks[] = 'google';
+		}
+		if ($this->twitter) {
+			$networks[] = 'twitter';
+		}
+		if ($this->instagram) {
+			$networks[] = 'instagram';
+		}
+		return $networks;
 	}
 	
 	/**
@@ -160,7 +191,24 @@ class User extends BaseUser
 	 * @param unknown_type $profileImage        	
 	 */
 	public function setProfileImage($profileImage) {
-		$this->profileImage = $profileImage;
+		$splited = explode(',', $profileImage);
+		if (isset($splited[1])) {
+			$filename = '/uploads/'.md5('profile-image'.$this->getId().$this->getUsername().time());
+			$mime = $splited[0];
+			$mime_split_without_base64=explode(';', $mime, 2);
+			$mime_split=explode('/', $mime_split_without_base64[0], 2);
+			if (count($mime_split) == 2) {
+				$ext = $mime_split[1];
+				$filename .= '.'.$ext;
+			}
+			$data = $splited[1];
+			$fp = fopen(__DIR__.'/../../../../web'.$filename, 'wb');
+			fwrite($fp, base64_decode($data));
+			fclose($fp);
+			$this->profileImage = $filename;
+		} else {
+			$this->profileImage = $profileImage;
+		}
 		return $this;
 	}
 	
@@ -177,7 +225,24 @@ class User extends BaseUser
 	 * @param unknown_type $profileCover        	
 	 */
 	public function setProfileCover($profileCover) {
-		$this->profileCover = $profileCover;
+		$splited = explode(',', $profileCover);
+		if (isset($splited[1])) {
+			$filename = '/uploads/'.md5('profile-cover'.$this->getId().$this->getUsername().time());
+			$mime = $splited[0];
+			$mime_split_without_base64=explode(';', $mime, 2);
+			$mime_split=explode('/', $mime_split_without_base64[0], 2);
+			if (isset($mime_split[1])) {
+				$ext = $mime_split[1];
+				$filename .= '.'.$ext;
+			}
+			$data = $splited[1];
+			$fp = fopen(__DIR__.'/../../../../web'.$filename, 'wb');
+			fwrite($fp, base64_decode($data));
+			fclose($fp);
+			$this->profileCover = $filename;
+		} else {
+			$this->profileCover = $profileCover;
+		}
 		return $this;
 	}
 				
@@ -494,7 +559,9 @@ class User extends BaseUser
 	 * @param unknown_type $facebook        	
 	 */
 	public function setFacebook($facebook) {
-		$this->facebook = $facebook;
+		if ($facebook instanceof Network) {
+			$this->facebook = $facebook;
+		}
 		return $this;
 	}
 	
@@ -511,7 +578,9 @@ class User extends BaseUser
 	 * @param unknown_type $google        	
 	 */
 	public function setGoogle($google) {
-		$this->google = $google;
+		if ($google instanceof Network) {
+			$this->google = $google;
+		}
 		return $this;
 	}
 	
@@ -528,7 +597,9 @@ class User extends BaseUser
 	 * @param unknown_type $twitter        	
 	 */
 	public function setTwitter($twitter) {
-		$this->twitter = $twitter;
+		if ($twitter instanceof Network) {
+			$this->twitter = $twitter;
+		}
 		return $this;
 	}
 	
@@ -545,7 +616,9 @@ class User extends BaseUser
 	 * @param unknown_type $instagram        	
 	 */
 	public function setInstagram($instagram) {
-		$this->instagram = $instagram;
+		if ($instagram instanceof Network) {
+			$this->instagram = $instagram;
+		}
 		return $this;
 	}
 	
@@ -566,6 +639,21 @@ class User extends BaseUser
 		return $this;
 	}
 	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getStatistics() {
+		return $this->statistics;
+	}
 	
+	/**
+	 *
+	 * @param unknown_type $statistics        	
+	 */
+	public function setStatistics($statistics) {
+		$this->statistics = $statistics;
+		return $this;
+	}
 	
 }

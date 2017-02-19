@@ -1,12 +1,13 @@
 'use strict';
 
 angular.module('app')
-	.controller('LogoutCtrl', ['$rootScope', '$location', '$auth', function($rootScope, $location, $auth) {
+	.controller('LogoutCtrl', ['$scope', '$location', '$auth', 'localStorageService', function($scope, $location, $auth, localStorageService) {
 		if (!$auth.isAuthenticated()) { 
 			return; 
 		}
 		$auth.logout().then(function() {
-			$rootScope.user = {};
+			$scope.user = {};
+			localStorageService.clearAll();
 			$location.path('/');
 		});
 	}]);

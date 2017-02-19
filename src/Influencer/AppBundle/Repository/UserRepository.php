@@ -8,9 +8,21 @@ use Influencer\AppBundle\Entity\Language;
 use Influencer\AppBundle\Entity\Country;
 use Influencer\AppBundle\Entity\Audience;
 use Influencer\AppBundle\Entity\Price;
+use Influencer\AppBundle\Entity\Network;
 
 class UserRepository extends EntityRepository
 {
+	public function findUserByNetworkId($network, $id)
+	{
+		$em = $this->getEntityManager();
+		$dql = sprintf('SELECT u FROM InfluencerAppBundle:User u LEFT JOIN u.%s AS n WHERE n.userId = :id AND n.code = :network', $network);
+		$user = $em->createQuery($dql)->setParameters([
+			'id' => $id,
+			'network' => $network,
+		])->getResult();
+		return $user;
+	}
+	
 	public function findByOrCondition($params)
 	{
 		$em = $this->getEntityManager();
@@ -23,12 +35,11 @@ class UserRepository extends EntityRepository
 		return $em->createQuery($dql)->setParameters($params)->getOneOrNullResult();
 	}
 	
-	public function checkForUniqueUser($username, $email)
+	public function checkForUniqueUser($email)
 	{
 		$em = $this->getEntityManager();
-		$user = $em->createQuery('SELECT u.id FROM InfluencerAppBundle:User u WHERE u.username = :username OR u.email = :email')
+		$user = $em->createQuery('SELECT u.id FROM InfluencerAppBundle:User u WHERE u.email = :email')
 			->setParameters([
-				'username' => $username,
 				'email' => $email,
 			])
 			->getOneOrNullResult();
@@ -48,12 +59,12 @@ class UserRepository extends EntityRepository
 		try {
 			$em = $this->getEntityManager();
 			$user = new User();
-			$user->setUsername($data->username);
+			$user->setUsername(md5($data->email.'::'.time().'::'.$data->contact_number));
 			if (isset($data->profileImage)) {
 				$user->setProfileImage($data->profileImage);
 			}
 			$user->setEmail($data->email);
-			$user->setPlainPassword('B!e281ckr');
+			$user->setPlainPassword($data->password);
 			$user->setFirstName($data->first_name);
 			$user->setLastName($data->last_name);
 			$user->setContactNumber($data->contact_number);
@@ -141,10 +152,18 @@ class UserRepository extends EntityRepository
 					foreach ($socials as $network => $item) {
 						$setter = 'set'.ucfirst($network);
 						//$getter = 'load'.ucfirst($network).'Feed';
-						$user->$setter($item['id']);
+						$_network = new Network();
+						$_network->setCode($network);
+						$_network->setName($network);
+						$_network->setUserId($item['id']);
+						$_network->setUserName('username');
+						$_network->setToken($item['token']);
+						$em->persist($_network);
+						//$user->$setter($item['id']);
+						$user->$setter($_network);
 						$getter = 'load'.ucfirst($network).'Feed';
-						$data = $this->get('app.feed_loader')->$getter($item['token'], $item['id']);
-						$em->getRepository('InfluencerAppBundle:Feed')->loadLatestForUser($data, $network, $user->getId());
+						//$data = $this->get('app.feed_loader')->$getter($item['token'], $item['id']);
+						//$em->getRepository('InfluencerAppBundle:Feed')->loadLatestForUser($data, $network, $user->getId());
 						//$em->getRepository('InfluencerAppBundle:Feed')->loadLatestForUser($network, $user, $item['id'], $item['token']);
 					}
 					$em->persist($user);
@@ -202,6 +221,7 @@ class UserRepository extends EntityRepository
 							$item = new Audience();
 							$item->setCode($val->tag);
 							$item->setName($val->name);
+							$item->setIcon($val->icon);
 							$add = 'addAudience';
 							break;
 						case 'prices':
@@ -227,10 +247,42 @@ class UserRepository extends EntityRepository
 		}
 	}
 	
-	public function getAllUsers()
+	public function getUsers($field = null, $value = null)
 	{
 		$em = $this->getEntityManager();
-		$dql = 'SELECT u.';
+		$dql = 'SELECT u FROM InfluencerAppBundle:User u WHERE u.roles NOT LIKE :admin_roles ';
+		$params = ['admin_roles' => '%ROLE_ADMIN%'];
+		if ($field !== null) {
+			if ($field == 'role') {
+				$dql .= 'AND u.roles LIKE :role ';
+				$params['role'] = '%'.$value.'%';
+			} else {
+				$dql .= sprintf('AND u.%s = :value ', $field);
+				$params['value'] = $value;
+			}
+		}
+		$users = $em->createQuery($dql)->setParameters($params)->getArrayResult();
+		
+		return $users;
+	}
+	
+	public function getUserForAdminEdit($id, $hydration = 'array')
+	{
+		$em = $this->getEntityManager();
+		$dql = 'SELECT u FROM InfluencerAppBundle:User u ';
+		$dql .= 'WHERE u.id = :userId';
+		if ($hydration === 'array') {
+			$user = $em->createQuery($dql)->setParameter('userId', $id)->getArrayResult();
+			if (isset($user[0])) {
+				return $user[0];
+			}
+		} else {
+			$user = $em->createQuery($dql)->setParameter('userId', $id)->getSingleResult();
+			if ($user) {
+				return $user;
+			}
+		}
+		return false;
 	}
 	
 }

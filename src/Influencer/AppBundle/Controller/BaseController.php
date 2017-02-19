@@ -42,6 +42,7 @@ class BaseController extends Controller
 			$audience[] = [
 				'tag' => $item->code,
 				'name' => $item->name,
+				'icon' => isset($item->icon)?$item->icon:null,
 			];
 		}
 		$priceItems = json_decode($serializer->serialize($user->getPrices(), 'json'));
@@ -96,11 +97,16 @@ class BaseController extends Controller
 			'countries' => $countries,
 			'audience' => $audience,
 			'prices' => $prices,
-			'facebook' => $user->getFacebook(),
-			'google' => $user->getGoogle(),
-			'instagram' => $user->getInstagram(),
-			'twitter' => $user->getTwitter(),
+			'facebook' => json_decode($serializer->serialize($user->getFacebook(), 'json')),
+			'google' => json_decode($serializer->serialize($user->getGoogle(), 'json')),
+			'instagram' => json_decode($serializer->serialize($user->getInstagram(), 'json')),
+			'twitter' => json_decode($serializer->serialize($user->getTwitter(), 'json')),
+			'klout' => $user->getKlout(),
+			'kloutScore' => $this->get('app.influencer_data')->getKloutScore($user->getKlout()),
 			'role' => $this->getReadableRole($user),
+			//'twitterFollowers' => $this->get('app.influencer_data')->getTwitterStats($user->getId()),
+			//'instagramFans' => $this->get('app.influencer_data')->getInstagramStats($user->getId()),
+			//'youtubeViews' => 0,//$this->get('app.influencer_data')->getGoogleStats($user->getId()),
 		];
 	}
 	

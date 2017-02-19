@@ -14,6 +14,27 @@ use Influencer\AppBundle\Controller\BaseController;
 class PageController extends BaseController
 {
 	/**
+	 * @Route("/dashboard/{role}", name="inf_dashboard", options={"expose"=true})
+	 */
+	public function dashboardAction(Request $request, $role = null)
+	{
+		switch ($role) {
+			case 'admin':
+				$tpl = 'admin/home';
+				break;
+			case 'influencer':
+				$tpl = 'influencer/dashboard';
+				break;
+			case 'client':
+				$tpl = 'client/home';
+				break;
+			default:
+				$tpl = 'dashboard';
+		}
+		return $this->render('InfluencerAppBundle:Page:'.$tpl.'.html.twig');
+	}
+	
+	/**
 	 * @Route("/home/{role}", name="inf_home", options={"expose"=true})
 	 */
 	public function homeAction(Request $request, $role = null)
@@ -30,6 +51,27 @@ class PageController extends BaseController
 				break;
 			default:
 				$tpl = 'home';
+		}
+		return $this->render('InfluencerAppBundle:Page:'.$tpl.'.html.twig');
+	}
+	
+	/**
+	 * @Route("/feeds/{role}", name="inf_feed", options={"expose"=true})
+	 */
+	public function feedsAction(Request $request, $role = null)
+	{
+		switch ($role) {
+			case 'admin':
+				$tpl = 'admin/feeds';
+				break;
+			case 'influencer':
+				$tpl = 'influencer/feeds';
+				break;
+			case 'client':
+				$tpl = 'client/feeds';
+				break;
+			default:
+				$tpl = 'feeds';
 		}
 		return $this->render('InfluencerAppBundle:Page:'.$tpl.'.html.twig');
 	}
@@ -141,6 +183,25 @@ class PageController extends BaseController
 				break;
 			case 'influencer':
 				$tpl = 'influencer/profile-socials';
+				break;
+			case 'client':
+			default:
+				$tpl = 'error';
+		}
+		return $this->render('InfluencerAppBundle:Page:'.$tpl.'.html.twig');
+	}
+	
+	/**
+	 * @Route("/{role}/profile/password", name="inf_profile_password", options={"expose"=true})
+	 */
+	public function profilePasswordAction(Request $request, $role = null)
+	{
+		switch ($role) {
+			case 'admin':
+				$tpl = 'admin/profile-password';
+				break;
+			case 'influencer':
+				$tpl = 'influencer/profile-password';
 				break;
 			case 'client':
 			default:

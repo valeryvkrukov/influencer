@@ -7,7 +7,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 use Influencer\AppBundle\Controller\BaseController;
-use GuzzleHttp;
 
 /**
  * @Route("/user")
@@ -45,31 +44,8 @@ class UserController extends BaseController
 						}
 					} else {
 						$em->getRepository('InfluencerAppBundle:User')->addIfNotExists($id, $field, $value, $serializer);
-						//var_dump($res);die();
-						/*switch($field) {
-							case 'languages':
-								$em->getRepository('InfluencerAppBundle:User')->addIfNotExists($field, $value);
-								$current = json_decode($serializer->serialize($user->getLanguages(), 'json'));
-								foreach ($current as $curr) {
-									$add = true;
-									foreach ($value as $item) {
-										if ($curr->code == $item->code) {
-											$add = false;
-										}
-									}
-									if ($add) {
-										$lang = new Language();
-										$lang->setCode($item->code);
-										$lang->setName($item->lang);
-										$em->persist($lang);
-										$user->addLanguage($lang);
-									}
-								}
-								break;*/
-						//var_dump($field, $value);
 					}
 				}
-				//die();
 				$em->persist($user);
 				$em->flush();
 			}
@@ -88,6 +64,23 @@ class UserController extends BaseController
 			$data = $this->get('app.admin_data')->getDashboardData($userId);
 		} elseif ($role === 'influencer' && in_array('ROLE_INFLUENCER', $userRoles)) {
 			$data = $this->get('app.influencer_data')->getDashboardData($userId);
+		} else {
+			$data = get('app.client_data')->getDashboardData($userId);
+		}
+		return new JsonResponse($data);
+	}
+	
+	/**
+	 * @Route("/{role}/feed", name="inf_load_user_feed", options={"expose"=true})
+	 */
+	public function getUserFeedsAction(Request $request, $role)
+	{
+		$userId = $this->getUser()->getId();
+		$userRoles = $this->getUser()->getRoles();
+		if ($role === 'admin' && in_array('ROLE_ADMIN', $userRoles)) {
+			$data = $this->get('app.admin_data')->getDashboardData($userId);
+		} elseif ($role === 'influencer' && in_array('ROLE_INFLUENCER', $userRoles)) {
+			$data = $this->get('app.influencer_data')->getFeeds($userId);
 		} else {
 			$data = get('app.client_data')->getDashboardData($userId);
 		}
@@ -114,6 +107,41 @@ class UserController extends BaseController
 	}
 	
 	/**
+	 * @Route("/get-campaign-stat", name="inf_campaigns_stat", options={"expose"=true})
+	 */
+	public function getCampaignsStatAction(Request $request)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$user = $this->getUser();
+		$statistics = $em->getRepository('InfluencerAppBundle:Campaign')->getStatisticsForUser($user);
+		
+		return new JsonResponse(['data' => $statistics]);
+	}
+	
+	/**
+	 * @Route("/campaigns", name="inf_campaigns", options={"expose"=true})
+	 */
+	public function getCampaignsAction(Request $request)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$user = $this->getUser();
+		$status = $request->query->get('status');
+		$campaigns = $em->getRepository('InfluencerAppBundle:Campaign')->getCampaignsRelatedToUser($user, $status);
+
+		return new JsonResponse($campaigns);
+	}
+	
+	/**
+	 * @Route("/get-stat/{network}/{id}", name="inf_user_get_stat", options={"expose"=true})
+	 */
+	public function getStatAction(Request $request, $network, $id)
+	{
+		$serv = 'get'.ucfirst($network).'Stats';
+		$stat = $this->get('app.influencer_data')->$serv($id);
+		return new JsonResponse($stat);
+	}
+	
+	/**
 	 * @Route("/update-field", name="inf_user_update_field", options={"expose"=true})
 	 */
 	public function updateFieldAction(Request $request)
@@ -121,13 +149,25 @@ class UserController extends BaseController
 		$input = json_decode($request->getContent());
 		if (isset($input->user) && isset($input->field)) {
 			$em = $this->getDoctrine()->getManager();
-			$user = $this->getUser();
+			$user = $em->getRepository('InfluencerAppBundle:User')->find($input->user);
+			if ($user) {
+				$current = $this->getUser();
+				if ($current->getId() != $user->getId()) {
+					if (!in_array('ROLE_ADMIN', $current->getRoles())) {
+						return new JsonResponse(['message' => 'Access Denied'], 409);
+					}
+				}
+			}
 			$setter = 'set'.ucfirst($input->field);
+			$getter = 'get'.ucfirst($input->field);
+			if (!method_exists($getter, $user)) {
+				$getter = 'is'.ucfirst($input->field);
+			}
 			$value = isset($input->value)?$input->value:null;
 			$user->$setter($value);
 			$em->persist($user);
 			$em->flush();
-			return new JsonResponse($user);
+			return new JsonResponse([$input->field => $user->$getter()]);
 		}
 	}
 	
@@ -160,5 +200,28 @@ class UserController extends BaseController
 			$users = $em->getRepository('InfluencerAppBundle:User')->getAllUsers();
 			return new JsonResponse($users);
 		}
+	}
+	
+	/**
+	 * @Route("/get-statisticts/{network}", name="inf_get_user_statistics", options={"expose"=true})
+	 */
+	public function getStatisticsAction(Request $request, $network)
+	{
+		$input = json_decode($request->getContent());
+		$user = $this->getUser();
+		$networks = $user->getNetworks();
+		$statistics = [];
+		if (is_array($networks) && sizeof($networks) > 0) {
+			foreach ($networks as $source) {
+				if ($network == $source || $network == 'all') {
+					$getter = 'get'.ucfirst($source).'Stats';
+					$data = $this->get('app.influencer_data')->$getter($user->getId());
+					if ($data) {
+						$statistics[$source] = $data;
+					}
+				}
+			}
+		}
+		return new JsonResponse($statistics);
 	}
 }

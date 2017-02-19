@@ -5,15 +5,36 @@
 	</ul>
 </div>
 
-<div class="container-fluid container-fixed-lg">
-	<div class="row full-height no-margin bg-white">
+<div class="container-fluid no-margin full-width bg-white">
+	<div class="row full-height no-margin">
 		<div class="col-md-12 no-padding full-height">
 			<div class="panel panel-transparent">
 				<div class="panel-heading">
 					<div class="panel-title"><h4>Users List</h4></div>
 				</div>
 				<div class="panel-body">
-					<table datatable="" dt-options="dtOptions" dt-columns="dtColumns" class="row-border hover"></table>
+					<div class="row">
+						<div class="col-md-12">
+							<ul class="nav nav-tabs nav-tabs-simple">
+								<li ng-class="{'active': filteredBy == 'all'}">
+									<a ng-click="filterData('role', 'all', dtInstance)">All</a>
+								</li>
+								<li ng-class="{'active': filteredBy == 'ROLE_CLIENT'}">
+									<a ng-click="filterData('role', 'ROLE_CLIENT', dtInstance)">Clients</a>
+								</li>
+								<li ng-class="{'active': filteredBy == 'ROLE_INFLUENCER'}">
+									<a ng-click="filterData('role', 'ROLE_INFLUENCER', dtInstance)">Influencers</a>
+								</li>
+								<li ng-class="{'active': filteredBy == 1}">
+									<a ng-click="filterData('enabled', 1, dtInstance)">Enabled</a>
+								</li>
+								<li ng-class="{'active': filteredBy == 0}">
+									<a ng-click="filterData('enabled', 0, dtInstance)">Disabled</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<table datatable="" dt-options="dtOptions" dt-columns="dtColumns" dt-instance="dtInstance" class="table table-striped table-bordered"></table>
 				</div>
 			</div>
 		</div>

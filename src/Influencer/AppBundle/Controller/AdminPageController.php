@@ -27,7 +27,17 @@ class AdminPageController extends Controller
     }
     
     /**
-     * @Route("/users/list", name="inf_admin_users_create", options={"expose"=true})
+     * @Route("/users/edit/{id}", name="inf_admin_users_edit", options={"expose"=true})
+     */
+    public function usersEditAction($id)
+    {
+    	return $this->render('InfluencerAppBundle:AdminPage:users/edit.html.twig', [
+    		'id' => $id,
+    	]);
+    }
+    
+    /**
+     * @Route("/users/create", name="inf_admin_users_create", options={"expose"=true})
      */
     public function usersCreateAction()
     {

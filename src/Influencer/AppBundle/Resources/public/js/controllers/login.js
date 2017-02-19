@@ -1,12 +1,16 @@
 'use strict';
 
 angular.module('app')
-	.controller('LoginCtrl', ['$scope', '$state', '$auth', 'toastr', function($scope, $state, $auth, toastr) {
+	.controller('LoginCtrl', ['$scope', '$state', '$auth', 'Account', 'localStorageService', function($scope, $state, $auth, Account, localStorageService) {
 		$scope.login = function() {
 			$auth.login($scope.user).then(function() {
 				//toastr.success('You have successfully signed in!');
 				//$location.path('/');
-				$state.transitionTo('app.home');
+				Account.getProfile().then(function(resp) {
+					localStorageService.set('currentUser', resp.data);
+				    $scope.user = resp.data;
+				    $state.transitionTo('app.dashboard');
+				});
 			}).catch(function(error) {
 				//toastr.error(error.data.message, error.status);
 				$scope.error = error.data.message;
@@ -16,7 +20,7 @@ angular.module('app')
 			$auth.authenticate(provider).then(function() {
 				//toastr.success('You have successfully signed in with ' + provider + '!');
 				//$location.path('/');
-				$state.transitionTo('app.home');
+				$state.transitionTo('app.dashboard');
 				
 			}).catch(function(error) {
 				if (error.message) {
@@ -30,5 +34,8 @@ angular.module('app')
 					$scope.error = error;
 				}
 			});
+		};
+		$scope.resetPassword = function() {
+			
 		};
 	}]);

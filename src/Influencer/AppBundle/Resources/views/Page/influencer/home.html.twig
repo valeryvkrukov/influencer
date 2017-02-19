@@ -1,56 +1,351 @@
-<div class="jumbotron no-margin" data-pages="parallax">
-	<div class="container-fluid container-fixed-lg sm-p-l-20 sm-p-r-20">
-		<div class="inner">
-			<ul class="nav nav-tabs nav-tabs-simple">
-				<li ng-class="{'active': activeTab == ''}">
-					<a ng-click="setFeedFilter('')">All feeds</a>
-				</li>
-				<li ng-if="user.facebook != null" ng-class="{'active': activeTab == 'facebook'}">
-					<a ng-click="setFeedFilter('facebook')">Facebook</a>
-				</li>
-				<li ng-if="user.google != null" ng-class="{'active': activeTab == 'google'}">
-					<a ng-click="setFeedFilter('google')">YouTube</a>
-				</li>
-				<li ng-if="user.twitter != null" ng-class="{'active': activeTab == 'twitter'}">
-					<a ng-click="setFeedFilter('twitter')">Twitter</a>
-				</li>
-				<li ng-if="user.instagram != null" ng-class="{'active': activeTab == 'instagram'}">
-					<a ng-click="setFeedFilter('instagram')">Instagram</a>
-				</li>
-			</ul>
+<div class="social-wrapper">
+	<div class="social " data-pages="social">
+		<div class="jumbotron" data-pages="parallax" data-social="cover" style="margin-bottom:0;" flow-init flow-file-added="changeCover($file, $event, $flow)">
+        	<div class="cover-photo">
+        		<img ng-if="!$flow.files[0] && !user.profileCover" alt="Cover photo" src="{{ asset('img/cover.png') }}">
+        		<img ng-if="user.profileCover" alt="Cover photo" ng-src="{{ '{{ user.profileCover }}' }}" style="display:block;width:100%;">
+        		<img ng-if="$flow.files[0]" alt="Cover photo" flow-img="$flow.files[0]" style="display:block;width:100%;">
+        	</div>
+        	<div class="container-fluid container-fixed-lg sm-p-l-20 sm-p-r-20">
+        		<div class="inner">
+        			<div class="pull-bottom bottom-left m-b-40">
+        				<h5 class="text-white no-margin">welcome to your Influence profile</h5>
+        				<span flow-btn class="text-white"><i class="fa fa-pencil fs-16 m-t-10"></i> change cover</span>
+        			</div>
+        		</div>
+        	</div>
+        </div>
+        
+        <div class="container-fluid bg-white full-width">
+        	<div class="panel panel-transparent">
+				<div class="panel-body no-padding">
+					<div class="container-fluid p-t-30 p-b-30">
+            			<div class="row" style="padding-top:20px;">
+            				<div class="col-md-4">
+            					<div class="panel panel-transparent">
+            						<div class="panel-body">
+            							<div class="social-user-profile col-xs-height text-center col-top c120" flow-init flow-file-added="changeAvatar($file, $event, $flow)">
+            								<div class="thumbnail-wrapper d120 circular bordered b-white">
+            									<img ng-if="user.profileImage" alt="Avatar" data-src-retina="{{ '{{ user.profileImage }}' }}" ng-src="{{ '{{ user.profileImage }}' }}">
+            									<img ng-if="$flow.files[0] && !user.profileImage" alt="Avatar" flow-img="$flow.files[0]">
+            								</div>
+            								<br>
+            								<a ng-click="cropProfileImage($file, $event, $flow)" data-toggle="modal" data-target="#imageCrop"><i class="text-primary pg-crop text-info fs-16 m-t-10"></i></a>
+            								<span flow-btn><i class="fa fa-pencil text-info fs-16 m-t-10"></i></span>
+            								<div class="modal fade fill-in" id="imageCrop" tabindex="-1" role="dialog" aria-labelledby="imageCropModal" aria-hidden="true">
+                                            	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="pg-close"></i></button>
+                                            	<div class="modal-dialog">
+                                            		<div class="modal-content">
+                                            			<div class="modal-header">
+                                            				<h5 class="text-left p-b-5"><span class="semi-bold">Crop</span> image</h5>
+                                            			</div>
+                                            			<div class="modal-body">
+                                            				<div class="row">
+                                            					<div class="col-md-9">
+                                            						<div class="cropArea">
+                                            							<img-crop image="user.profileImage" result-image="croppedImage" area-type="square"></img-crop>
+                                            						</div>
+                                            					</div>
+                                            				</div>
+                                            			</div>
+                                            			<div class="modal-footer">
+                                            				<div class="col-md-3 text-center">
+                                        						<button type="button" ng-click="saveCroppedImage(croppedImage)" data-dismiss="modal" aria-hidden="true" class="btn btn-primary btn-lg btn-large fs-15">Crop</button>
+                                        					</div>
+                                            			</div>
+                                            		</div>
+                                            	</div>
+                                            </div>
+                						</div>
+                						<div class="col-xs-height p-l-20">
+                							<h3 class="no-margin"><span class="semi-bold">{{ '{{ user.firstName }}' }}</span> {{ '{{ user.lastName }}' }}</h3>
+                							<br>
+                							<p>
+                    							<a class="btn btn-primary btn-xs">View Rates</a>
+                    						</p>
+                							<p>
+                								<a class="btn btn-primary btn-xs">Assign to Campaign</a>
+                							</p>
+                						</div>
+            						</div>
+            					</div>
+            				</div>
+                			<div class="col-md-4">
+                				<div class="panel panel-transparent">
+            						<div class="panel-heading">
+            							<div class="panel-title">
+            								<h4 class="no-margin">Overview <small><a href="#" data-toggle="modal" data-target="#modalFillIn"><i class="fa fa-pencil text-info fs-16 m-t-10"></i></a></small></h4>
+            							</div>
+            						</div>
+                					<div class="panel-body">
+                        				<p class="no-margin fs-16">{{ '{{ user.brief }}' }}</p>
+                        			</div>
+                        		</div>
+                				<div class="modal fade fill-in" id="modalFillIn" tabindex="-1" role="dialog" aria-labelledby="modalFillInLabel" aria-hidden="true">
+                					<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="pg-close"></i></button>
+                					<div class="modal-dialog">
+                						<div class="modal-content">
+                							<div class="modal-header">
+                								<h5 class="text-left p-b-5"><span class="semi-bold">Add/Change</span> brief info</h5>
+                							</div>
+                							<div class="modal-body">
+                								<div class="wysiwyg5-wrapper b-a b-grey">
+                									<textarea id="user-brief-editor" ng-model="user.brief" placeholder="Enter text ..." style="width:100%;min-height:150px;"></textarea>
+                								</div>
+                							</div>
+                							<div class="modal-footer">
+                								<button type="button" class="btn btn-primary" ng-click="updateProfileField('brief')" data-dismiss="modal">Save</button>
+                								<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                							</div>
+                						</div>
+                					</div>
+                				</div>
+                			</div>
+                			<div class="col-md-4" ng-if="user.role == 'influencer'">
+                				<div class="panel panel-transparent">
+                					<div class="panel-heading">
+                						<div class="panel-title">
+                							<button type="button" class="btn btn-default btn-xs">
+                								<span class="p-t-5 p-b-5">0</span>
+                								<br>
+                								<span class="fs-11 font-montserrat text-uppercase"><i class="i fa fa-facebook"></i> Fans</span>
+                							</button>
+                							<button type="button" class="btn btn-default btn-xs">
+                								<span class="p-t-5 p-b-5">{{ '{{ statistics.twitter.followersCount }}' }}</span>
+                								<br>
+                								<span class="fs-11 font-montserrat text-uppercase"><i class="i fa fa-twitter"></i> Followers</span>
+                							</button>
+                							<button type="button" class="btn btn-default btn-xs">
+                								<span class="p-t-5 p-b-5">{{ '{{ statistics.instagram.followed_by }}' }}</span>
+                								<br>
+                								<span class="fs-11 font-montserrat text-uppercase"><i class="i fa fa-instagram"></i> Fans</span>
+                							</button>
+                							<button type="button" class="btn btn-default btn-xs">
+                								<span class="p-t-5 p-b-5">{{ '{{ statistics.google.viewCount }}' }}</span>
+                								<br>
+                								<span class="fs-11 font-montserrat text-uppercase"><i class="i fa fa-youtube-play"></i> Views</span>
+                							</button>
+                							<button type="button" class="btn btn-default btn-xs">
+                								<span class="p-t-5 p-b-5">0</span>
+                								<br>
+                								<span class="fs-11 font-montserrat text-uppercase">Blog Visits</span>
+                							</button>
+                						</div>
+                					</div>
+            						<div class="panel-body">
+            							<br><br>
+            							<div class="text-center">
+                							<div class="social-user-profile col-xs-height text-center col-top c100 p-r-20" flow-init flow-file-added="changeAvatar($file, $event, $flow)">
+                        						<div class="thumbnail-wrapper d100 circular bordered b-thin b-primary bg-primary-lighter">
+                        							<div class="container-sm-height">
+                        								<div class="row row-sm-height">
+                        									<div class="col-sm-12 col-sm-height col-middle">
+                        										<span>
+                        											<strong class="fs-14">Klout Score</strong><br>
+                        											<span class="fs-16">{{ '{{ user.kloutScore.score.score|number:3 }}' }}</span>
+                        										</span>
+                        									</div>
+                        								</div>
+                        							</div>
+                        						</div>
+                        					</div>
+                        					<div class="social-user-profile col-xs-height text-center col-top c100 p-r-20" flow-init flow-file-added="changeAvatar($file, $event, $flow)">
+                        						<div class="thumbnail-wrapper d100 circular bordered b-thin b-primary bg-primary-lighter">
+                        							<div class="container-sm-height">
+                        								<div class="row row-sm-height">
+                        									<div class="col-sm-12 col-sm-height col-middle">
+                        										<span>
+                        											<strong class="fs-14">Male</strong><br>
+                        											<span class="fs-16">33 %</span>
+                        										</span>
+                        									</div>
+                        								</div>
+                        							</div>
+                        						</div>
+                        					</div>
+                        					<div class="social-user-profile col-xs-height text-center col-top c100 p-r-20" flow-init flow-file-added="changeAvatar($file, $event, $flow)">
+                        						<div class="thumbnail-wrapper d100 circular bordered b-thin b-primary bg-primary-lighter">
+                        							<div class="container-sm-height">
+                        								<div class="row row-sm-height">
+                        									<div class="col-sm-12 col-sm-height col-middle">
+                        										<span>
+                        											<strong class="fs-14">Female</strong><br>
+                        											<span class="fs-16">45 %</span>
+                        										</span>
+                        									</div>
+                        								</div>
+                        							</div>
+                        						</div>
+                        					</div>
+                        				</div>
+            						</div>
+            					</div>
+                			</div>
+                		</div>
+                		<div class="row">
+            				<div class="col-md-4">
+            					<div class="col-md-6 no-padding">
+                					<div class="panel panel-transparent">
+            							<div class="panel-heading">
+            								<div class="panel-title">Countries</div>
+            							</div>
+            							<div class="panel-body">
+            								<span class="label flag-icon flag-icon-{{ '{{ item.code|lowercase }}' }}" style="margin-right:5px;" ng-repeat="item in user.countries"> </span>
+            							</div>
+            						</div>
+            					</div>
+            					<div class="col-md-6 no-padding">
+            						<div class="panel panel-transparent">
+            							<div class="panel-heading">
+            								<div class="panel-title">Languages</div>
+            							</div>
+            							<div class="panel-body">
+            								<span ng-repeat="item in user.languages" class="label label-inverse" style="margin-right:5px;">{{ '{{ item.lang }}' }}</span>
+            							</div>
+            						</div>
+            					</div>
+            				</div>
+            				<div class="col-md-4">
+            					<div class="panel panel-transparent">
+            						<div class="panel-heading">
+            							<div class="panel-title">Industries</div>
+            						</div>
+            						<div class="panel-body">
+            							<span class="label label-inverse" ng-repeat="item in user.audience" style="margin-right:5px;">{{ '{{ item.name }}' }}</span>
+            						</div>
+            					</div>
+            				</div>
+            				<div class="col-md-4">
+            					
+            				</div>
+            			</div>
+            		</div>
+            	</div>
+            </div>
 		</div>
+		
+		<div class="container-fluid full-width">
+			<div class="panel panel-transparent">
+				<div class="panel-body no-padding">
+					<div class="container-fluid p-t-30 p-b-30">
+        				<div class="row">
+        					<div ng-if="feeds.facebook" ng-class="{'col-md-3': sizeOf(feeds) == 4, 'col-md-4': sizeOf(feeds) == 3, 'col-md-6': sizeOf(feeds) == 2, 'col-md-12': sizeOf(feeds) == 1}">
+                				<div class="panel panel-transparent">
+                					<div class="panel-heading">
+                						<div class="panel-title"><h4>Facebook</h4></div>
+                					</div>
+                					<div class="panel-body no-padding">
+                            			<div ng-repeat="item in feeds.facebook" class="card share share-self col1" ng-class="{'wide': sizeOf(feeds) > 2, 'wide2': sizeOf(feeds) ==  2, 'wide3': sizeOf(feeds) < 2}" data-social="item">
+                            				<div class="circle" data-toggle="tooltip" title="Label"></div>
+                            				<div class="card-header clearfix">
+                            					<h5><a href="{{ '{{ item.link }}' }}" target="blank"><i class="i fa fa-facebook"></i> {{ '{{ item.title }}' }}</a></h5>
+                            				</div>
+                            				<div class="card-content">
+                            					<a href="{{ '{{ item.link }}' }}" target="blank">
+                            						<img ng-if="item.picture" alt="Social post" ng-src="{{ '{{ item.picture }}' }}">
+                            					</a>
+                            					<div ng-if="item.contents" ng-bind-html="item.contents|limitTo:200|trustHTML" class="padding-10"></div>
+                            				</div>
+                            				<div class="card-footer clearfix">
+                            					<div class="time">{{ '{{ item.createdAt.date|datetime }}' }}</div>
+                            					<ul class="reactions">
+                            						<li><a href="#">{{ '{{ item.comments }}' }} <i class="fa fa-comment-o"></i></a></li>
+                            						<li><a href="#">{{ '{{ item.likes }}' }} <i class="fa fa-heart-o"></i></a></li>
+                            					</ul>
+                            				</div>
+                            			</div>
+                        			</div>
+                        		</div>
+                        	</div>
+                			<div ng-if="feeds.instagram" ng-class="{'col-md-3': sizeOf(feeds) == 4, 'col-md-4': sizeOf(feeds) == 3, 'col-md-6': sizeOf(feeds) == 2, 'col-md-12': sizeOf(feeds) == 1}">
+                    			<div class="panel panel-transparent">
+                					<div class="panel-heading">
+                						<div class="panel-title"><h4>Instagram</h4></div>
+                					</div>
+                					<div class="panel-body no-padding">
+                            			<div ng-repeat="item in feeds.instagram" class="card share share-self col1" ng-class="{'wide': sizeOf(feeds) > 2, 'wide2': sizeOf(feeds) ==  2, 'wide3': sizeOf(feeds) < 2}" data-social="item">
+                            				<div class="circle" data-toggle="tooltip" title="Label"></div>
+                            				<div class="card-header clearfix">
+                            					<h5><a href="{{ '{{ item.link }}' }}" target="blank"><i class="i fa fa-instagram"></i> {{ '{{ item.title }}' }}</a></h5>
+                            				</div>
+                            				<div class="card-content">
+                            					<a href="{{ '{{ item.link }}' }}" target="blank">
+                            						<img alt="Social post" ng-src="{{ '{{ item.picture }}' }}">
+                            					</a>
+                            				</div>
+                            				<div class="card-footer clearfix">
+                            					<div class="time">{{ '{{ item.createdAt.date|datetime }}' }}</div>
+                            					<ul class="reactions">
+                            						<li><a href="#">{{ '{{ item.comments }}' }} <i class="fa fa-comment-o"></i></a></li>
+                            						<li><a href="#">{{ '{{ item.likes }}' }} <i class="fa fa-heart-o"></i></a></li>
+                            					</ul>
+                            				</div>
+                            			</div>
+                            		</div>
+                            	</div>
+                            </div>
+                			<div ng-if="feeds.google" ng-class="{'col-md-3': sizeOf(feeds) == 4, 'col-md-4': sizeOf(feeds) == 3, 'col-md-6': sizeOf(feeds) == 2, 'col-md-12': sizeOf(feeds) == 1}">
+                				<div class="panel panel-transparent">
+                					<div class="panel-heading">
+                						<div class="panel-title"><h4>Google</h4></div>
+                					</div>
+                					<div class="panel-body no-padding">
+                            			<div ng-repeat="item in feeds.google" class="card share share-self col1" ng-class="{'wide': sizeOf(feeds) > 2, 'wide2': sizeOf(feeds) ==  2, 'wide3': sizeOf(feeds) < 2}" data-social="item">
+                            				<div class="circle" data-toggle="tooltip" title="Label"></div>
+                            				<div class="card-header clearfix">
+                            					<h5><a href="{{ '{{ item.link }}' }}" target="blank"><i class="i fa fa-youtube-play"></i> {{ '{{ item.title }}' }}</a></h5>
+                            				</div>
+                            				<div class="card-content">
+                            					<a href="{{ '{{ item.link }}' }}" target="blank">
+                            						<img ng-if="item.picture" alt="Social post" ng-src="{{ '{{ item.picture }}' }}">
+                            					</a>
+                            					<div ng-if="item.contents" ng-bind-html="item.contents|limitTo:200|trustHTML" class="padding-10"></div>
+                            				</div>
+                            				<div class="card-footer clearfix">
+                            					<div class="time">{{ '{{ item.createdAt.date|datetime }}' }}</div>
+                            					<ul class="reactions">
+                            						<li><a href="#">{{ '{{ item.comments }}' }} <i class="fa fa-comment-o"></i></a></li>
+                            						<li><a href="#">{{ '{{ item.likes }}' }} <i class="fa fa-heart-o"></i></a></li>
+                            					</ul>
+                            				</div>
+                            			</div>
+                        			</div>
+                        		</div>
+                        	</div>
+                			<div ng-if="feeds.twitter" ng-class="{'col-md-3': sizeOf(feeds) == 4, 'col-md-4': sizeOf(feeds) == 3, 'col-md-6': sizeOf(feeds) == 2, 'col-md-12': sizeOf(feeds) == 1}">
+                				<div class="panel panel-transparent">
+                					<div class="panel-heading">
+                						<div class="panel-title"><h4>Twitter</h4></div>
+                					</div>
+                					<div class="panel-body no-padding">
+                            			<div ng-repeat="item in feeds.twitter" class="card share share-self col1" ng-class="{'wide': sizeOf(feeds) > 2, 'wide2': sizeOf(feeds) ==  2, 'wide3': sizeOf(feeds) < 2}" data-social="item">
+                            				<div class="circle" data-toggle="tooltip" title="Label"></div>
+                            				<div class="card-header clearfix">
+                            					<h5><a href="{{ '{{ item.link }}' }}" target="blank"><i class="i fa fa-twitter"></i> {{ '{{ item.title }}' }}</a></h5>
+                            				</div>
+                            				<div class="card-content">
+                            					<a href="{{ '{{ item.link }}' }}" target="blank">
+                            						<img ng-if="item.picture" alt="Social post" ng-src="{{ '{{ item.picture }}' }}">
+                            					</a>
+                            					<div ng-if="item.contents" ng-bind-html="item.contents|limitTo:200|trustHTML" class="padding-10"></div>
+                            				</div>
+                            				<div class="card-footer clearfix">
+                            					<div class="time">{{ '{{ item.createdAt.date|datetime }}' }}</div>
+                            					<ul class="reactions">
+                            						<li><a href="#">{{ '{{ item.comments }}' }} <i class="fa fa-comment-o"></i></a></li>
+                            						<li><a href="#">{{ '{{ item.likes }}' }} <i class="fa fa-heart-o"></i></a></li>
+                            					</ul>
+                            				</div>
+                            			</div>
+                        			</div>
+                        		</div>
+                        	</div>
+        				</div>
+        			</div>
+				</div>
+			</div>        			
+		</div>
+
 	</div>
 </div>
-<div class="container-fluid container-fixed-lg sm-p-l-20 sm-p-r-20">
-	<div class="row">
-		<div ng-if="feeds.length > 0">
-			<div masonry>
-				<div ng-repeat="item in feeds | filter:feedFilter" class="card share col-md-3 col1 masonry-brick" data-social="item">
-					<div class="card-header clearfix">
-						<div class="panel-title">
-							<h5>
-								<i ng-if="item.network == 'facebook'" class="i fa fa-facebook"></i> 
-								<i ng-if="item.network == 'google'" class="i fa fa-youtube-play"></i> 
-								<i ng-if="item.network == 'twitter'" class="i fa fa-twitter"></i> 
-								<i ng-if="item.network == 'instagram'" class="i fa fa-instagram"></i> 
-								{{ '{{ item.title }}' }}
-							</h5>
-						</div>
-					</div>
-					<div class="card-content">
-						<img ng-if="item.picture" style="width:100%;" alt="Social post" ng-src="{{ '{{ item.picture }}' }}">
-						<div ng-if="item.contents" class="padding-10" style="overflow:hidden" ng-bind-html="item.contents|limitTo:200|trustHTML"></div>
-					</div>
-					<div class="card-footer clearfix">
-						<div class="time">{{ '{{ item.createdAt.date|datetime }}' }}</div>
-    					<ul class="reactions">
-    						<li><a href="#">{{ '{{ item.comments }}' }} <i class="fa fa-comment-o"></i></a></li>
-    						<li><a href="#">{{ '{{ item.likes }}' }} <i class="fa fa-heart-o"></i></a></li>
-    					</ul>
-					</div>
-					</div>
-    			</div>
-    		</div>
-    	</div>
-	</div>
-</div>
+

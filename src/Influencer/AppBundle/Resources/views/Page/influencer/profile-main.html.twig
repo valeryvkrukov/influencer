@@ -3,7 +3,7 @@
 		<div class="panel-heading">
 			<h4>Main Info</h4>
 		</div>
-		<div class="panel-content" flow-init flow-file-added="loadProfileImage($file, $event, $flow)">
+		<div class="panel-content" flow-init="{headers: {'Access-Control-Allow-Origin': '*'}}" flow-file-added="loadProfileImage($file, $event, $flow)">
 			<div class="padding-20">
 	        	<form role="form" name="mainInfluencerInfo" ng-submit="submitProfile()">
 	        		<div class="row">
@@ -20,16 +20,6 @@
         									</div>
         								</div>
         							</div>
-        						</div>
-        					</div>
-        	        		<div class="row">
-        						<div class="col-sm-12">
-        							<div pg-form-group class="form-group form-group-default required" ng-class="{ 'has-error': mainInfluencerInfo.username.$invalid && !mainInfluencerInfo.username.$pristine }">
-        								<label>Username</label>
-        								<input inf-unique inf-unique-property="username" type="text" name="username" placeholder="Username" class="form-control" ng-model="user.username" required>
-        							</div>
-        							<label class="error" for="username" ng-show="mainInfluencerInfo.username.$invalid && !mainInfluencerInfo.username.$pristine && !mainInfluencerInfo.username.$error.unique">This field is required.</label>
-        							<label class="error" for="username" ng-show="mainInfluencerInfo.username.$error.unique == true">Username already in use.</label>
         						</div>
         					</div>
         					<div class="row">
@@ -98,10 +88,39 @@
                     		</div>
                     	</div>
                     	<div class="col-md-5">
-                    		<div class="gallery-item">
-    							<img ng-if="$flow.files.length > 0" flow-img="$flow.files[0]" class="img-responsive" />
-    							<img ng-if="!$flow.files[0] && user.profileImage" ng-src="{{ '{{ user.profileImage }}' }}" class="img-responsive" />
+                    		<div class="gallery-item bg-transparent">
+    							<img ng-if="$flow.files.length > 0" flow-img="$flow.files[0]" class="img-responsive" class="full-width"/>
+    							<img ng-if="!$flow.files[0] && user.profileImage" ng-src="{{ '{{ user.profileImage }}' }}" class="img-responsive"  class="full-width"/>
     						</div>
+    						<h5 ng-if="user.profileImage">
+    							<a ng-click="cropProfileImage($flow)" data-toggle="modal" data-target="#imageCrop"><i class="text-primary pg-crop"></i></a>
+    							<a ng-click="removeProfileImage($flow)"><i class="text-danger pg-close"></i></a>
+    						</h5>
+    						<div class="modal fade fill-in" id="imageCrop" tabindex="-1" role="dialog" aria-labelledby="imageCropModal" aria-hidden="true">
+                            	<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="pg-close"></i></button>
+                            	<div class="modal-dialog">
+                            		<div class="modal-content">
+                            			<div class="modal-header">
+                            				<h5 class="text-left p-b-5"><span class="semi-bold">Crop</span> image</h5>
+                            			</div>
+                            			<div class="modal-body">
+                            				<div class="row">
+                            					<div class="col-md-9">
+                            						<div class="cropArea">
+                            							<img-crop image="user.profileImage" result-image="croppedImage" area-type="square"></img-crop>
+                            						</div>
+                            					</div>
+                            				</div>
+                            			</div>
+                            			<div class="modal-footer">
+                            				<div class="col-md-12 text-center">
+                        						<button type="button" ng-click="saveCroppedImage(croppedImage)" data-dismiss="modal" aria-hidden="true" class="btn btn-primary btn-lg btn-large fs-15 m-r-10">Crop</button>
+                        						<button type="button" data-dismiss="modal" aria-hidden="true" class="btn btn-default btn-lg btn-large fs-15">Cancel</button>
+                        					</div>
+                            			</div>
+                            		</div>
+                            	</div>
+                            </div>
                     	</div>
                     </div>
 	        	</form>

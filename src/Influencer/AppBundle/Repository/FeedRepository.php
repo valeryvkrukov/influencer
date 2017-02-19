@@ -20,6 +20,28 @@ class FeedRepository extends EntityRepository
 		return $networks;
 	}
 	
+	public function loadLatestFromFeedsFor($userId, $hydration = 'object')
+	{
+		$em = $this->getEntityManager();
+		$data = [];
+		foreach (['facebook', 'google', 'twitter', 'instagram'] as $network) {
+			$dql = 'SELECT f FROM InfluencerAppBundle:Feed f WHERE f.user = :userId AND f.network = :network ORDER BY f.createdAt DESC';
+			$query = $em->createQuery($dql)->setParameters([
+				'userId' => $userId,
+				'network' => $network,
+			])->setMaxResults(3);
+			if ($hydration == 'object') {
+				$feeds = $query->getResult();
+			} else {
+				$feeds = $query->getArrayResult();
+			}
+			if (sizeof($feeds) > 0) {
+				$data[$network] = $feeds;
+			}
+		}
+		return $data;
+	}
+	
 	public function loadSavedFeedsFor($userId, $network = null, $hydration = 'object', $limit = null)
 	{
 		$em = $this->getEntityManager();
