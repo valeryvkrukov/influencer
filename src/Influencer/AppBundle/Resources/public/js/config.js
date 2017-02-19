@@ -8,10 +8,11 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 		.setPrefix('incluencer_app')
 		.setStorageType('localStorage')
 		.setNotify(true, true);
-	var skipIfLoggedIn = function($q, $auth) {
+	var skipIfLoggedIn = function($q, $location, $auth) {
 		var deferred = $q.defer();
 		if ($auth.isAuthenticated()) {
-			deferred.reject();
+			//deferred.reject();
+			deferred.resolve();
 		} else {
 			deferred.resolve();
 		}
@@ -52,13 +53,13 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 			url: '/dashboard',
 			controller: 'DashboardCtrl',
 			templateUrl: Routing.generate('inf_dashboard'),
-			resolve: lazyLoad(['dashboard'], ['dataTables', 'metrojs'])
+			resolve: lazyLoad(['dashboard'], ['dataTables', 'metrojs', 'nvd3', 'rickshaw'])
 		})
 		.state('app.home', {
 			url: '/home',
 			controller: 'HomeCtrl',
 			templateUrl: Routing.generate('inf_home'),
-			resolve: lazyLoad(['home'], ['isotope', 'ngImgCrop'])
+			resolve: lazyLoad(['home'], ['ngImgCrop'])
 		})
 		.state('app.me', {
 			url: '/me',
@@ -83,6 +84,12 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 			controller: 'CampaignCtrl',
 			templateUrl: Routing.generate('inf_campaign'),
 			resolve: lazyLoad(['campaign'], ['select', 'wizard'])
+		})
+		.state('app.wallet', {
+			url: '/wallet',
+			controller: 'WalletCtrl',
+			templateUrl: Routing.generate('inf_wallet'),
+			resolve: lazyLoad(['wallet'], [])
 		})
 		.state('app.settings', {
 			abstract: true,
@@ -138,7 +145,7 @@ app.config(function($stateProvider, $urlRouterProvider, $authProvider, $ocLazyLo
 			}
 		})
 		.state('access.login', {
-			url: '/login',
+			url: '/login?confirmation',
 			controller: 'LoginCtrl',
 			templateUrl: Routing.generate('inf_login')
 		})

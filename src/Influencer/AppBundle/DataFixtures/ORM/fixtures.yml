@@ -12,10 +12,11 @@ Influencer\AppBundle\Entity\User:
         website: '<url()>'
         frequency: '<sentence()>'
         plainPassword: 'B!e281ckr'
+        enabled: true
         
     admin (extends user):
-        username (unique): 'admin'
-        email (unique): 'admin@email.com'
+        username: 'admin'
+        email: 'admin@email.com'
         gender: 'male'
         roles: ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN']
             
@@ -29,14 +30,24 @@ Influencer\AppBundle\Entity\User:
         email (unique): '<email()>'
         roles: ['ROLE_INFLUENCER']
 
+Influencer\AppBundle\Entity\Wallet:
+    wallet_client{1..120}:
+        user: '@client<current()>'
+        balance: '<randomFloat(2, 100, 10000)>'
+        escrow: '<randomFloat(2, 100, 10000)>'
+    wallet_influencer{1..50}:
+        user: '@influencer<current()>'
+        balance: '<randomFloat(2, 100, 10000)>'
+        escrow: '<randomFloat(2, 100, 10000)>'
+
 Influencer\AppBundle\Entity\Language:
-    language{1..40}:
+    language{1..100}:
         code: '<languageCode()>'
         name: '<(Influencer\AppBundle\DataFixtures\ORM\LoadFixtures::getLanguageNameByCode($code))>'
         user: '@influencer*'
         
 Influencer\AppBundle\Entity\Country:
-    country{1..40}:
+    country{1..100}:
         code: '<countryCode()>'
         name: '<(Influencer\AppBundle\DataFixtures\ORM\LoadFixtures::getCountryNameByCode($code))>'
         user: '@influencer*'
@@ -55,15 +66,32 @@ Influencer\AppBundle\Entity\Campaign:
         name: '<sentence()>'
         brand: '<company()>'
         location: '{lat: <latitude()>, lng: <longitude()>}'
-        budget: '<randomFloat()>'
+        budget: '<randomFloat(2, 100, 1000)>'
         target: ''
-        deadline: '<dateTimeBetween("now", "+5 years")>'
+        deadline: '<dateTimeBetween("now", "+1 year")>'
         description: '<realText()>'
         language: '<languageCode()>'
-        status: '<randomElement(["done","new","pending","rejected","live","finished"])>'
+        status: '<randomElement(["new","pending","rejected","live","finished"])>'
         caption: '<sentence()>'
         emojii: ''
         restrictions: '<text()>'
-            
-            
-            
+        createdAt: '<dateTimeBetween("-1 year", "now")>'
+
+Influencer\AppBundle\Entity\Payment:
+    payment_client{1..1000}:
+        amount: '<randomFloat(2, 50, 1000)>'
+        type: '<randomElement(["escrow", "balance", "payout"])>'
+        status: '<randomElement(["pending", "rejected", "approved"])>'
+        campaign: '@campaign*'
+        paidAt: '<dateTimeBetween("-1 year", "now")>'
+        direction: 'out'
+        wallet: '@wallet_client*'
+    payment_influencer{1..1000}:
+        amount: '<randomFloat(2, 50, 1000)>'
+        type: '<randomElement(["escrow", "balance", "payout"])>'
+        status: '<randomElement(["pending", "rejected", "approved"])>'
+        campaign: '@campaign*'
+        paidAt: '<dateTimeBetween("-1 year", "now")>'
+        direction: 'in'
+        wallet: '@wallet_influencer*'
+        

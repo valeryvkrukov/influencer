@@ -5,7 +5,7 @@
 				<div class="row">
 					<div class="col-md-12 m-b-10">
 						<div class="ar-1-1">
-							<div class="widget-2 panel no-border bg-primary widget widget-loader-circle-lg no-margin" style="background-image:url({{ '{{ user.profileImage }}' }})">
+							<div class="widget-2 panel no-border bg-primary widget widget-loader-circle-lg no-margin" style="background-image:url({{ '{{ user.profileImage }}' }});background-size:cover;background-repeat:no-repeat;">
 								<div class="panel-heading top-right">
 									<div class="panel-controls">
 
@@ -20,7 +20,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-9">
 				<div class="row">
 					<div class="col-md-12">
 						<div class="widget-12 panel no-border widget-loader-circle no-margin">
@@ -116,7 +116,7 @@
     				</div>
     			</div>
     		</div>
-    		<div class="col-md-3">
+    		<!--div class="col-md-3">
     			<div class="row">
     				<div class="col-sm-6 m-b-10">
     					<div class="ar-1-1">
@@ -128,7 +128,7 @@
     							</div>
     							<div class="panel-body no-padding">
     								<div class="pull-bottom bottom-left bottom-right padding-25">
-    									<h1 class="text-white semi-bold">{{ '{{ campaignsStat.new }}' }}</h1>
+    									<h1 class="text-white semi-bold">{{ '{{ campaignsStat.count.new }}' }}</h1>
     									<h4 class="text-white">New Campaigns</h4>
     								</div>
     							</div>
@@ -142,13 +142,13 @@
     								<div class="metro live-tile" data-mode="carousel" data-start-now="true" data-delay="3100" ui-jq="liveTile">
             							<div class="slide-front tiles slide active">
             								<div class="pull-bottom bottom-left bottom-right padding-25">
-            									<h1 class="text-white semi-bold">{{ '{{ campaignsStat.pending }}' }}</h1>
+            									<h1 class="text-white semi-bold">{{ '{{ campaignsStat.count.pending }}' }}</h1>
             									<h4 class="text-white">Pending Campaigns</h4>
             								</div>
             							</div>
             							<div class="slide-back tiles slide">
             								<div class="pull-bottom bottom-left bottom-right padding-25">
-            									<h1 class="text-white semi-bold">{{ '{{ campaignsStat.live }}' }}</h1>
+            									<h1 class="text-white semi-bold">{{ '{{ campaignsStat.count.live }}' }}</h1>
             									<h4 class="text-white">Live Campaigns</h4>
             								</div>
             							</div>
@@ -166,13 +166,13 @@
     								<div class="metro live-tile" data-mode="carousel" data-start-now="true" data-delay="2400" ui-jq="liveTile">
             							<div class="slide-front tiles slide active">
             								<div class="pull-bottom bottom-left bottom-right padding-25">
-            									<h1 class="text-white semi-bold">{{ '{{ campaignsStat.finished }}' }}</h1>
+            									<h1 class="text-white semi-bold">{{ '{{ campaignsStat.count.finished }}' }}</h1>
             									<h4 class="text-white">Finished Campaigns</h4>
             								</div>
             							</div>
             							<div class="slide-back tiles slide">
             								<div class="pull-bottom bottom-left bottom-right padding-25">
-            									<h1 class="text-white semi-bold">{{ '{{ campaignsStat.rejected }}' }}</h1>
+            									<h1 class="text-white semi-bold">{{ '{{ campaignsStat.count.rejected }}' }}</h1>
             									<h4 class="text-white">Rejected Campaigns</h4>
             								</div>
             							</div>
@@ -191,20 +191,20 @@
     							</div>
     							<div class="panel-body">
     								<div class="pull-bottom bottom-left bottom-right padding-25">
-    									<h1 class="text-white semi-bold">
+    									<h2 class="text-white semi-bold p-b-30">
     										<sup>
     											<small class="semi-bold text-white">$</small>
     										</sup>
-    										0
-    									</h1>
-    									<h4 class="text-white">Balance</h4>
+    										<span>{{ '{{ walletInfo.balance }}' }}</span>
+    									</h2>
+    									<h2 class="text-white">Balance</h2>
     								</div>
     							</div>
     						</div>
     					</div>
         			</div>
     			</div>
-    		</div>
+    		</div-->
     	</div>
     	<div class="row m-b-10">
 			<div class="col-md-12 bg-white">
@@ -287,10 +287,71 @@
 				</div>
 			</div>
 		</div>
+		<!--div class="row m-b-10">
+			<div class="col-md-4">
+				<div class="row">
+					<div class="col-md-12 full-width full-height p-l-0">
+        				<div class="widget-15 panel panel-condensed no-margin no-border widget-loader-circle">
+        					<div class="panel-body no-padding">
+        						<div class="p-l-20 p-r-20">
+        							<div class="full-width">
+        								<rickshaw rickshaw-options="cmpOptions" rickshaw-features="cmpFeatures" rickshaw-series="cmpSeries" class="widget-15-chart2 rickshaw-chart full-height"></rickshaw>
+        							</div>
+        						</div>
+        						<div class="p-t-10 p-l-20 p-r-20 p-b-30">
+        							<div class="row">
+        								<div class="col-md-9">
+        									<p class="fs-16 text-black">Campaigns approved</p>
+        									<p class="small hint-text">Rejected campaigns number</p>
+        								</div>
+        							</div>
+        						</div>
+        					</div>
+        				</div>
+        			</div>
+        		</div>
+			</div>
+			<div class="col-md-6 bg-white">
+				<div class="row">
+					<div class="widget-12 panel no-border widget-loader-circle no-margin" pg-portlet progress="circle">
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="p-l-10">
+    									<h2 class="pull-left">Transactions</h2>
+    									<h2 class="pull-left m-l-50 text-hint">
+    										<small class="bold fs12">{{ '{{ periodText[walletStatPeriod] }}' }}</small>
+    									</h2>
+    									<div class="clearfix"></div>
+    									<!--div class="full-width">
+    										<ul class="list-inline">
+    											<li ng-class="{'active': walletStatPeriod == '1D'}">
+    												<a href="" ng-click="changeWalletStatPeriod('1D')" class="font-montserrat text-master" ng-class="{'bg-master-light': walletStatPeriod == '1D'}">1D</a>
+    											</li>
+    											<li ng-class="{'active': walletStatPeriod == '1W'}">
+    												<a href="" ng-click="changeWalletStatPeriod('1W')" class="font-montserrat text-master" ng-class="{'bg-master-light': walletStatPeriod == '1W'}">1W</a>
+    											</li>
+    											<li ng-class="{'active': walletStatPeriod == '1M'}">
+    												<a href="" ng-click="changeWalletStatPeriod('1M')" class="font-montserrat text-master" ng-class="{'bg-master-light': walletStatPeriod == '1M'}">1M</a>
+    											</li>
+    											<li ng-class="{'active': walletStatPeriod == '1Y'}">
+    												<a href="" ng-click="changeWalletStatPeriod('1Y')" class="font-montserrat text-master" ng-class="{'bg-master-light': walletStatPeriod == '1Y'}">1Y</a>
+    											</li>
+    										</ul>
+    									</div->
+    									<nvd3 options="walletStatOptions" data="walletStatData"></nvd3>
+    								</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div-->
 		<div class="row">
 			<div class="col-md-12 bg-white">
 				<div class="row">
-					<div class="widget-13 panel no-border  no-margin widget-loader-circle">
+					<div class="widget-13 panel no-border no-margin widget-loader-circle">
 						<div class="container-sm-height">
 							<div class="row row-sm-height">
 								<div class="col-md-2 col-sm-height col-top no-padding b-r b-dashed b-grey">

@@ -1,4 +1,36 @@
 <div class="login-wrapper" ng-controller="LoginCtrl">
+	<div ng-if="confirmationStatus && confirmationStatus == 'success'" class="pgn-wrapper" style="    max-height: 50px;" data-position="top">
+		<div class="pgn push-on-sidebar-open pgn-bar">
+			<div class="alert alert-info">
+				<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+				<span>Your email confirmed successfully! Now you can sign in.</span>
+			</div>
+		</div>
+	</div>
+	<div ng-if="resetStatus && resetStatus == 'ok'" class="pgn-wrapper" style="max-height:50px;" data-position="top">
+		<div class="pgn push-on-sidebar-open pgn-bar">
+			<div class="alert alert-info">
+				<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+				<span>{{ '{{ resetMessage }}' }}</span>
+			</div>
+		</div>
+	</div>
+	<div ng-if="confirmationStatus && confirmationStatus == 'failed'" class="pgn-wrapper" style="max-height:50px;" data-position="top">
+		<div class="pgn push-on-sidebar-open pgn-bar">
+			<div class="alert alert-danger">
+				<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+				<span>Confirmation of your email failed.</span>
+			</div>
+		</div>
+	</div>
+	<div ng-if="resetStatus && resetStatus != 'ok'" class="pgn-wrapper" style="max-height:50px;" data-position="top">
+		<div class="pgn push-on-sidebar-open pgn-bar">
+			<div class="alert alert-danger">
+				<button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+				<span>{{ '{{ resetMessage }}' }}</span>
+			</div>
+		</div>
+	</div>
 	<div class="bg-pic">
 		<img src="{{ asset('assets/img/new-york-city-buildings-sunrise-morning-hd-wallpaper.jpg') }}" data-src="{{ asset('assets/img/new-york-city-buildings-sunrise-morning-hd-wallpaper.jpg') }}" ui-jq="unveil" data-src-retina="{{ asset('assets/img/new-york-city-buildings-sunrise-morning-hd-wallpaper.jpg') }}" alt="" class="lazy">
 		<div class="bg-caption pull-bottom sm-pull-bottom text-white p-l-20 m-b-20">
@@ -37,13 +69,13 @@
 										<h4>Reset <span class="semi-bold">password</span></h4>
 									</div>
 									<div class="modal-body">
-										<form role="form" name="restorePasswordForm" ng-submit="resetPassword()">
+										<form role="form" name="restorePasswordForm">
 											<h5>Email used on registration</h5>
 											<div class="form-group has-feedback">
 												<input class="form-control input-lg" type="text" name="email" ng-model="resetEmail" placeholder="Email" required autofocus>
 												<span class="ion-at form-control-feedback"></span>
 											</div>
-											<button type="submit" ng-disabled="restorePasswordForm.$invalid" class="btn btn-lg  btn-block btn-success">Reset password</button>
+											<button type="button" ng-click="resetPassword()" data-dismiss="modal" aria-hidden="true" ng-disabled="restorePasswordForm.$invalid" class="btn btn-lg  btn-block btn-success">Reset password</button>
 										</form>
 									</div>
 								</div>

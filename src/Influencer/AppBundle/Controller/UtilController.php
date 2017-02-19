@@ -236,12 +236,12 @@ class UtilController extends Controller
      */
     public function checkEmailAction(Request $request)
     {
-    	$email = $request->request->get('email');
+    	$input = json_decode($request->getContent());
     	$response = ['status' => 'fail'];
-    	if ($email) {
+    	if ($input->email) {
     		$em = $this->getDoctrine()->getManager();
     		$user = $em->createQuery('SELECT u FROM InfluencerAppBundle:User u WHERE u.email = :email')
-    			->setParameter('email', $email)
+    			->setParameter('email', $input->email)
     			->getOneOrNullResult();
     		if ($user === null) {
     			$response['status'] = 'success';

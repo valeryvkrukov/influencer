@@ -19,6 +19,31 @@ use Influencer\AppBundle\Entity\Network;
 class AuthController extends BaseController
 {
 	/**
+	 * @Route("/reset-password", name="inf_reset_password", options={"expose"=true})
+	 */
+	public function resetPasswordAction(Request $request)
+	{
+		$input = json_decode($request->getContent());
+		if ($input->email) {
+			$em = $this->getDoctrine()->getManager();
+			$user = $em->getRepository('InfluencerAppBundle:User')->findOneByEmail($input->email);
+			if ($user) {
+				$generator = $this->get('fos_user.util.token_generator');
+				$password = substr($generator->generateToken(), 0, 8);
+				$factory = $this->get('security.encoder_factory');
+				$encoder = $factory->getEncoder($user);
+				$user->setPassword($encoder->encodePassword($password, null));
+				$em->persist($user);
+				$em->flush();
+				$emailSent = $this->sendResetPasswordMessage($user, $password);
+				return new JsonResponse(['status' => 'ok', 'email' => $emailSent]);
+			}
+			return new JsonResponse(['status' => 'error', 'message' => sprintf('User with email "%s" is not registered', $input->email)]);
+		}
+		return new JsonResponse(['status' => 'error', 'message' => 'Invalid parameters']);
+	}
+	
+	/**
 	 * 
 	 */
 	public function linkAction(Request $request, $provider)
@@ -33,15 +58,15 @@ class AuthController extends BaseController
 	{
 		$input = json_decode($request->getContent());
 		$em = $this->getDoctrine()->getManager();
-		$user = $em->getRepository('InfluencerAppBundle:User')->findByEmail($input->email);
+		$user = $em->getRepository('InfluencerAppBundle:User')->findOneByEmail($input->email);
 		$factory = $this->get('security.encoder_factory');
 		
-		if (!isset($user[0])) {
+		if (!isset($user)) {
 			return new JsonResponse(['message' => 'Wrong email and/or password'], 401);
 		} else {
-			$encoder = $factory->getEncoder($user[0]);
-			if ($encoder->isPasswordValid($user[0]->getPassword(), $input->password, $user[0]->getSalt())) {
-				return new JsonResponse(['token' => $this->createToken($user[0])]);
+			$encoder = $factory->getEncoder($user);
+			if ($encoder->isPasswordValid($user->getPassword(), $input->password, $user->getSalt())) {
+				return new JsonResponse(['token' => $this->createToken($user)]);
 			} else {
 				return new JsonResponse(['message' => 'Wrong email and/or password'], 401);
 			}
@@ -141,12 +166,16 @@ class AuthController extends BaseController
 				$user->setProfileImage($profile['picture']['data']['url']);
 				$user->setFirstName($profile['first_name']);
 				$user->setLastName($profile['last_name']);
+				$tokenGenerator = $this->get('fos_user.util.token_generator');
+				$confirmationToken = $tokenGenerator->generateToken();
+				$user->setConfirmationToken($confirmationToken);
 				if (!$user->getPassword()) {
-					$user->setPassword('none');
+					$user->setPassword($confirmationToken);
 				}
 				$user->addRole('ROLE_CLIENT');
 				$em->persist($user);
 				$em->flush();
+				$this->sendConfirmationMessage($user, 'client');
 				return new JsonResponse(['token' => $this->createToken($user)]);
 			}
 		}
@@ -237,12 +266,16 @@ class AuthController extends BaseController
 				$user->setGoogle($_network);
 				$user->setFirstName($profile['given_name']);
 				$user->setLastName($profile['family_name']);
+				$tokenGenerator = $this->get('fos_user.util.token_generator');
+				$confirmationToken = $tokenGenerator->generateToken();
+				$user->setConfirmationToken($confirmationToken);
 				if (!$user->getPassword()) {
-					$user->setPassword('none');
+					$user->setPassword($confirmationToken);
 				}
 				$user->addRole('ROLE_CLIENT');
 				$em->persist($user);
 				$em->flush();
+				$this->sendConfirmationMessage($user, 'client');
 				return new JsonResponse(['token' => $this->createToken($user)]);
 			}
 		}
@@ -347,12 +380,16 @@ class AuthController extends BaseController
 					if ($lastName != $firstName) {
 						$user->setLastName($lastName);
 					}
+					$tokenGenerator = $this->get('fos_user.util.token_generator');
+					$confirmationToken = $tokenGenerator->generateToken();
+					$user->setConfirmationToken($confirmationToken);
 					if (!$user->getPassword()) {
-						$user->setPassword('none');
+						$user->setPassword($confirmationToken);
 					}
 					$user->addRole('ROLE_CLIENT');
 					$em->persist($user);
 					$em->flush();
+					$this->sendConfirmationMessage($user, 'client');
 					return new JsonResponse(['token' => $this->createToken($user)]);
 				}
 			}
@@ -444,12 +481,16 @@ class AuthController extends BaseController
 				if ($lastName != $firstName) {
 					$user->setLastName($lastName);
 				}
+				$tokenGenerator = $this->get('fos_user.util.token_generator');
+				$confirmationToken = $tokenGenerator->generateToken();
+				$user->setConfirmationToken($confirmationToken);
 				if (!$user->getPassword()) {
-					$user->setPassword('none');
+					$user->setPassword($confirmationToken);
 				}
 				$user->addRole('ROLE_CLIENT');
 				$em->persist($user);
 				$em->flush();
+				$this->sendConfirmationMessage($user, 'client');
 				return new JsonResponse(['token' => $this->createToken($user)]);
 			}
 		}

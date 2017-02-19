@@ -21,6 +21,11 @@
                 <span class="title"><i class="fa fa-comments"></i> Socials</span>
             </a>
 		</li>
+		<li ng-class="{'active': formLoaded == 'channels'}">
+			<a ng-click="loadForm('channels')">
+                <span class="title"><i class="fa fa-credit-card"></i> Channels and prices</span>
+            </a>
+		</li>
 		<li ng-class="{'active': formLoaded == 'password'}">
 			<a ng-click="loadForm('password')">
                 <span class="title"><i class="fa fa-lock"></i> Password</span>

@@ -4,6 +4,7 @@ namespace Influencer\AppBundle\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 use GuzzleHttp;
 use GuzzleHttp\Subscriber\Oauth\Oauth1;
@@ -24,11 +25,24 @@ class RegisterController extends BaseController
 		$input = json_decode($request->getContent());
 		if (isset($input->email)) {
 			$em = $this->getDoctrine()->getManager();
-			if ($em->getRepository('InfluencerAppBundle:User')->checkForUniqueUser($input->email)) {
-				$user = $em->getRepository('InfluencerAppBundle:User')->createInfluencerUser($input, $this->get('app.feed_loader'));
-				return new JsonResponse(['token' => $this->createToken($user)]);
-			} else {
-				return new JsonResponse(['error' => 'User with given username or/and password already registered'], 409);
+			$tokenGenerator = $this->get('fos_user.util.token_generator');
+			if ($input->user_type == 'influencer') {
+				if ($em->getRepository('InfluencerAppBundle:User')->checkForUniqueUser($input->email)) {
+					$user = $em->getRepository('InfluencerAppBundle:User')->createInfluencerUser($input, $this->get('app.feed_loader'), $tokenGenerator);
+					$this->sendConfirmationMessage($user, 'influencer');
+					return new JsonResponse(['token' => $this->createToken($user)]);
+				} else {
+					return new JsonResponse(['error' => 'User with given username or/and password already registered'], 409);
+				}
+			}
+			if ($input->user_type == 'client') {
+				if ($em->getRepository('InfluencerAppBundle:User')->checkForUniqueUser($input->email)) {
+					$user = $em->getRepository('InfluencerAppBundle:User')->createClientUser($input, $this->get('app.feed_loader'), $tokenGenerator);
+					$this->sendConfirmationMessage($user, 'client');
+					return new JsonResponse(['token' => $this->createToken($user)]);
+				} else {
+					return new JsonResponse(['error' => 'User with given username or/and password already registered'], 409);
+				}
 			}
 		} else {
 			return new JsonResponse(['error' => 'Username or/and password is not set'], 403);
@@ -169,4 +183,24 @@ class RegisterController extends BaseController
 			'token' => $accessToken['access_token'],
 		]);
 	}
+	
+	/**
+	 * @Route("/email-confirmation/{token}", name="inf_email_confirmation")
+	 */
+	public function emailConfirmationAction(Request $request, $token)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$user = $em->getRepository('InfluencerAppBundle:User')->findOneByConfirmationToken($token);
+		$url = $this->generateUrl('inf_root');
+		if ($user) {
+			$user->setEnabled(true);
+			$user->setConfirmationToken(null);
+			$em->persist($user);
+			$em->flush();
+			return $this->redirect($url.'#!/access/login?confirmation=success');
+		} else {
+			return $this->redirect($url.'#!/access/login?confirmation=failed');
+		}
+	}
+	
 }

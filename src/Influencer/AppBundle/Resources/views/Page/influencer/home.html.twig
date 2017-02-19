@@ -24,8 +24,8 @@
             				<div class="col-md-4">
             					<div class="panel panel-transparent">
             						<div class="panel-body">
-            							<div class="social-user-profile col-xs-height text-center col-top c120" flow-init flow-file-added="changeAvatar($file, $event, $flow)">
-            								<div class="thumbnail-wrapper d120 circular bordered b-white">
+            							<div class="social-user-profile col-xs-height text-center col-top c220" flow-init flow-file-added="changeAvatar($file, $event, $flow)">
+            								<div class="thumbnail-wrapper d220 circular bordered b-white">
             									<img ng-if="user.profileImage" alt="Avatar" data-src-retina="{{ '{{ user.profileImage }}' }}" ng-src="{{ '{{ user.profileImage }}' }}">
             									<img ng-if="$flow.files[0] && !user.profileImage" alt="Avatar" flow-img="$flow.files[0]">
             								</div>
@@ -183,41 +183,42 @@
                 			</div>
                 		</div>
                 		<div class="row">
-            				<div class="col-md-4">
-            					<div class="col-md-6 no-padding">
+            				<div class="col-md-12">
+            					<div class="col-md-4 no-padding">
                 					<div class="panel panel-transparent">
             							<div class="panel-heading">
             								<div class="panel-title">Countries</div>
             							</div>
             							<div class="panel-body">
-            								<span class="label flag-icon flag-icon-{{ '{{ item.code|lowercase }}' }}" style="margin-right:5px;" ng-repeat="item in user.countries"> </span>
+            								<span class="btn btn-complete no-border no-padding m-r-10 m-b-5 p-r-10" ng-repeat="item in user.countries">
+            									<div class="flag-icon flag-icon-{{ '{{ item.code|lowercase }}' }} padding-10 m-b-0" style="width:46px;background-position:0 0;background-size:contain;"></div> {{ '{{ item.country }}' }}
+            									
+                								<!--span style="background-position:0 0;background-repeat:no-repeat;" class="flag-icon flag-icon-{{ '{{ item.code|lowercase }}' }} m-b-10 p-l-30 p-t-5 p-b-5 pr-5">{{ '{{ item.country }}' }}</span-->
+                							</span>
             							</div>
             						</div>
             					</div>
-            					<div class="col-md-6 no-padding">
+            					<div class="col-md-4 no-padding">
             						<div class="panel panel-transparent">
             							<div class="panel-heading">
             								<div class="panel-title">Languages</div>
             							</div>
             							<div class="panel-body">
-            								<span ng-repeat="item in user.languages" class="label label-inverse" style="margin-right:5px;">{{ '{{ item.lang }}' }}</span>
+            								<span ng-repeat="item in user.languages" class="btn btn-complete btn-sm" style="margin-right:5px;">{{ '{{ item.lang }}' }}</span>
             							</div>
             						</div>
             					</div>
-            				</div>
-            				<div class="col-md-4">
-            					<div class="panel panel-transparent">
-            						<div class="panel-heading">
-            							<div class="panel-title">Industries</div>
-            						</div>
-            						<div class="panel-body">
-            							<span class="label label-inverse" ng-repeat="item in user.audience" style="margin-right:5px;">{{ '{{ item.name }}' }}</span>
-            						</div>
-            					</div>
-            				</div>
-            				<div class="col-md-4">
-            					
-            				</div>
+                				<div class="col-md-4">
+                					<div class="panel panel-transparent">
+                						<div class="panel-heading">
+                							<div class="panel-title">Industries</div>
+                						</div>
+                						<div class="panel-body">
+                							<span class="btn btn-complete btn-sm" ng-repeat="item in user.audience" style="margin-right:5px;"><i class="fa {{ '{{ item.icon }}' }}"></i> {{ '{{ item.name }}' }}</span>
+                						</div>
+                					</div>
+                				</div>
+                			</div>
             			</div>
             		</div>
             	</div>

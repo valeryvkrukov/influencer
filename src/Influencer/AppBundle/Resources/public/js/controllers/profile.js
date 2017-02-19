@@ -32,7 +32,7 @@ angular.module('app')
 			}
 		};
 	}])
-	.controller('ProfileCtrl', ['Account', '$scope', '$http', '$auth', '$sce', 'FeedLoader', 'GetPredefinedVars', 'localStorageService', 'ImageUtils', function(Account, $scope, $http, $auth, $sce, FeedLoader, GetPredefinedVars, localStorageService, ImageUtils) {
+	.controller('ProfileCtrl', ['Account', '$scope', '$rootScope', '$http', '$auth', '$sce', 'FeedLoader', 'GetPredefinedVars', 'localStorageService', 'ImageUtils', function(Account, $scope, $rootScope, $http, $auth, $sce, FeedLoader, GetPredefinedVars, localStorageService, ImageUtils) {
 		$scope.languages = [];
 		$scope.countries = [];
 		$scope.categories = [];
@@ -101,6 +101,7 @@ angular.module('app')
 			}).then(function(resp) {
 				localStorageService.set('currentUser', resp.data);
 				$scope.user = resp.data;
+				$rootScope.$broadcast('profile-update', 'all');
 			});
 			return false;
 		};
@@ -140,6 +141,7 @@ angular.module('app')
 				}).then(function(resp) {
 					if (resp.status == 200) {
 						$scope.user.profileCover = cover;
+						$rootScope.$broadcast('profile-update', 'cover');
 					}
 				});
 			};
@@ -164,6 +166,7 @@ angular.module('app')
 				}).then(function(resp) {
 					if (resp.status == 200) {
 						$scope.user.profileImage = avatar;
+						$rootScope.$broadcast('profile-update', 'avatar');
 					}
 				});
 			};
