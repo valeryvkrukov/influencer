@@ -164,6 +164,19 @@ angular.module('app')
         		}
         	});
         };
+        $scope.connectBlog = function(blogRss) {
+        	if (blogRss) {
+        		if (!$scope.user.socials) {
+        			$scope.user.socials = {};
+        		}
+        		$scope.user.socials['blog'] = {
+        			'name': 'Blog',
+        			'tag': 'blog',
+        			'rss': blogRss
+        		};
+        	}
+        	console.log($scope.socials);
+        };
 	}]).directive('ensureUnique', ['$http', function($http) {
 		return {
 			require: 'ngModel',
@@ -183,4 +196,20 @@ angular.module('app')
 				});
 			}
 		}
-	}]);	
+	}]).directive('positiveNumber', function() {
+        return {
+        	restrict: 'A',
+        	require: 'ngModel',
+        	link: function(scope, ele, attrs, c) {
+        		var regexp = /\d+\.(\d{1,2})?/;
+        		if (!regexp.test(ele.val())) {
+        			c.$setValidity('negative', true);
+        		}
+        		ele.bind('keypress', function(event) {
+        			if (event.keyCode === 32) {
+        				event.preventDefault();
+        			}
+        		});
+        	}
+       };
+   });	
