@@ -120,6 +120,12 @@ label small {
 	padding: 0;
 }
 
+.thumbnail-wrapper.d220,
+.social-user-profile.c220 {
+	width: 220px;
+	height: 220px;
+}
+
 .thumbnail-wrapper.d120,
 .social-user-profile.c120 {
 	width: 120px;

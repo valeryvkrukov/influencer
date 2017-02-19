@@ -65,7 +65,7 @@ class UserController extends BaseController
 		} elseif ($role === 'influencer' && in_array('ROLE_INFLUENCER', $userRoles)) {
 			$data = $this->get('app.influencer_data')->getDashboardData($userId);
 		} else {
-			$data = get('app.client_data')->getDashboardData($userId);
+			$data = $this->get('app.client_data')->getDashboardData($userId);
 		}
 		return new JsonResponse($data);
 	}
@@ -113,7 +113,11 @@ class UserController extends BaseController
 	{
 		$em = $this->getDoctrine()->getManager();
 		$user = $this->getUser();
-		$statistics = $em->getRepository('InfluencerAppBundle:Campaign')->getStatisticsForUser($user);
+		$period = $request->query->get('period');
+		if (isset($period) && in_array(strtoupper($period), ['1D', '1W', '1M', '1Y'])) {
+			$period = strtoupper($period);
+		}
+		$statistics = $em->getRepository('InfluencerAppBundle:Campaign')->getStatisticsForUser($user, $period);
 		
 		return new JsonResponse(['data' => $statistics]);
 	}

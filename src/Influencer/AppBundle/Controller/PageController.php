@@ -20,13 +20,13 @@ class PageController extends BaseController
 	{
 		switch ($role) {
 			case 'admin':
-				$tpl = 'admin/home';
+				$tpl = 'admin/dashboard';
 				break;
 			case 'influencer':
 				$tpl = 'influencer/dashboard';
 				break;
 			case 'client':
-				$tpl = 'client/home';
+				$tpl = 'client/dashboard';
 				break;
 			default:
 				$tpl = 'dashboard';
@@ -192,6 +192,25 @@ class PageController extends BaseController
 	}
 	
 	/**
+	 * @Route("/{role}/profile/channels", name="inf_profile_channels", options={"expose"=true})
+	 */
+	public function profileChannelsAction(Request $request, $role = null)
+	{
+		switch ($role) {
+			case 'admin':
+				$tpl = 'admin/profile-channels';
+				break;
+			case 'influencer':
+				$tpl = 'influencer/profile-channels';
+				break;
+			case 'client':
+			default:
+				$tpl = 'error';
+		}
+		return $this->render('InfluencerAppBundle:Page:'.$tpl.'.html.twig');
+	}
+	
+	/**
 	 * @Route("/{role}/profile/password", name="inf_profile_password", options={"expose"=true})
 	 */
 	public function profilePasswordAction(Request $request, $role = null)
@@ -206,6 +225,27 @@ class PageController extends BaseController
 			case 'client':
 			default:
 				$tpl = 'error';
+		}
+		return $this->render('InfluencerAppBundle:Page:'.$tpl.'.html.twig');
+	}
+	
+	/**
+	 * @Route("/wallet/{role}", name="inf_wallet", options={"expose"=true})
+	 */
+	public function walletAction(Request $request, $role = null)
+	{
+		switch ($role) {
+			case 'admin':
+				$tpl = 'admin/wallet';
+				break;
+			case 'influencer':
+				$tpl = 'influencer/wallet';
+				break;
+			case 'client':
+				$tpl = 'client/wallet';
+				break;
+			default:
+				$tpl = 'wallet';
 		}
 		return $this->render('InfluencerAppBundle:Page:'.$tpl.'.html.twig');
 	}

@@ -1,0 +1,52 @@
+<div class="container-fluid container-fixed-lg">
+	<ul class="breadcrumb">
+		<li><p>wallet</p></li>
+		<li><a href="#" class="active">	overview</a></li>
+	</ul>
+</div>
+
+<div class="container-fluid no-margin full-width bg-white">
+	<div class="row full-height no-margin">
+		<div class="col-md-12 no-padding full-height">
+			<div class="panel panel-transparent">
+				<div class="panel-heading">
+					<div class="panel-title">
+						<h4>Wallet</h4>
+					</div>
+					<div class="pull-right">
+						<h4>
+							<span>Balance: <small class="text-master">${{ '{{ wallet.balance|number:2 }}' }}</small></span>
+							<span class="m-l-20">In Escrow: <small class="text-master">${{ '{{ wallet.escrow|number:2 }}' }}</small></span>
+							<span class="m-l-20">Paid: <small class="text-master">${{ '{{ wallet.payout|number:2 }}' }}</small></span>
+						</h4>
+					</div>
+				</div>
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-12">
+							<ul class="nav nav-tabs nav-tabs-simple">
+								<li ng-class="{'active': dataType == 'all'}">
+									<a ng-click="loadByType('all', dtInstance)">All</a>
+								</li>
+								<li ng-class="{'active': dataType == 'payments'}">
+									<a ng-click="loadByType('payments', dtInstance)">Balance</a>
+								</li>
+								<li ng-class="{'active': dataType == 'escrow'}">
+									<a ng-click="loadByType('escrow', dtInstance)">Escrow</a>
+								</li>
+								<li ng-class="{'active': dataType == 'payouts'}">
+									<a ng-click="loadByType('payouts', dtInstance)">Payouts</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<table datatable="" dt-options="dtOptions" dt-columns="dtColumns" dt-instance="dtInstance" class="table table-striped table-bordered"></table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -5,7 +5,6 @@ use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
  * @ORM\Table(name="users")
  * @ORM\Entity(repositoryClass="Influencer\AppBundle\Repository\UserRepository")
  */
@@ -92,6 +91,11 @@ class User extends BaseUser
 	 * @ORM\OneToMany(targetEntity="Price", mappedBy="user", cascade={"persist", "remove"})
 	 */
 	protected $prices;
+	
+	/**
+	 * @ORM\OneToMany(targetEntity="Wallet", mappedBy="user", cascade={"persist", "remove"})
+	 */
+	protected $wallet;
 	
 	/**
 	 * @ORM\OneToMany(targetEntity="Feed", mappedBy="user", cascade={"persist", "remove"})
@@ -503,6 +507,23 @@ class User extends BaseUser
 		return $this;
 	}
 	
+	/**
+	 *
+	 * @return the unknown_type
+	 */
+	public function getWallet() {
+		return $this->wallet;
+	}
+	
+	/**
+	 *
+	 * @param unknown_type $wallet        	
+	 */
+	public function setWallet($wallet) {
+		$this->wallet = $wallet;
+		return $this;
+	}
+		
 	/**
 	 *
 	 * @return the unknown_type

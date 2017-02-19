@@ -54,7 +54,31 @@ class UserRepository extends EntityRepository
 		return $user->$getter();
 	}
 	
-	public function createInfluencerUser($data, $feedLoader)
+	public function createClientUser($data, $feedLoader, $tokenGenerator)
+	{
+		try {
+			$em = $this->getEntityManager();
+			$user = new User();
+			$user->setUsername(md5($data->email.'::'.time().'::'.$data->contact_number));
+			if (isset($data->profileImage)) {
+				$user->setProfileImage($data->profileImage);
+			}
+			$user->setEmail($data->email);
+			$user->setPlainPassword($data->password);
+			$user->setFirstName($data->first_name);
+			$user->setLastName($data->last_name);
+			$user->addRole('ROLE_CLIENT');
+			$user->setConfirmationToken($tokenGenerator->generateToken());
+			$user->setEnabled(true);
+			$em->persist($user);
+			$em->flush();
+			return $user;
+		} catch(\Exception $e) {
+			var_dump($e->getMessage(), $e->getLine());
+		}
+	}
+	
+	public function createInfluencerUser($data, $feedLoader, $tokenGenerator)
 	{
 		try {
 			$em = $this->getEntityManager();
@@ -143,6 +167,7 @@ class UserRepository extends EntityRepository
 				}
 			}
 			$user->addRole('ROLE_INFLUENCER');
+			$user->setConfirmationToken($tokenGenerator->generateToken());
 			$user->setEnabled(true);
 			$em->persist($user);
 			$em->flush();

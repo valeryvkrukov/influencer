@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app')
-	.controller('AdminUsersCreateCtrl', ['$scope', '$http', 'UserEdit', function($scope, $http, UserEdit) {
+	.controller('AdminUsersCreateCtrl', ['$scope', '$http', '$state', 'UserEdit', function($scope, $http, $state, UserEdit) {
 		$scope.newUser = {
 			roles: ['ROLE_CLIENT'],
 			enabled: false
@@ -16,6 +16,7 @@ angular.module('app')
 						alert(resp.error);
 					} else {
 						$scope.newUser = resp;
+						$state.transitionTo('app.users.edit', {id: $scope.newUser.id});
 					}
 				});
 			}

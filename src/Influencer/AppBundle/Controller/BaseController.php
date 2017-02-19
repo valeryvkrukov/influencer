@@ -2,6 +2,7 @@
 namespace Influencer\AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Firebase\JWT\JWT;
 
 class BaseController extends Controller
@@ -121,6 +122,44 @@ class BaseController extends Controller
 		}
 		if (in_array('ROLE_CLIENT', $roles)) {
 			return 'client';
+		}
+	}
+	
+	protected function sendConfirmationMessage($user, $role)
+	{
+		try {
+			$link = $this->get('router')->generate('inf_email_confirmation', ['token' => $user->getConfirmationToken()], UrlGeneratorInterface::ABSOLUTE_URL);
+			$message = \Swift_Message::newInstance()
+				->setSubject('Confirmation message')
+				->setFrom($this->getParameter('email_from'))
+				->setTo($user->getEmail())
+				->setBody($this->renderView('Emails/registration-'.$role.'.html.twig', [
+					'name' => implode(' ', [$user->getFirstName(), $user->getLastName()]),
+					'link' => $link,
+				]), 'text/html');
+			$this->get('mailer')->send($message);
+			return true;
+		} catch(\Exception $e) {
+			return false;
+		}
+	}
+	
+	protected function sendResetPasswordMessage($user, $password)
+	{
+		try {
+			$message = \Swift_Message::newInstance()
+				->setSubject('New password')
+				->setFrom($this->getParameter('email_from'))
+				->setTo($user->getEmail())
+				->setBody($this->renderView('Emails/password-reset.html.twig', [
+					'name' => implode(' ', [$user->getFirstName(), $user->getLastName()]),
+					'password' => $password,
+				]), 'text/html');
+			$this->get('mailer')->send($message);
+			return true;
+		} catch(\Exception $e) {
+			var_dump($e->getMessage());die();
+			return false;
 		}
 	}
 }

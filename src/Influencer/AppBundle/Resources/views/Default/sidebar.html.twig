@@ -15,14 +15,14 @@
 					<span class="title">Dashboard</span>
 					<span class="details"></span>
 				</a>
-				<span class="icon-thumbnail"><i class="pg-settings"></i></span>
+				<span class="icon-thumbnail"><i class="pg-home"></i></span>
 			</li>
-			<li class="m-t-30 open" ui-sref-active="active">
+			<li ui-sref-active="active">
 				<a ui-sref="app.home" class="detailed">
-					<span class="title">Home</span>
+					<span class="title">My Profile</span>
 					<span class="details"></span>
 				</a>
-				<span class="icon-thumbnail"><i class="pg-home"></i></span>
+				<span class="icon-thumbnail"><i class="fa fa-user"></i></span>
 			</li>
 			<li ng-if="user.role == 'admin'" ng-class="{'open active':includes('app.settings')}">
 				<a href="javascript:;">
@@ -55,11 +55,18 @@
 				</ul>
 			</li>
 			<li ng-if="user.role == 'influencer'" ui-sref-active="active">
-				<a ui-sref="app.feeds" class="detailed">
-					<span class="title">Feeds</span>
+				<a ui-sref="app.wallet" class="detailed">
+					<span class="title">Wallet</span>
 					<span class="details"></span>
 				</a>
-				<span class="icon-thumbnail"><i class="pg-social"></i></span>
+				<span class="icon-thumbnail"><i class="pg-credit_card"></i></span>
+			</li>
+			<li ng-if="user.role == 'influencer'" ui-sref-active="active">
+				<a ui-sref="app.wallet" class="detailed">
+					<span class="title">Campaigns</span>
+					<span class="details"></span>
+				</a>
+				<span class="icon-thumbnail"><i class="pg-suitcase"></i></span>
 			</li>
 			<li ng-if="user.role == 'client'" ui-sref-active="active">
 				<a ui-sref="app.campaign" class="detailed">

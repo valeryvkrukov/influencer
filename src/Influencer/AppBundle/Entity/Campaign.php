@@ -120,6 +120,7 @@ class Campaign
 	public function __construct()
 	{
 		$this->influencers = new \Doctrine\Common\Collections\ArrayCollection();
+		$this->payments = new \Doctrine\Common\Collections\ArrayCollection();
 	}
 	
 	/**
@@ -438,10 +439,13 @@ class Campaign
 	
 	/**
 	 *
-	 * @ORM\PrePersist
+	 * ORM\PrePersist
 	 */
-	public function setCreatedAt() {
-		$this->createdAt = new \DateTime();
+	public function setCreatedAt($createdAt = null) {
+		if ($createdAt === null) {
+			$createdAt = new \DateTime();
+		}
+		$this->createdAt = $createdAt;
 		return $this;
 	}
 	

@@ -1,47 +1,7 @@
 'use strict';
 
 angular.module('app')
-	.factory('CheckForUnique', ['$q', '$http', function($q, $http) {
-		return {
-			checkForUsername: function(username) {
-				return $http({
-        			url: Routing.generate('inf_check_for_username'),
-        			method: 'POST',
-        			data: {
-        				'username': username
-        			}
-        		});
-			},
-			checkForEmail: function(email) {
-				return $http({
-        			url: Routing.generate('inf_check_for_email'),
-        			method: 'POST',
-        			data: {
-        				'email': email
-        			}
-        		});
-			}
-		};
-	}])
-	.factory('Register', ['$q', '$http', function($q, $http) {
-		return {
-			submitInfluencerData: function(data) {
-				var deferred = $q.defer();
-				$http({
-					url: Routing.generate('inf_registration_save'),
-					method: 'POST',
-					data: data
-				}).then(function(resp) {
-					console.log(resp);
-					deferred.resolve(resp.data);
-				}, function() {
-					deferred.reject();
-				});
-				return deferred.promise;
-			}
-		};
-	}])
-	.controller('SignupCtrl', ['$scope', '$sce', '$location', '$auth', 'toastr', 'GetPredefinedVars', 'WizardHandler', 'Register', function($scope, $sce, $location, $auth, toastr, GetPredefinedVars, WizardHandler, Register) {
+	.controller('SignupCtrl', ['$scope', '$sce', '$location', '$auth', 'toastr', 'GetPredefinedVars', 'WizardHandler', 'Register', 'CheckForUnique', function($scope, $sce, $location, $auth, toastr, GetPredefinedVars, WizardHandler, Register, CheckForUnique) {
 		$scope.languages = [];
 		$scope.countries = [];
 		$scope.categories = [];
@@ -204,4 +164,23 @@ angular.module('app')
         		}
         	});
         };
-	}]);
+	}]).directive('ensureUnique', ['$http', function($http) {
+		return {
+			require: 'ngModel',
+			link: function(scope, ele, attrs, c) {
+				scope.$watch(attrs.ngModel, function() {
+					$http({
+						url: Routing.generate('inf_check_for_email'),
+						method: 'POST',
+						data: {'email': ele.val()}
+					}).then(function(resp) {
+						if (resp.data.status == 'fail') {
+							c.$setValidity('unique', false);
+						} else {
+							c.$setValidity('unique', true);
+						}
+					});
+				});
+			}
+		}
+	}]);	

@@ -33,6 +33,7 @@ class AdminUserController extends BaseController
 			
 			return new JsonResponse($users);
 		}
+		return new JsonResponse(['error' => 'Access denied'], 403);
 	}
 	
 	/**
@@ -48,6 +49,7 @@ class AdminUserController extends BaseController
 				return new JsonResponse($user);
 			}
 		}
+		return new JsonResponse(['error' => 'Access denied'], 403);
 	}
 	
 	/**
@@ -85,6 +87,7 @@ class AdminUserController extends BaseController
 				return new JsonResponse($user);
 			}
 		}
+		return new JsonResponse(['error' => 'Access denied'], 403);
 	}
 	
 	/**
@@ -122,5 +125,26 @@ class AdminUserController extends BaseController
 			
 			return new JsonResponse($user);
 		}
+		return new JsonResponse(['error' => 'Access denied'], 403);
+	}
+	
+	/**
+	 * @Route("/delete-user", name="inf_admin_data_user_delete", options={"expose"=true})
+	 */
+	public function deleteUserAction(Request $request)
+	{
+		$current = $this->getUser();
+		if (in_array('ROLE_ADMIN', $current->getRoles())) {
+			$input = json_decode($request->getContent());
+			if (isset($input->user)) {
+				$em = $this->getDoctrine()->getManager();
+				$user = $em->getRepository('InfluencerAppBundle:User')->getUserForAdminEdit($input->user, 'object');
+				$em->remove($user);
+				$em->flush();
+				return new JsonResponse(['message' => sprintf('User %s removed', $input->user)]);
+			}
+			return new JsonResponse(['error' => 'Invalid request parameter'], 409);
+		}
+		return new JsonResponse(['error' => 'Access denied'], 403);
 	}
 }

@@ -1,25 +1,6 @@
 'use strict';
 
 angular.module('app')
-	.factory('Users', ['$q', '$http', function($q, $http) {
-		return {
-			loadAll: function(field, filter) {
-				var deferred = $q.defer();
-				var params = {};
-				if (field !== undefined && filter !== undefined && filter !== 'all') {
-					params = {field: field, filter: filter};
-				}
-				$http({
-					url: Routing.generate('inf_admin_data_users_list'),
-					method: 'POST',
-					data: params
-				}).then(function(resp) {
-					deferred.resolve(resp.data);
-				})
-				return deferred.promise;
-			}
-		};
-	}])
 	.controller('AdminUsersListCtrl', ['$scope', '$http', '$q', '$compile', 'Users', 'DTOptionsBuilder', 'DTColumnBuilder', function($scope, $http, $q, $compile, Users, DTOptionsBuilder, DTColumnBuilder) {
 		$scope.users = {};
 		$scope.filteredBy = 'all';
@@ -68,7 +49,7 @@ angular.module('app')
 				$scope.users[data.id] = data;
 				var cell = '<span class="font-montserrat fs-12">';
 				cell += '<a ui-sref="app.users.edit({id: '+data.id+'})" class="b-a b-grey b-rad-sm bg-master-light padding-5 m-l-5"><i class="fa fa-pencil fs-14 text-master"></i></a>';
-				cell += '<a ng-click="deleteUser(users['+data.id+'], dtInstance)" class="b-a b-grey b-rad-sm bg-master-light padding-5 m-l-5"><i class="fa fa-times fs-14 text-danger"></i></a>';
+				cell += '<a ng-click="selectedForDelete = users['+data.id+']" data-toggle="modal" data-target="#deleteUser" class="b-a b-grey b-rad-sm bg-master-light padding-5 m-l-5"><i class="fa fa-times fs-14 text-danger"></i></a>';
 				if (full.enabled == 1) {
 					cell += '<a ng-click="disableUser(users['+data.id+'], dtInstance)" class="b-a b-grey b-rad-sm bg-master-light padding-5 m-l-5"><i class="fa fa-ban fs-14 text-warning"></i></a>';
 				} else {
@@ -82,23 +63,19 @@ angular.module('app')
 			console.log(user);
 		};
 		$scope.disableUser = function(user, instance) {
-			$http({
-				url: Routing.generate('inf_user_update_field'),
-				method: 'POST',
-				data: {user: user.id, field: 'enabled', value: (user.enabled == 1?0:1)}
-			}).then(function(resp) {
+			Users.disable(user).then(function(resp) {
 				instance.reloadData();
 			});
 		};
 		$scope.deleteUser = function(user, instance) {
-			console.log(user);
+			Users.deleteUser(user).then(function(resp) {
+				instance.reloadData();
+			});
 		};
 		$scope.filterData = function(field, value, instance) {
 			$scope.filteredBy = value;
 			$scope.field = field;
-			instance.reloadData(function() {
-				return Users.loadAll(field, value);
-			}, true);
+			instance.reloadData();
 		}
 	}]);
 		
