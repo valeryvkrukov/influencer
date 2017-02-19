@@ -234,9 +234,9 @@
                         					</div>
                     						<div class="row">
                     							<div class="col-sm-12">
-                        							<div pg-form-group class="form-group form-group-default" style="height: 150px;">
+                        							<div pg-form-group class="form-group form-group-default" style="min-height: 150px;">
                         								<label>About Me</label>
-                        								<textarea name="bio" class="form-control" rows="3" ng-model="user.bio"></textarea>
+                        								<textarea name="bio" class="form-control" rows="3" ng-model="user.bio" style="min-height: 150px;"></textarea>
                         							</div>
                         						</div>
                         					</div>
@@ -281,6 +281,47 @@
                             									<span ng-if="user.socials[network.tag] != undefined && user.socials[network.tag] != null" class="pull-right"> Connected <i class="fa fa-check"></i></span>
                             									<span ng-if="user.socials[network.tag] == undefined || user.socials[network.tag] == null" class="pull-right"> Not Connected <i class="fa fa-times"></i></span>
                             								</a>
+                            							</div>
+                            						</div>
+                            					</div>
+                            					<div class="row">
+                            						<div class="col-sm-10">
+                    									<br>
+                    									<div class="input-group" style="width:100%;">
+                                							<a data-toggle="modal" data-target="#modalConnectBlog" class="btn btn-block" ng-class="{'btn-primary':(user.socials['blog'] == undefined), 'btn-success':(user.socials['blog'])}">
+                            									<span class="pull-left">
+                            										<i class="fa fa-rss"></i>
+                            									</span> 
+                            									<span>Blog</span>
+                            									<span ng-if="user.socials['blog'] != undefined && user.socials['blog'] != null" class="pull-right"> Connected <i class="fa fa-check"></i></span>
+                            									<span ng-if="user.socials['blog'] == undefined || user.socials['blog'] == null" class="pull-right"> Not Connected <i class="fa fa-times"></i></span>
+                            								</a>
+                            							</div>
+                            							<div class="modal fade slide-up disable-scroll" id="modalConnectBlog" tabindex="-1" role="dialog" aria-labelledby="modalConnectBlogLabel" aria-hidden="false">
+                            								<div class="modal-dialog ">
+                            									<div class="modal-content-wrapper">
+                            										<div class="modal-content">
+                            											<div class="modal-header clearfix text-left">
+                            												<button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="pg-close fs-14"></i></button>
+                            												<h4>Connect <span class="semi-bold">blog</span></h4>
+                            											</div>
+                            											<div class="modal-body">
+                            												<div class="row">
+                            													<div class="col-md-12">
+                            														<div pg-form-group class="form-group form-group-default">
+                            															<label>Url of RSS feed</label>
+                            															<input type="url" name="blog" placeholder="RSS" class="form-control" ng-model="blogRss">
+                            														</div>
+                            													</div>
+                            												</div>
+                            											</div>
+                            											<div class="modal-footer">
+                            												<button class="btn btn-primary" ng-click="connectBlog(blogRss)" data-dismiss="modal" aria-hidden="true">Connect</button>
+                            												<button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                            											</div>
+                            										</div>
+                            									</div>
+                            								</div>
                             							</div>
                             						</div>
                             					</div>
@@ -336,14 +377,25 @@
                             					</div-->
                             					<div class="row" ng-repeat="(network,data) in user.socials">
                             						<div class="col-sm-12">
-                            							<div pg-form-group class="form-group form-group-default input-group">
-                            								<label>{{ '{{ postTypes[network].name }}' }} Price</label>
-                            								<input type="number" name="prices_{{ '{{ postTypes[network].tag }}' }}" placeholder="{{ '{{ postTypes[network].name }}' }} Price" class="form-control" ng-model="user.prices[postTypes[network].tag]">
+                            							<div pg-form-group class="form-group form-group-default input-group"ng-class="{ 'has-error': campaignInfluencerInfo['prices_'+postTypes[network].tag].$invalid && !campaignInfluencerInfo['prices_'+postTypes[network].tag].$pristine }">
+                            								<label>Price per post ({{ '{{ network|capitalize }}' }})</label>
+                            								<input type="number" min="0" name="prices_{{ '{{ postTypes[network].tag }}' }}" placeholder="{{ '{{ postTypes[network].tag|capitalize }}' }}" class="form-control" ng-model="user.prices[postTypes[network].tag]">
                             								<span class="input-group-addon">$</span>
                             							</div>
+                            							<label class="error" for="prices_{{ '{{ postTypes[network].tag }}' }}" ng-show="parseInt(user.prices[network]) < 0">Enter a valid number.</label>
                             						</div>
                             					</div>
-                            					<div class="row">
+                            					<div ng-if="network == 'google'">
+                            						<div class="col-sm-12">
+                            							<div pg-form-group class="form-group form-group-default input-group" ng-class="{ 'has-error': campaignInfluencerInfo.prices_youtube.$invalid && !campaignInfluencerInfo.prices_youtube.$pristine }">
+                            								<label>Price per video (YouTube)</label>
+                            								<input type="number" min="0" name="prices_youtube" placeholder="YouTube" class="form-control" ng-model="user.prices['youtube']">
+                            								<span class="input-group-addon">$</span>
+                            							</div>
+                            							<label class="error" for="prices_youtube" ng-show="parseInt(user.prices['youtube']) < 0">Enter a valid number.</label>
+                            						</div>
+                            					</div>
+                            					<!--div class="row">
                             						<div class="col-sm-12">
                             							<div pg-form-group class="form-group form-group-default required" ng-class="{ 'has-error': register.frequency.$invalid && !register.frequency.$pristine }">
                             								<label>Frequency</label>
@@ -351,7 +403,7 @@
                             							</div>
                             							<label class="error" for="frequency" ng-show="campaignInfluencerInfo.frequency.$invalid && !campaignInfluencerInfo.frequency.$pristine">This field is required.</label>
                             						</div>
-                            					</div>
+                            					</div-->
                     						</div>
                     					</div>
                     				</div>

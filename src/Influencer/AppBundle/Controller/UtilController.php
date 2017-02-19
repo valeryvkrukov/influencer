@@ -203,6 +203,10 @@ class UtilController extends Controller
     			'name' => 'Instagram',
     			'tag' => 'instagram',
     		],
+    		[
+    			'name' => 'Snapchat',
+    			'tag' => 'snapchat-square',
+    		]
     	];
     	return new JsonResponse([
     		'status' => 200,
