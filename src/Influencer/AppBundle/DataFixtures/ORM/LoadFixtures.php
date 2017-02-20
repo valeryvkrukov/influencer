@@ -9,7 +9,7 @@ use Symfony\Component\Intl\Intl;
 
 class LoadFixtures implements FixtureInterface
 {
-	const AUDIENCE = [
+	protected static $AUDIENCE = [
 		'art-n-design' => [
 				'name' => 'Art & Design',
 				'icon' => 'fa-paint-brush',
@@ -136,17 +136,17 @@ class LoadFixtures implements FixtureInterface
 	public static function getAudienceCode()
 	{
 		$faker = \Faker\Factory::create();
-		return $faker->randomElement(array_keys(self::AUDIENCE));
+		return $faker->randomElement(array_keys(self::$AUDIENCE));
 	}
 	
 	public static function getAudienceName($code)
 	{
-		return self::AUDIENCE[$code]['name'];
+		return self::$AUDIENCE[$code]['name'];
 	}
 	
 	public static function getAudienceIcon($code)
 	{
-		return self::AUDIENCE[$code]['icon'];
+		return self::$AUDIENCE[$code]['icon'];
 	}
 	
 	public function load(ObjectManager $manager)
